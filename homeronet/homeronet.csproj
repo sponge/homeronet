@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasePlugin.cs" />
+    <Compile Include="plugins\discordplaying.cs" />
     <Compile Include="plugins\homero.cs" />
     <Compile Include="plugins\tone.cs" />
     <Compile Include="Program.cs" />
