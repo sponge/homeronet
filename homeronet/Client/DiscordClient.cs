@@ -1,54 +1,102 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using homeronet.EventArgs;
+using homeronet.Messages;
+using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using homeronet.EventArgs;
+using Discord;
+using Discord.API.Client;
+using User = Discord.User;
 
 namespace homeronet.Client
 {
     public class DiscordClient : IClient
     {
-        public event EventHandler<MessageReceivedEventArgs> ConnectionStatusChanged;
+
+        private Discord.DiscordClient _discordClient;
 
         #region Constructors
 
         public DiscordClient(IClientConfiguration config)
         {
-            
+            ClientConfiguration = config;
+
+            if (String.IsNullOrEmpty(ClientConfiguration.ApiKey))
+            {
+                throw new Exception("No API key specified.");
+            }
+
+
+            _discordClient = new Discord.DiscordClient(x =>
+            {
+                // Seriously, a configuration constructor in an action?
+                x.AppName = "Homero.NET";
+                x.AppUrl = "https://goodass.dog";
+            });
+
         }
 
-        #endregion
-
+        #endregion Constructors
 
         #region Events
 
         public event PropertyChangedEventHandler PropertyChanged;
-        #endregion
+
+        public event EventHandler<MessageReceivedEventArgs> ConnectionStatusChanged;
+
+        #endregion Events
 
         #region Async Methods
-        public Task<bool> Connect()
+
+        public async Task<bool> Connect()
         {
-            throw new NotImplementedException();
+            await _discordClient.Connect(ClientConfiguration.ApiKey);
+            return true; // uh why can't i get the connect result?
         }
-        #endregion
+
+        public async Task SendMessage(IStandardMessage message)
+        {
+            // Is it a PM or a public message?
+            if (message.IsPrivate)
+            {
+                User targetedUser = null;
+                foreach (Server server in _discordClient.Servers)
+                {
+                    targetedUser = server.Users.FirstOrDefault(x => x.Nickname == message.Sender);
+                }
+                var sendMessage = targetedUser?.SendMessage(message.Message);
+                if (sendMessage != null)
+                    await sendMessage;
+            }
+            else
+            {
+                Discord.Channel targetedChannel = (_discordClient.Servers
+                    .FirstOrDefault(x => x.Name == message.Server)?.TextChannels)?.FirstOrDefault(x => x.Name == message.Channel);
+
+                var sendMessage = targetedChannel?.SendMessage(message.Message);
+                if (sendMessage != null)
+                    await sendMessage;
+            }
+        }
+
+        #endregion Async Methods
+
         #region Methods
-        
+
         public void Initialize()
         {
-            throw new NotImplementedException();
+            // Not used....yet.
         }
-        
-        #endregion
-        
+
+        #endregion Methods
+
         #region Properties
 
         public bool IsConnected
         {
             get
             {
-                throw new NotImplementedException();
+                return _discordClient.State == ConnectionState.Connected;
             }
         }
 
@@ -64,6 +112,7 @@ namespace homeronet.Client
                 throw new NotImplementedException();
             }
         }
-#endregion
+
+        #endregion Properties
     }
 }

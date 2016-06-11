@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using homeronet.EventArgs;
+using homeronet.Messages;
 
 namespace homeronet.Client
 {
@@ -12,6 +13,7 @@ namespace homeronet.Client
     {
         void Initialize();
         Task<bool> Connect();
+        Task SendMessage(IStandardMessage message);
         bool IsConnected { get; }
         IClientConfiguration ClientConfiguration { get; set; }
         event EventHandler<MessageReceivedEventArgs> ConnectionStatusChanged;

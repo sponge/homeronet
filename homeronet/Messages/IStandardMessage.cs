@@ -9,8 +9,10 @@ namespace homeronet.Messages
     public interface IStandardMessage
     {
         string Message { get; }
-        string User { get; }
+        string Sender { get; }
+        string Target { get; }
         string Channel { get; }
+        string Server { get; }
         bool IsPrivate { get; }
     }
 }
