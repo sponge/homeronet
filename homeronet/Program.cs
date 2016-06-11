@@ -15,6 +15,7 @@ namespace homeronet {
     internal class Program {
 
         private static void Main(string[] args) {
+            /*
             if (args.Length == 0) {
                 Console.WriteLine("Please specify your bot token on the commandline.");
                 Environment.Exit(1);
@@ -66,6 +67,7 @@ namespace homeronet {
             }
 
             Environment.Exit(0);
+            */
         }
     }
 }

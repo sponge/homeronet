@@ -14,6 +14,11 @@ namespace homeronet.Client
 
         #region Constructors
 
+        public DiscordClient(IClientConfiguration config)
+        {
+            
+        }
+
         #endregion
 
 
