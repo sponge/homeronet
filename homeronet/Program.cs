@@ -15,10 +15,15 @@ namespace homeronet {
     internal class Program {
 
         private static void Main(string[] args) {
+            if (args.Length == 0) {
+                Console.WriteLine("Please specify your bot token on the commandline.");
+                Environment.Exit(1);
+            }
+
             List<IPlugin> plugins = new List<IPlugin>();
             Dictionary<string, IPlugin> commandTriggers = new Dictionary<string, IPlugin>();
 
-            DiscordClient client = new DiscordClient("MTkwOTkzMTU3MDIwNzEyOTYx.CjzzvQ.ajx3Z6jYPuLFNOmymNeLxyxi-zc", true);
+            DiscordClient client = new DiscordClient(args[0], true);
 
             var assembly = Assembly.GetExecutingAssembly();
             foreach (string pluginName in Properties.Settings.Default.PluginList) {
