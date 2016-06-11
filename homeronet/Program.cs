@@ -40,14 +40,14 @@ namespace homeronet {
 
             client.Connected += (sender, e) => {
                 Console.WriteLine($"Connected! User: {e.User.Username}");
-                client.UpdateCurrentGame("i'm a dumb bot");
             };
 
             client.MessageReceived += (sender, e) => {
                 if (e.MessageText.StartsWith(Properties.Settings.Default.CommandPrefix)) {
                     var parts = e.MessageText.Split(null);
-                    var cmd = commandTriggers[parts[0]];
-                    cmd.CommandTrigger(e);
+                    if (commandTriggers.ContainsKey(parts[0])) {
+                        commandTriggers[parts[0]].CommandTrigger(e);
+                    }
                 }
             };
 
