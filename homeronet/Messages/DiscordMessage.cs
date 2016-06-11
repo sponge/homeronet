@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace homeronet.Messages
 {
-    class DiscordMessage
+    public class DiscordMessage
     {
     }
 }

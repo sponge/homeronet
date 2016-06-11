@@ -64,7 +64,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasePlugin.cs" />
-    <Compile Include="plugins\discordplaying.cs" />
+    <Compile Include="Client\DiscordClient.cs" />
+    <Compile Include="Client\IClient.cs" />
+    <Compile Include="Client\IClientConfiguration.cs" />
+    <Compile Include="Client\IrcClient.cs" />
+    <Compile Include="Client\SlackClient.cs" />
+    <Compile Include="Client\TwitchClient.cs" />
+    <Compile Include="EventArgs\MessageReceivedEventArgs.cs" />
+    <Compile Include="Messages\DiscordMessage.cs" />
+    <Compile Include="Messages\IStandardMessage.cs" />
     <Compile Include="plugins\homero.cs" />
     <Compile Include="plugins\tone.cs" />
     <Compile Include="Program.cs" />
@@ -86,6 +94,9 @@
   <ItemGroup>
     <Content Include="libsodium.dll" />
     <Content Include="opus.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Command\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
