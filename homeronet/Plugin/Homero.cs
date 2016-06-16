@@ -31,14 +31,7 @@ namespace homeronet.Plugin
                 if (command.Command == "homero")
                 {
                     _webClient.DownloadString("http://simpsons-latino.tumblr.com/random");
-                    return new StandardMessage()
-                    {
-                        Target = command.InnerMessage.Sender,
-                        IsPrivate = command.InnerMessage.IsPrivate,
-                        Channel = command.InnerMessage.Channel,
-                        Message = _webClient.ResponseUri.ToString(),
-                        Server = command.InnerMessage.Server
-                    };
+                    return command.InnerMessage.CreateResponse(_webClient.ResponseUri?.ToString());
                 }
                 return null;
             });
@@ -55,14 +48,7 @@ namespace homeronet.Plugin
             {
                 if (message.Message == "hello homero")
                 {
-                    return new StandardMessage()
-                    {
-                        Target = message.Sender,
-                        IsPrivate = message.IsPrivate,
-                        Channel = message.Channel,
-                        Message = "hi friend",
-                        Server = message.Server
-                    };
+                    return message.CreateResponse("hi friend");
                 }
                 return null;
             });

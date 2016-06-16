@@ -29,6 +29,7 @@ namespace homeronet.Plugin
                     {
                         DiscordClient client = command.InnerMessage.SendingClient as DiscordClient;
                         client.RootClient.SetGame(String.Join(" ", command.Arguments));
+                        return command.InnerMessage.CreateResponse($"Changed playing game to: {client.RootClient.CurrentGame}");
                     }
                 }
                 return null;

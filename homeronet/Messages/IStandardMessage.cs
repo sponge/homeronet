@@ -16,17 +16,33 @@ namespace homeronet.Messages
         string Server { get; }
         bool IsPrivate { get; }
         IClient SendingClient { get; }
+        IStandardMessage CreateResponse(string message = null);
     }
 
-    class StandardMessage : IStandardMessage
+    public class StandardMessage : IStandardMessage
     {
         public string Message { get; set; }
         public string Sender { get; set; }
         public string Target { get; set; }
         public string Channel { get; set; }
         public string Server { get; set; }
+        /// <exclude />
         public bool IsPrivate { get; set; }
         public IClient SendingClient { get; set; }
 
+        public IStandardMessage CreateResponse(string message = null)
+        {
+            return new StandardMessage()
+            {
+
+                Target = this.Sender,
+                IsPrivate = this.IsPrivate,
+                Channel = this.Channel,
+                Message = String.IsNullOrEmpty(message) ? String.Empty : message,
+                Server = this.Server,
+                Sender = this.Target, // not exactly true but it'll do...
+                SendingClient = this.SendingClient
+            };
+        }
     }
 }

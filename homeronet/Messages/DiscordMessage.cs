@@ -65,5 +65,21 @@ namespace homeronet.Messages
                 return _sender;
             }
         }
+
+        public IStandardMessage CreateResponse(string message = null)
+        {
+            return new StandardMessage()
+            {
+
+                Target = this.Sender,
+                IsPrivate = this.IsPrivate,
+                Channel = this.Channel,
+                Message = String.IsNullOrEmpty(message) ? String.Empty : message,
+                Server = this.Server,
+                Sender = this.Target, // not exactly true but it'll do...
+                SendingClient = this.SendingClient
+            };
+        }
+
     }
 }

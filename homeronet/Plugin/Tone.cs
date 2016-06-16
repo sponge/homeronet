@@ -42,19 +42,10 @@ namespace homeronet.Plugin
                     if (command.Command == "tone")
                     {
                         IClient sendingClient = command.InnerMessage.SendingClient;
-
-                        StandardMessage msgTemplate = new StandardMessage()
-                        {
-                            Target = command.InnerMessage.Sender,
-                            IsPrivate = command.InnerMessage.IsPrivate,
-                            Channel = command.InnerMessage.Channel,
-                            Server = command.InnerMessage.Server
-                        };
-
+                        
                         foreach (string msg in _tonyOutput)
                         {
-                            msgTemplate.Message = msg;
-                            sendingClient.SendMessage(msgTemplate);
+                            sendingClient.SendMessage(command.InnerMessage.CreateResponse(msg));
                             Thread.Sleep(TimeSpan.FromSeconds(1));
                         }
 
