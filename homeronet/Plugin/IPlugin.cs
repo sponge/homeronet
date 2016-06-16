@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using homeronet.Messages;
 
-namespace homeronet.Plugins
+namespace homeronet.Plugin
 {
     public interface IPlugin
     {

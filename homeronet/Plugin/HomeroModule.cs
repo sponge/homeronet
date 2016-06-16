@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using homeronet.plugins;
 using Ninject.Modules;
 
-namespace homeronet.Plugins
+namespace homeronet.Plugin
 {
     public class HomeroModule : NinjectModule
     {
@@ -14,6 +13,8 @@ namespace homeronet.Plugins
         {
             // TODO: Define per-client scopes if requested.
             Kernel.Bind<IPlugin>().To<Homero>().InSingletonScope();
+            Kernel.Bind<IPlugin>().To<Tone>().InSingletonScope();
+
         }
     }
 }

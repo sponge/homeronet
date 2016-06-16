@@ -1,7 +1,7 @@
 ﻿using homeronet.Client;
 using homeronet.EventArgs;
 using homeronet.Messages;
-using homeronet.Plugins;
+using homeronet.Plugin;
 using homeronet.Properties;
 using Newtonsoft.Json;
 using Ninject;

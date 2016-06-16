@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using homeronet.Client;
 using homeronet.Messages;
-using homeronet.Plugins;
 using Ninject;
 
 namespace homeronet.Plugin

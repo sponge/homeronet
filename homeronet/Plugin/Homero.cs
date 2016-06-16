@@ -1,6 +1,5 @@
 ﻿using System;
 using homeronet.Messages;
-using homeronet.Plugins;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
@@ -8,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using homeronet.Utility;
 
-namespace homeronet.plugins
+namespace homeronet.Plugin
 {
     public class Homero : IPlugin
     {
