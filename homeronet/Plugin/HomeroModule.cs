@@ -14,6 +14,7 @@ namespace homeronet.Plugin
             // TODO: Define per-client scopes if requested.
             Kernel.Bind<IPlugin>().To<Homero>().InSingletonScope();
             Kernel.Bind<IPlugin>().To<Tone>().InSingletonScope();
+            Kernel.Bind<IPlugin>().To<DiscordNowPlaying>().InSingletonScope();
 
         }
     }

@@ -122,6 +122,11 @@ namespace homeronet.Client
 
         public Version Version => new Version(0,0,1);
 
+        public Discord.DiscordClient RootClient
+        {
+            get { return _discordClient; }
+        }
+
         #endregion Properties
     }
 }
