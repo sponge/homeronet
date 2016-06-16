@@ -15,6 +15,6 @@ namespace homeronet.Plugins
 
         Task<IStandardMessage> HandleTextCommandInvocationAsync(ITextCommand command);
         List<string> RegisteredTextCommands { get; }
-        Task ProcessTextMessage(IStandardMessage message);
+        Task<IStandardMessage> ProcessTextMessage(IStandardMessage message);
     }
 }

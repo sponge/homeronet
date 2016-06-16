@@ -98,9 +98,9 @@
     <Compile Include="Messages\IStandardMessage.cs" />
     <Compile Include="Messages\ITextCommand.cs" />
     <Compile Include="Messages\IVoiceMessage.cs" />
-    <Compile Include="Plugins\Homero.cs" />
-    <Compile Include="Plugins\HomeroModule.cs" />
-    <Compile Include="Plugins\IPlugin.cs" />
+    <Compile Include="Plugin\Homero.cs" />
+    <Compile Include="Plugin\HomeroModule.cs" />
+    <Compile Include="Plugin\IPlugin.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -108,6 +108,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Utility\Logger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using homeronet.Client;
+using homeronet.EventArgs;
+using homeronet.Messages;
 using homeronet.Plugins;
 using Newtonsoft.Json;
 using Ninject;
@@ -23,8 +25,7 @@ namespace homeronet {
         public static Logger Log { get; private set; }
         private static void Main(string[] args)
         {
-            Log = LogManager.GetCurrentClassLogger();
-            
+            Log = LogManager.GetLogger("Homero");
             Log.Info("Homero.NET - Startup");
 
             Log.Debug("Building kernel");
@@ -52,6 +53,21 @@ namespace homeronet {
             Log.Debug("Binding Discord");
             Kernel.Bind<IClient>().To<DiscordClient>().InSingletonScope().WithParameter(new Parameter("ClientName", "DiscordClient", true));
 
+            Log.Info("Loading all plugins.");
+            foreach (IPlugin plugin in Kernel.GetAll<IPlugin>())
+            {
+                try
+                {
+                    Log.Info($"Starting ${plugin.GetType()}");
+                    plugin.Startup();
+                }
+                catch (Exception e)
+                {
+                    Log.Warn($"Error starting {plugin.GetType()}.");
+                    Log.Error(e);
+                }
+            }
+
             foreach (IClient client in Kernel.GetAll<IClient>())
             {
                 Log.Info($"Connecting {client.GetType()}.");
@@ -59,6 +75,7 @@ namespace homeronet {
                 {
                     client.Connect();
                     Log.Info($"{client.GetType()} connected.");
+                    client.MessageReceived += ClientOnMessageReceived;
                 }
                 catch (Exception e)
                 {
@@ -69,6 +86,41 @@ namespace homeronet {
 
             Log.Info("Homero running. Press any key to quit.");
             Console.ReadKey();
+        }
+
+        private static void ClientOnMessageReceived(object sender, MessageReceivedEventArgs messageReceivedEventArgs)
+        {
+            // Dispatch to all plugins we can.
+            foreach (IPlugin plugin in Kernel.GetAll<IPlugin>())
+            {
+
+                /* Standard Text distribution! */
+
+                // Get the new task.
+                Task<IStandardMessage> processTask = plugin.ProcessTextMessage(messageReceivedEventArgs.Message);
+
+                // Does the plugin even bother parsing?
+                if (processTask != null)
+                {
+                    // Setup callback handling
+                    processTask.ContinueWith(
+                    delegate (Task task, object o)
+                    {
+                        IClient client = o as IClient;
+                        if (client != null)
+                        {
+                            Task<IStandardMessage> castTask = task as Task<IStandardMessage>;
+                            if (castTask?.Result != null)
+                            {
+                                client.SendMessage(castTask.Result);
+                            }
+                        }
+                    }, sender);
+                    // Fire the root task!
+                    processTask.Start();
+                }
+ 
+            }
         }
     }
 }

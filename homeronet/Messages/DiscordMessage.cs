@@ -24,7 +24,7 @@ namespace homeronet.Messages
 
         public string Sender
         {
-            get { return _inner.User.Nickname; }
+            get { return _inner.User?.Nickname; }
         }
 
         public string Target
@@ -34,17 +34,17 @@ namespace homeronet.Messages
 
         public string Channel
         {
-            get { return _inner.Channel.Name; }
+            get { return _inner.Channel?.Name; }
         }
 
         public string Server
         {
-            get { return _inner.Server.Name; }
+            get { return _inner.Server?.Name; }
         }
 
         public bool IsPrivate
         {
-            get { return _inner.Channel.IsPrivate; }
+            get { return _inner.Channel == null || _inner.Channel.Name.StartsWith("@"); }
         }
 
         public Message InnerMessage

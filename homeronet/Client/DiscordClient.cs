@@ -67,17 +67,18 @@ namespace homeronet.Client
             return true; // uh why can't i get the connect result?
         }
 
+        /// <summary>
+        /// Sends the message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>Task.</returns>
         public async Task SendMessage(IStandardMessage message)
         {
             // Is it a PM or a public message?
             if (message.IsPrivate)
             {
-                User targetedUser = null;
-                foreach (Server server in _discordClient.Servers)
-                {
-                    targetedUser = server.Users.FirstOrDefault(x => x.Nickname == message.Sender);
-                }
-                var sendMessage = targetedUser?.SendMessage(message.Message);
+                var targetChannel = _discordClient.PrivateChannels.FirstOrDefault(x => x.Recipient.Name.Contains(message.Target));
+                var sendMessage = targetChannel?.SendMessage(message.Message);
                 if (sendMessage != null)
                     await sendMessage;
             }
