@@ -1,71 +1,163 @@
-﻿using DiscordSharp;
-using homeronet.plugins;
+﻿using homeronet.Client;
+using homeronet.EventArgs;
+using homeronet.Messages;
+using homeronet.Plugin;
+using homeronet.Properties;
+using Newtonsoft.Json;
+using Ninject;
+using Ninject.Parameters;
+using NLog;
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace homeronet {
+namespace homeronet
+{
+    public class Program
+    {
+        public static IKernel Kernel { get; private set; }
+        public static Logger Log { get; private set; }
 
-    internal class Program {
+        private static void Main(string[] args)
+        {
+            Log = LogManager.GetLogger("Homero");
+            Log.Info("Homero.NET - Startup");
 
-        private static void Main(string[] args) {
-            if (args.Length == 0) {
-                Console.WriteLine("Please specify your bot token on the commandline.");
-                Environment.Exit(1);
-            }
+            Log.Debug("Building kernel");
+            Kernel = new StandardKernel(new HomeroModule());
 
-            List<IPlugin> plugins = new List<IPlugin>();
-            Dictionary<string, IPlugin> commandTriggers = new Dictionary<string, IPlugin>();
-
-            DiscordClient client = new DiscordClient(args[0], true);
-
-            var assembly = Assembly.GetExecutingAssembly();
-            foreach (string pluginName in Properties.Settings.Default.PluginList) {
-                var pluginType = assembly.GetTypes().First(t => t.Name == pluginName);
-                IPlugin pluginInstance = (IPlugin)Activator.CreateInstance(pluginType);
-                pluginInstance.Startup(client);
-                plugins.Add(pluginInstance);
-
-                var trigger = pluginInstance.GetCommandTrigger();
-                if (trigger.Length > 0) {
-                    commandTriggers.Add(Properties.Settings.Default.CommandPrefix + trigger, pluginInstance);
-                }
-            }
-
-            client.Connected += (sender, e) => {
-                Console.WriteLine($"Connected! User: {e.User.Username}");
-            };
-
-            client.MessageReceived += (sender, e) => {
-                if (e.MessageText.StartsWith(Properties.Settings.Default.CommandPrefix)) {
-                    var parts = e.MessageText.Split(null);
-                    if (commandTriggers.ContainsKey(parts[0])) {
-                        commandTriggers[parts[0]].CommandTrigger(e);
+            Log.Debug("Building configuration factory");
+            Kernel.Bind<IClientConfiguration>().ToMethod((context =>
+            {
+                // TODO: Proper config factory.
+                IParameter clientNameParam = context.Parameters.FirstOrDefault(x => x.Name == "ClientName");
+                if (clientNameParam != null)
+                {
+                    string clientName = clientNameParam.GetValue(context, null) as string;
+                    using (StreamReader r = new StreamReader("config.json"))
+                    {
+                        // TODO: Strict contract
+                        string json = r.ReadToEnd();
+                        dynamic jsonConfig = JsonConvert.DeserializeObject<dynamic>(json);
+                        return new ClientConfiguration() { ApiKey = jsonConfig[clientName]["ApiKey"].ToString(), Username = jsonConfig[clientName]["Username"].ToString(), Password = jsonConfig[clientName]["Password"].ToString() };
                     }
                 }
-            };
+                return null;
+            }));
 
-            try {
-                client.SendLoginRequest();
-                client.Connect();
-            }
-            catch (Exception e) {
-                Console.WriteLine("Something went wrong!\n" + e.Message + "\nPress any key to close this window.");
+            Log.Debug("Binding Discord");
+            Kernel.Bind<IClient>().To<DiscordClient>().InSingletonScope().WithParameter(new Parameter("ClientName", "DiscordClient", true));
+
+            Log.Info("Loading all plugins.");
+            foreach (IPlugin plugin in Kernel.GetAll<IPlugin>())
+            {
+                try
+                {
+                    Log.Info($"Starting ${plugin.GetType()}");
+                    plugin.Startup();
+                }
+                catch (Exception e)
+                {
+                    Log.Warn($"Error starting {plugin.GetType()}.");
+                    Log.Error(e);
+                }
             }
 
+            foreach (IClient client in Kernel.GetAll<IClient>())
+            {
+                Log.Info($"Connecting {client.GetType()}.");
+                try
+                {
+                    client.Connect();
+                    Log.Info($"{client.GetType()} connected.");
+                    client.MessageReceived += ClientOnMessageReceived;
+                }
+                catch (Exception e)
+                {
+                    Log.Warn($"Error connecting {client.GetType()}.");
+                    Log.Error(e);
+                }
+            }
+
+            Log.Info("Homero running. Press any key to quit.");
             Console.ReadKey();
+        }
 
-            foreach (var plugin in plugins) {
-                plugin.Shutdown();
+        private static void ClientOnMessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+            // Is this a command?
+            if (e.Message.Message.StartsWith(Settings.Default.CommandPrefix))
+            {
+                // TODO: TextCommand constructor to auto-parse message.
+                TextCommand command = new TextCommand();
+                command.InnerMessage = e.Message;
+                string[] splitMsg = e.Message.Message.Split(' ');
+                command.Command = splitMsg[0].TrimStart(Settings.Default.CommandPrefix.ToCharArray());
+                if (splitMsg.Length > 1)
+                {
+                    command.Arguments = splitMsg.Skip(1).ToList();
+                }
+
+                // Dispatch to all applicable plugins.
+
+                // TODO: Reduce this to one kernel iteration for standard and plugin dispatch.
+                foreach (IPlugin plugin in Kernel.GetAll<IPlugin>())
+                {
+                    if (plugin.RegisteredTextCommands?.Contains(command.Command) == true)
+                    {
+                        // Check the implementation below for more info on how this works.
+                        Task<IStandardMessage> commandTask = plugin.ProcessTextCommand(command);
+                        if (commandTask != null)
+                        {
+                            commandTask.ContinueWith(
+                                delegate (Task task, object o)
+                                {
+                                    IClient client = o as IClient;
+                                    if (client != null)
+                                    {
+                                        Task<IStandardMessage> castTask = task as Task<IStandardMessage>;
+                                        if (castTask?.Result != null)
+                                        {
+                                            client.SendMessage(castTask.Result);
+                                        }
+                                    }
+                                }, sender);
+                            commandTask.Start();
+                        }
+                    }
+                }
             }
 
-            Environment.Exit(0);
+            // Dispatch to all plugins we can.
+            foreach (IPlugin plugin in Kernel.GetAll<IPlugin>())
+            {
+                /* Standard Text distribution! */
+
+                // Get the new task.
+                Task<IStandardMessage> processTask = plugin.ProcessTextMessage(e.Message);
+
+                // Does the plugin even bother parsing?
+                if (processTask != null)
+                {
+                    // Setup callback handling
+                    processTask.ContinueWith(
+                        delegate (Task task, object o)
+                        {
+                            IClient client = o as IClient;
+                            if (client != null)
+                            {
+                                Task<IStandardMessage> castTask = task as Task<IStandardMessage>;
+                                if (castTask?.Result != null)
+                                {
+                                    client.SendMessage(castTask.Result);
+                                }
+                            }
+                        }, sender);
+                    // Fire the root task!
+                    processTask.Start();
+                }
+            }
         }
     }
 }
