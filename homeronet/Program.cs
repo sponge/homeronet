@@ -111,51 +111,51 @@ namespace homeronet
                         if (commandTask != null)
                         {
                             commandTask.ContinueWith(
-                            delegate (Task task, object o)
-                            {
-                                IClient client = o as IClient;
-                                if (client != null)
+                                delegate (Task task, object o)
                                 {
-                                    Task<IStandardMessage> castTask = task as Task<IStandardMessage>;
-                                    if (castTask?.Result != null)
+                                    IClient client = o as IClient;
+                                    if (client != null)
                                     {
-                                        client.SendMessage(castTask.Result);
+                                        Task<IStandardMessage> castTask = task as Task<IStandardMessage>;
+                                        if (castTask?.Result != null)
+                                        {
+                                            client.SendMessage(castTask.Result);
+                                        }
                                     }
-                                }
-                            }, sender);
+                                }, sender);
                             commandTask.Start();
                         }
                     }
                 }
+            }
 
-                // Dispatch to all plugins we can.
-                foreach (IPlugin plugin in Kernel.GetAll<IPlugin>())
+            // Dispatch to all plugins we can.
+            foreach (IPlugin plugin in Kernel.GetAll<IPlugin>())
+            {
+                /* Standard Text distribution! */
+
+                // Get the new task.
+                Task<IStandardMessage> processTask = plugin.ProcessTextMessage(e.Message);
+
+                // Does the plugin even bother parsing?
+                if (processTask != null)
                 {
-                    /* Standard Text distribution! */
-
-                    // Get the new task.
-                    Task<IStandardMessage> processTask = plugin.ProcessTextMessage(e.Message);
-
-                    // Does the plugin even bother parsing?
-                    if (processTask != null)
-                    {
-                        // Setup callback handling
-                        processTask.ContinueWith(
-                            delegate (Task task, object o)
+                    // Setup callback handling
+                    processTask.ContinueWith(
+                        delegate (Task task, object o)
+                        {
+                            IClient client = o as IClient;
+                            if (client != null)
                             {
-                                IClient client = o as IClient;
-                                if (client != null)
+                                Task<IStandardMessage> castTask = task as Task<IStandardMessage>;
+                                if (castTask?.Result != null)
                                 {
-                                    Task<IStandardMessage> castTask = task as Task<IStandardMessage>;
-                                    if (castTask?.Result != null)
-                                    {
-                                        client.SendMessage(castTask.Result);
-                                    }
+                                    client.SendMessage(castTask.Result);
                                 }
-                            }, sender);
-                        // Fire the root task!
-                        processTask.Start();
-                    }
+                            }
+                        }, sender);
+                    // Fire the root task!
+                    processTask.Start();
                 }
             }
         }
