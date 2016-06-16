@@ -21,7 +21,7 @@ namespace homeronet.plugins
         {
         }
 
-        public Task<IStandardMessage> HandleTextCommandInvocationAsync(ITextCommand command)
+        public Task<IStandardMessage> ProcessTextCommand(ITextCommand command)
         {
             return new Task<IStandardMessage>(() =>
             {

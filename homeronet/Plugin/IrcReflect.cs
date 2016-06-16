@@ -20,7 +20,7 @@ namespace homeronet.Plugin
         {
         }
 
-        public Task<IStandardMessage> HandleTextCommandInvocationAsync(ITextCommand command)
+        public Task<IStandardMessage> ProcessTextCommand(ITextCommand command)
         {
             return null;
         }
@@ -30,17 +30,20 @@ namespace homeronet.Plugin
         {
             return new Task<IStandardMessage>(() =>
             {
-                if (message is DiscordMessage)
+                if (message is DiscordMessage && message.Channel.Contains("sa-minecraft"))
                 {
-                    if (message.Channel.Contains("sa-minecraft"))
+
+                    IClient client = Program.Kernel.Get<IrcClient>() as IClient;
+                    if (client != null)
                     {
-                        IrcClient client = Program.Kernel.Get<IrcClient>();
-                        if (client != null)
+                        client.SendMessage(new StandardMessage()
                         {
-                            // Do things
-                        }
+                            Message = $"<{message.Sender}> {message.Message}",
+                            Channel = "#sa-minecraft"
+                        });
                     }
                 }
+
                 return null;
             });
         }

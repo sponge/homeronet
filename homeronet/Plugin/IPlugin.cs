@@ -13,7 +13,7 @@ namespace homeronet.Plugins
         void Startup();
         void Shutdown();
 
-        Task<IStandardMessage> HandleTextCommandInvocationAsync(ITextCommand command);
+        Task<IStandardMessage> ProcessTextCommand(ITextCommand command);
         List<string> RegisteredTextCommands { get; }
         Task<IStandardMessage> ProcessTextMessage(IStandardMessage message);
     }

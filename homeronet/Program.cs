@@ -103,6 +103,34 @@ namespace homeronet {
                 {
                     command.Arguments = splitMsg.Skip(1).ToList();
                 }
+
+                // Dispatch to all applicable plugins.
+
+                // TODO: Reduce this to one kernel iteration for standard and plugin dispatch.
+                foreach (IPlugin plugin in Kernel.GetAll<IPlugin>())
+                {
+                    if (plugin.RegisteredTextCommands?.Contains(command.Command) == true)
+                    {
+                        // Check the implementation below for more info on how this works.
+                        Task<IStandardMessage> commandTask = plugin.ProcessTextCommand(command);
+                        if (commandTask != null)
+                        {
+                            commandTask.ContinueWith(
+                            delegate (Task task, object o)
+                            {
+                                IClient client = o as IClient;
+                                if (client != null)
+                                {
+                                    Task<IStandardMessage> castTask = task as Task<IStandardMessage>;
+                                    if (castTask?.Result != null)
+                                    {
+                                        client.SendMessage(castTask.Result);
+                                    }
+                                }
+                            }, sender);
+                            commandTask.Start();
+                        }
+                }
             }
 
             // Dispatch to all plugins we can.
