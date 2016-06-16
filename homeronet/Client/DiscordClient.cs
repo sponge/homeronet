@@ -77,7 +77,7 @@ namespace homeronet.Client
             // Is it a PM or a public message?
             if (message.IsPrivate)
             {
-                var targetChannel = _discordClient.PrivateChannels.FirstOrDefault(x => x.Recipient.Name.Contains(message.Target));
+                var targetChannel = _discordClient.PrivateChannels.FirstOrDefault(x => x.Name == message.Channel);
                 var sendMessage = targetChannel?.SendMessage(message.Message);
                 if (sendMessage != null)
                     await sendMessage;

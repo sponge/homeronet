@@ -24,7 +24,7 @@ namespace homeronet.Messages
 
         public string Sender
         {
-            get { return _inner.User?.Nickname; }
+            get { return _inner.User?.Name; }
         }
 
         public string Target
