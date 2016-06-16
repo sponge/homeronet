@@ -3,18 +3,22 @@ using homeronet.Messages;
 using homeronet.Plugins;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using homeronet.Utility;
 
 namespace homeronet.plugins
 {
     public class Homero : IPlugin
     {
+        private UriWebClient _webClient;
         private List<string> _registeredCommands = new List<string>() { "homero" };
         public void Startup()
 
         {
             Program.Log.Info("I startup, ola.");
+            _webClient = new UriWebClient();
         }
 
         public void Shutdown()
@@ -25,8 +29,18 @@ namespace homeronet.plugins
         {
             return new Task<IStandardMessage>(() =>
             {
-                Debug.WriteLine("Homero got a message.");
-
+                if (command.Command == "homero")
+                {
+                    _webClient.DownloadString("http://simpsons-latino.tumblr.com/random");
+                    return new StandardMessage()
+                    {
+                        Target = command.InnerMessage.Sender,
+                        IsPrivate = command.InnerMessage.IsPrivate,
+                        Channel = command.InnerMessage.Channel,
+                        Message = _webClient.ResponseUri.ToString(),
+                        Server = command.InnerMessage.Server
+                    };
+                }
                 return null;
             });
         }
