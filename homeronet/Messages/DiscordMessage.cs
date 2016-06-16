@@ -4,16 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using homeronet.Client;
 
 namespace homeronet.Messages
 {
     public class DiscordMessage : IStandardMessage
     {
         private Message _inner;
+        private IClient _sender;
 
-        public DiscordMessage(Message msg)
+        public DiscordMessage(IClient sender, Message msg)
         {
             _inner = msg;
+            _sender = sender;
         }
 
 
@@ -52,6 +55,14 @@ namespace homeronet.Messages
             get
             {
                 return _inner;
+            }
+        }
+
+        public IClient SendingClient
+        {
+            get
+            {
+                return _sender;
             }
         }
     }

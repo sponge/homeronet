@@ -42,10 +42,7 @@ namespace homeronet.Client
 
         private void DiscordClientOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
-#if DEBUG
-            Debug.WriteLine(messageEventArgs.Message);
-#endif
-            DiscordMessage message = new DiscordMessage(messageEventArgs.Message);
+            DiscordMessage message = new DiscordMessage(this, messageEventArgs.Message);
             MessageReceived?.Invoke(this, new MessageReceivedEventArgs(message));
         }
 

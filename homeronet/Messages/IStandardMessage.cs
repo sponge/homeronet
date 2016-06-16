@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using homeronet.Client;
 
 namespace homeronet.Messages
 {
@@ -14,6 +15,7 @@ namespace homeronet.Messages
         string Channel { get; }
         string Server { get; }
         bool IsPrivate { get; }
+        IClient SendingClient { get; }
     }
 
     class StandardMessage : IStandardMessage
@@ -24,5 +26,7 @@ namespace homeronet.Messages
         public string Channel { get; set; }
         public string Server { get; set; }
         public bool IsPrivate { get; set; }
+        public IClient SendingClient { get; set; }
+
     }
 }

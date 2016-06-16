@@ -1,7 +1,9 @@
-﻿using homeronet.Messages;
+﻿using System;
+using homeronet.Messages;
 using homeronet.Plugins;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace homeronet.plugins
@@ -9,7 +11,6 @@ namespace homeronet.plugins
     public class Homero : IPlugin
     {
         private List<string> _registeredCommands = new List<string>() { "homero" };
-
         public void Startup()
 
         {
