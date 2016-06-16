@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using homeronet.Client;
+﻿using homeronet.Client;
 using homeronet.EventArgs;
 using homeronet.Messages;
 using homeronet.Plugins;
@@ -17,13 +7,18 @@ using Newtonsoft.Json;
 using Ninject;
 using Ninject.Parameters;
 using NLog;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace homeronet {
-
+namespace homeronet
+{
     public class Program
     {
         public static IKernel Kernel { get; private set; }
         public static Logger Log { get; private set; }
+
         private static void Main(string[] args)
         {
             Log = LogManager.GetLogger("Homero");
@@ -130,39 +125,38 @@ namespace homeronet {
                             }, sender);
                             commandTask.Start();
                         }
+                    }
                 }
-            }
 
-            // Dispatch to all plugins we can.
-            foreach (IPlugin plugin in Kernel.GetAll<IPlugin>())
-            {
-
-                /* Standard Text distribution! */
-
-                // Get the new task.
-                Task<IStandardMessage> processTask = plugin.ProcessTextMessage(e.Message);
-
-                // Does the plugin even bother parsing?
-                if (processTask != null)
+                // Dispatch to all plugins we can.
+                foreach (IPlugin plugin in Kernel.GetAll<IPlugin>())
                 {
-                    // Setup callback handling
-                    processTask.ContinueWith(
-                    delegate (Task task, object o)
+                    /* Standard Text distribution! */
+
+                    // Get the new task.
+                    Task<IStandardMessage> processTask = plugin.ProcessTextMessage(e.Message);
+
+                    // Does the plugin even bother parsing?
+                    if (processTask != null)
                     {
-                        IClient client = o as IClient;
-                        if (client != null)
-                        {
-                            Task<IStandardMessage> castTask = task as Task<IStandardMessage>;
-                            if (castTask?.Result != null)
+                        // Setup callback handling
+                        processTask.ContinueWith(
+                            delegate (Task task, object o)
                             {
-                                client.SendMessage(castTask.Result);
-                            }
-                        }
-                    }, sender);
-                    // Fire the root task!
-                    processTask.Start();
+                                IClient client = o as IClient;
+                                if (client != null)
+                                {
+                                    Task<IStandardMessage> castTask = task as Task<IStandardMessage>;
+                                    if (castTask?.Result != null)
+                                    {
+                                        client.SendMessage(castTask.Result);
+                                    }
+                                }
+                            }, sender);
+                        // Fire the root task!
+                        processTask.Start();
+                    }
                 }
- 
             }
         }
     }

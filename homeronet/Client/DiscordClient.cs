@@ -40,17 +40,10 @@ namespace homeronet.Client
 
         }
 
-        private void DiscordClientOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
-        {
-            DiscordMessage message = new DiscordMessage(this, messageEventArgs.Message);
-            MessageReceived?.Invoke(this, new MessageReceivedEventArgs(message));
-        }
 
         #endregion Constructors
 
         #region Events
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
@@ -99,6 +92,12 @@ namespace homeronet.Client
             // Not used....yet.
         }
 
+        private void DiscordClientOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
+        {
+            DiscordMessage message = new DiscordMessage(this, messageEventArgs.Message);
+            MessageReceived?.Invoke(this, new MessageReceivedEventArgs(message));
+        }
+
         #endregion Methods
 
         #region Properties
@@ -116,6 +115,12 @@ namespace homeronet.Client
             get { return _clientConfiguration; }
             set { _clientConfiguration = value; }
         }
+
+        public string Name => "Discord.NET Client";
+
+        public string Description => "Client that connects to Discord using the Discord.NET library.";
+
+        public Version Version => new Version(0,0,1);
 
         #endregion Properties
     }
