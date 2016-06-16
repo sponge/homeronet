@@ -1,73 +1,74 @@
-﻿using DiscordSharp;
-using homeronet.plugins;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using homeronet.Client;
+using homeronet.Plugins;
+using Newtonsoft.Json;
+using Ninject;
+using Ninject.Parameters;
+using NLog;
 
 namespace homeronet {
 
-    internal class Program {
+    public class Program
+    {
+        public static IKernel Kernel { get; private set; }
+        public static Logger Log { get; private set; }
+        private static void Main(string[] args)
+        {
+            Log = LogManager.GetCurrentClassLogger();
+            
+            Log.Info("Homero.NET - Startup");
 
-        private static void Main(string[] args) {
-            /*
-            if (args.Length == 0) {
-                Console.WriteLine("Please specify your bot token on the commandline.");
-                Environment.Exit(1);
-            }
+            Log.Debug("Building kernel");
+            Kernel = new StandardKernel(new HomeroModule());
 
-            List<IPlugin> plugins = new List<IPlugin>();
-            Dictionary<string, IPlugin> commandTriggers = new Dictionary<string, IPlugin>();
-
-            DiscordClient client = new DiscordClient(args[0], true);
-
-            var assembly = Assembly.GetExecutingAssembly();
-            foreach (string pluginName in Properties.Settings.Default.PluginList) {
-                var pluginType = assembly.GetTypes().First(t => t.Name == pluginName);
-                IPlugin pluginInstance = (IPlugin)Activator.CreateInstance(pluginType);
-                pluginInstance.Startup(client);
-                plugins.Add(pluginInstance);
-
-                var trigger = pluginInstance.GetCommandTrigger();
-                if (trigger.Length > 0) {
-                    commandTriggers.Add(Properties.Settings.Default.CommandPrefix + trigger, pluginInstance);
-                }
-            }
-
-            client.Connected += (sender, e) => {
-                Console.WriteLine($"Connected! User: {e.User.Username}");
-            };
-
-            client.MessageReceived += (sender, e) => {
-                if (e.MessageText.StartsWith(Properties.Settings.Default.CommandPrefix)) {
-                    var parts = e.MessageText.Split(null);
-                    if (commandTriggers.ContainsKey(parts[0])) {
-                        commandTriggers[parts[0]].CommandTrigger(e);
+            Log.Debug("Building configuration factory");
+            Kernel.Bind<IClientConfiguration>().ToMethod((context =>
+            {
+                // TODO: Proper config factory.
+                IParameter clientNameParam = context.Parameters.FirstOrDefault(x => x.Name == "ClientName");
+                if (clientNameParam != null)
+                {
+                    string clientName = clientNameParam.GetValue(context, null) as string;
+                    using (StreamReader r = new StreamReader("config.json"))
+                    {
+                        // TODO: Strict contract
+                        string json = r.ReadToEnd();
+                        dynamic jsonConfig = JsonConvert.DeserializeObject<dynamic>(json);
+                        return new ClientConfiguration() { ApiKey = jsonConfig[clientName]["ApiKey"].ToString(), Username = jsonConfig[clientName]["Username"].ToString(), Password = jsonConfig[clientName]["Password"].ToString() };
                     }
                 }
-            };
+                return null;
+            }));
 
-            try {
-                client.SendLoginRequest();
-                client.Connect();
-            }
-            catch (Exception e) {
-                Console.WriteLine("Something went wrong!\n" + e.Message + "\nPress any key to close this window.");
+            Log.Debug("Binding Discord");
+            Kernel.Bind<IClient>().To<DiscordClient>().InSingletonScope().WithParameter(new Parameter("ClientName", "DiscordClient", true));
+
+            foreach (IClient client in Kernel.GetAll<IClient>())
+            {
+                Log.Info($"Connecting {client.GetType()}.");
+                try
+                {
+                    client.Connect();
+                    Log.Info($"{client.GetType()} connected.");
+                }
+                catch (Exception e)
+                {
+                    Log.Warn($"Error connecting {client.GetType()}.");
+                    Log.Error(e);
+                }
             }
 
+            Log.Info("Homero running. Press any key to quit.");
             Console.ReadKey();
-
-            foreach (var plugin in plugins) {
-                plugin.Shutdown();
-            }
-
-            Environment.Exit(0);
-            */
         }
     }
 }

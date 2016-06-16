@@ -16,6 +16,6 @@ namespace homeronet.Client
         Task SendMessage(IStandardMessage message);
         bool IsConnected { get; }
         IClientConfiguration ClientConfiguration { get; set; }
-        event EventHandler<MessageReceivedEventArgs> ConnectionStatusChanged;
+        event EventHandler<MessageReceivedEventArgs> MessageReceived;
      }
 }

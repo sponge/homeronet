@@ -2,6 +2,7 @@
 using homeronet.Messages;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -14,6 +15,7 @@ namespace homeronet.Client
     {
 
         private Discord.DiscordClient _discordClient;
+        private IClientConfiguration _clientConfiguration;
 
         #region Constructors
 
@@ -34,6 +36,17 @@ namespace homeronet.Client
                 x.AppUrl = "https://goodass.dog";
             });
 
+            _discordClient.MessageReceived += DiscordClientOnMessageReceived;
+
+        }
+
+        private void DiscordClientOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
+        {
+#if DEBUG
+            Debug.WriteLine(messageEventArgs.Message);
+#endif
+            DiscordMessage message = new DiscordMessage(messageEventArgs.Message);
+            MessageReceived?.Invoke(this, new MessageReceivedEventArgs(message));
         }
 
         #endregion Constructors
@@ -42,7 +55,7 @@ namespace homeronet.Client
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public event EventHandler<MessageReceivedEventArgs> ConnectionStatusChanged;
+        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
         #endregion Events
 
@@ -102,15 +115,8 @@ namespace homeronet.Client
 
         public IClientConfiguration ClientConfiguration
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get { return _clientConfiguration; }
+            set { _clientConfiguration = value; }
         }
 
         #endregion Properties
