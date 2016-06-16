@@ -12,6 +12,7 @@ using homeronet.Client;
 using homeronet.EventArgs;
 using homeronet.Messages;
 using homeronet.Plugins;
+using homeronet.Properties;
 using Newtonsoft.Json;
 using Ninject;
 using Ninject.Parameters;
@@ -88,8 +89,22 @@ namespace homeronet {
             Console.ReadKey();
         }
 
-        private static void ClientOnMessageReceived(object sender, MessageReceivedEventArgs messageReceivedEventArgs)
+        private static void ClientOnMessageReceived(object sender, MessageReceivedEventArgs e)
         {
+            // Is this a command?
+            if (e.Message.Message.StartsWith(Settings.Default.CommandPrefix))
+            {
+                // TODO: TextCommand constructor to auto-parse message.
+                TextCommand command = new TextCommand();
+                command.InnerMessage = e.Message;
+                string[] splitMsg = e.Message.Message.Split(' ');
+                command.Command = splitMsg[0].TrimStart(Settings.Default.CommandPrefix.ToCharArray());
+                if (splitMsg.Length > 1)
+                {
+                    command.Arguments = splitMsg.Skip(1).ToList();
+                }
+            }
+
             // Dispatch to all plugins we can.
             foreach (IPlugin plugin in Kernel.GetAll<IPlugin>())
             {
@@ -97,7 +112,7 @@ namespace homeronet {
                 /* Standard Text distribution! */
 
                 // Get the new task.
-                Task<IStandardMessage> processTask = plugin.ProcessTextMessage(messageReceivedEventArgs.Message);
+                Task<IStandardMessage> processTask = plugin.ProcessTextMessage(e.Message);
 
                 // Does the plugin even bother parsing?
                 if (processTask != null)

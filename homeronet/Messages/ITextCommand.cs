@@ -12,4 +12,11 @@ namespace homeronet.Messages
         string Command { get; }
         List<string> Arguments { get; }
     }
+
+    class TextCommand : ITextCommand
+    {
+        public IStandardMessage InnerMessage { get; set; }
+        public string Command { get; set; }
+        public List<string> Arguments { get; set; }
+    }
 }
