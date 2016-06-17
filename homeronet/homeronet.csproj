@@ -104,6 +104,7 @@
     <Compile Include="Plugin\HomeroModule.cs" />
     <Compile Include="Plugin\IPlugin.cs" />
     <Compile Include="Plugin\IrcReflect.cs" />
+    <Compile Include="Plugin\Reddit.cs" />
     <Compile Include="Plugin\Tone.cs" />
     <Compile Include="Plugin\Trek.cs" />
     <Compile Include="Program.cs" />
