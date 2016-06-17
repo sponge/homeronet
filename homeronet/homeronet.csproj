@@ -98,6 +98,7 @@
     <Compile Include="Messages\IStandardMessage.cs" />
     <Compile Include="Messages\ITextCommand.cs" />
     <Compile Include="Messages\IVoiceMessage.cs" />
+    <Compile Include="Plugin\CurrencyConverter.cs" />
     <Compile Include="Plugin\DiscordNowPlaying.cs" />
     <Compile Include="Plugin\Fortune.cs" />
     <Compile Include="Plugin\Homero.cs" />
