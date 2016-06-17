@@ -99,6 +99,7 @@
     <Compile Include="Messages\ITextCommand.cs" />
     <Compile Include="Messages\IVoiceMessage.cs" />
     <Compile Include="Plugin\DiscordNowPlaying.cs" />
+    <Compile Include="Plugin\Fortune.cs" />
     <Compile Include="Plugin\Homero.cs" />
     <Compile Include="Plugin\HomeroModule.cs" />
     <Compile Include="Plugin\IPlugin.cs" />
@@ -117,6 +118,24 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\business.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\deepthoughts.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\fatgoon.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\jerk.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\lilpp_list.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\trolldb.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="App.config" />
     <Content Include="config.json" />
     <Content Include="NLog.config">
