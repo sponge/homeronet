@@ -35,6 +35,7 @@ namespace homeronet.Plugin {
                 var response = "nope";
                 string character, count;
 
+                // TODO: i didn't realize we already have command arguments whoops
                 var argv = command.InnerMessage.Message.Split();
 
                 // if character is specified and it's valid, use it, otherwise random

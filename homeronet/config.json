@@ -1,7 +1,19 @@
-{  
-   "DiscordClient":{  
-      "Username":"Homero",
-      "Password":"NA",
-      "ApiKey":"NA"
-   }
+{
+  "DiscordClient": {
+    "Username": "Homero",
+    "Password": "NA",
+    "ApiKey": "NA"
+  },
+
+  "Forecast.IO": {
+    "Username": "",
+    "Password": "",
+    "ApiKey": ""
+  },
+
+  "GoogleGeocode": {
+    "Username": "",
+    "Password": "",
+    "ApiKey": ""
+  }
 }

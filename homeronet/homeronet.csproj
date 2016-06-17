@@ -37,6 +37,14 @@
       <HintPath>..\packages\Discord.Net.0.9.3.1\lib\net45\Discord.Net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Forecast.io.45, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Forecast.io.1.0.9\lib\net45\Forecast.io.45.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GeocodeSharp, Version=1.3.0.0, Culture=neutral, PublicKeyToken=1ae1b40d2ef46f2d, processorArchitecture=MSIL">
+      <HintPath>..\packages\GeocodeSharp.1.3.0.0\lib\net45\GeocodeSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
       <Private>True</Private>
@@ -98,6 +106,7 @@
     <Compile Include="Messages\IStandardMessage.cs" />
     <Compile Include="Messages\ITextCommand.cs" />
     <Compile Include="Messages\IVoiceMessage.cs" />
+    <Compile Include="Plugin\Weather.cs" />
     <Compile Include="Plugin\DiscordNowPlaying.cs" />
     <Compile Include="Plugin\Fortune.cs" />
     <Compile Include="Plugin\Homero.cs" />
