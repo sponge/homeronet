@@ -15,6 +15,7 @@ namespace homeronet.Plugin {
             Kernel.Bind<IPlugin>().To<Tone>().InSingletonScope();
             Kernel.Bind<IPlugin>().To<DiscordNowPlaying>().InSingletonScope();
             Kernel.Bind<IPlugin>().To<Fortune>().InSingletonScope();
+            Kernel.Bind<IPlugin>().To<Trek>().InSingletonScope();
         }
     }
 }
