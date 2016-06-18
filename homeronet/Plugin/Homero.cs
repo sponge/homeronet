@@ -30,7 +30,7 @@ namespace homeronet.Plugin {
         public Task<IStandardMessage> ProcessTextCommand(ITextCommand command) {
             return new Task<IStandardMessage>(() => {
                 if (_tumblrMap.ContainsKey(command.Command)) {
-                    _webClient.DownloadString("http://" + _tumblrMap[command.Command] + ".tumblr.com/random");
+                    _webClient.DownloadString($"http://{_tumblrMap[command.Command]}.tumblr.com/random");
                     return command.InnerMessage.CreateResponse(_webClient.ResponseUri?.ToString());
                 }
                 return null;
