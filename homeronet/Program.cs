@@ -5,8 +5,6 @@ using homeronet.Plugin;
 using homeronet.Properties;
 using Newtonsoft.Json;
 using Ninject;
-using Ninject.Parameters;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,55 +18,54 @@ namespace homeronet
     public class Program
     {
         public static IKernel Kernel { get; private set; }
-        public static Logger Log { get; private set; }
 
+        private static ILogger Logger { get; set; }
         private static void Main(string[] args)
         {
-            Log = LogManager.GetLogger("Homero");
-            Log.Info("Homero.NET - Startup");
+            Console.WriteLine("Starting up logger and Homero core.");
+            Kernel = new StandardKernel();
+            Kernel.Bind<ILogger>().ToMethod(context => LoggerFactory.Instance.GetLogger(context.Request?.Target?.Member?.DeclaringType?.Name));
+            Logger = Kernel.Get<ILogger>();
+            Logger.Info("Logger loaded.");
 
-            Log.Debug("Building kernel");
-            Kernel = new StandardKernel(new HomeroModule());
-
-
-            Log.Debug("Setting up Config factory");
+            Logger.Debug("Setting up Config factory");
             Kernel.Bind<IConfiguration>().ToMethod(context => ConfigurationFactory.Instance.GetConfiguration(context.Request?.Target?.Member?.DeclaringType?.Name));
 
-            Log.Debug("Binding Discord");
+            Logger.Debug("Binding Discord");
             Kernel.Bind<IClient>().To<DiscordClient>().InSingletonScope();
 
-            Log.Info("Loading all plugins.");
+            Logger.Info("Loading all plugins.");
             foreach (IPlugin plugin in Kernel.GetAll<IPlugin>())
             {
                 try
                 {
-                    Log.Info($"Starting ${plugin.GetType()}");
+                    Logger.Info($"Starting ${plugin.GetType()}");
                     plugin.Startup();
                 }
                 catch (Exception e)
                 {
-                    Log.Warn($"Error starting {plugin.GetType()}.");
-                    Log.Error(e);
+                    Logger.Warn($"Error starting {plugin.GetType()}.");
+                    Logger.Error(e);
                 }
             }
 
             foreach (IClient client in Kernel.GetAll<IClient>())
             {
-                Log.Info($"Connecting {client.GetType()}.");
+                Logger.Info($"Connecting {client.GetType()}.");
                 try
                 {
                     client.Connect();
-                    Log.Info($"{client.GetType()} connected.");
+                    Logger.Info($"{client.GetType()} connected.");
                     client.MessageReceived += ClientOnMessageReceived;
                 }
                 catch (Exception e)
                 {
-                    Log.Warn($"Error connecting {client.GetType()}.");
-                    Log.Error(e);
+                    Logger.Warn($"Error connecting {client.GetType()}.");
+                    Logger.Error(e);
                 }
             }
 
-            Log.Info("Homero running. Press any key to quit.");
+            Logger.Info("Homero running. Press any key to quit.");
             Console.ReadKey();
         }
 

@@ -36,12 +36,17 @@ namespace homeronet.Services
 
         public IConfiguration GetConfiguration(string ClassType)
         {
+            if (ClassType == null)
+            {
+                ClassType = "Core";
+            }
+
             if (_backedConfigurations.ContainsKey(ClassType))
             {
                 return _backedConfigurations[ClassType];
             }
 
-            IConfiguration config = new JsonConfiguration(ClassType + ".json") as IConfiguration;
+            IConfiguration config = new JsonConfiguration(ClassType + ".json");
             _backedConfigurations.Add(ClassType, config);
             return config;
         }

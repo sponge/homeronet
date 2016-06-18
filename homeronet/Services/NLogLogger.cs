@@ -10,9 +10,9 @@ namespace homeronet.Services
     public class NLogLogger : ILogger
     {
         private readonly Logger _logger;
-        public NLogLogger()
+        public NLogLogger(string loggerName)
         {
-            _logger = LogManager.GetLogger("Homero");
+            _logger = LogManager.GetLogger(loggerName);
         }
         public void Info(object message, string callingMethod = null)
         {

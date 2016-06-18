@@ -6,21 +6,27 @@ using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Discord.Logging;
 
 namespace homeronet.Plugin {
 
     public class Homero : IPlugin {
         private UriWebClient _webClient;
         private List<string> _registeredCommands = new List<string>() { "homero", "dog", "realbusinessmen" };
-
+        private ILogger _logger;
         private Dictionary<String, String> _tumblrMap = new Dictionary<String, String>() {
             {"homero", "simpsons-latino"},
             {"dog", "goodassdog"},
             {"realbusinessmen", "realbusinessmen"}
         };
 
+        public Homero(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         public void Startup() {
-            Program.Log.Info("I startup, ola.");
+            _logger.Info("I startup, ola.");
             _webClient = new UriWebClient();
         }
 
