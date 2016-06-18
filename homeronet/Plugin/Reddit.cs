@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net;
+using Newtonsoft.Json.Linq;
 using homeronet.Messages;
 using homeronet.Utility;
-using Newtonsoft.Json.Linq;
 
 namespace homeronet.Plugin
 {
@@ -16,7 +17,7 @@ namespace homeronet.Plugin
             public Func<string, string> FormatMessage { get; set; }
         }
 
-        private UriWebClient _webClient;
+        private WebClient _webClient;
         private Dictionary<string, RedditCommand> _commandForName = new Dictionary<string, RedditCommand>()
         {
             {
@@ -44,7 +45,7 @@ namespace homeronet.Plugin
 
         public void Startup()
         {
-            _webClient = new UriWebClient();
+            _webClient = new WebClient();
         }
 
         public List<string> RegisteredTextCommands

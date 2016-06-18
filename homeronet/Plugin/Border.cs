@@ -1,16 +1,16 @@
-﻿using System;
+﻿using homeronet.Client;
+using homeronet.Messages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using homeronet.Client;
-using homeronet.Messages;
 
 namespace homeronet.Plugin
 {
     public class Border : IPlugin
     {
-        private int _maxWidth = 40;
+        private const int BORDER_MAX_WIDTH = 40;
 
         private List<string> WrapText(string text, int maxWidth)
         {
@@ -25,7 +25,6 @@ namespace homeronet.Plugin
                 // if we will be too wide, add the line to the output list and start a new one
                 if (currentLine.Length + word.Length + 1 > maxWidth)
                 {
-
                     if (currentLine.Length > 0)
                     {
                         wrappedText.Add(currentLine.ToString());
@@ -141,7 +140,7 @@ namespace homeronet.Plugin
             return new Task<IStandardMessage>(() =>
             {
                 string message = String.Join(" ", command.Arguments);
-                List<string> wrappedText = WrapText(message, _maxWidth);
+                List<string> wrappedText = WrapText(message, BORDER_MAX_WIDTH );
                 List<string> outputLines = new List<string>();
 
                 if (command.Command == "rip")
@@ -166,13 +165,14 @@ namespace homeronet.Plugin
         public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message)
         {
             return null;
-        } 
+        }
 
         public void Shutdown()
         {
         }
 
         #region utility class
+
         private class BorderedLine
         {
             public string Left { get; set; }
@@ -197,6 +197,7 @@ namespace homeronet.Plugin
                 return text.PadLeft(gapToFill / 2 + text.Length).PadRight(width);
             }
         }
-        #endregion
+
+        #endregion utility class
     }
 }
