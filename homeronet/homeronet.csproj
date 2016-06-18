@@ -99,6 +99,7 @@
     <Compile Include="Messages\ITextCommand.cs" />
     <Compile Include="Messages\IVoiceMessage.cs" />
     <Compile Include="Plugin\Currency.cs" />
+    <Compile Include="Plugin\Beats.cs" />
     <Compile Include="Plugin\DiscordNowPlaying.cs" />
     <Compile Include="Plugin\Fortune.cs" />
     <Compile Include="Plugin\Homero.cs" />
@@ -107,8 +108,13 @@
     <Compile Include="Plugin\IrcReflect.cs" />
     <Compile Include="Plugin\Reddit.cs" />
     <Compile Include="Plugin\Border.cs" />
+    <Compile Include="Plugin\Pepito.cs" />
+    <Compile Include="Plugin\SBEmail.cs" />
+    <Compile Include="Plugin\Temperature.cs" />
+    <Compile Include="Plugin\Thinker.cs" />
     <Compile Include="Plugin\Tone.cs" />
     <Compile Include="Plugin\Trek.cs" />
+    <Compile Include="Plugin\YeahWoo.cs" />
     <Compile Include="Plugin\YouTube.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
