@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using homeronet.Services;
 using Ninject.Activation;
 
 namespace homeronet
@@ -20,7 +21,6 @@ namespace homeronet
     {
         public static IKernel Kernel { get; private set; }
         public static Logger Log { get; private set; }
-        public static AuthenticationConfigurationRoot AuthConfigRoot { get; private set; }
 
         private static void Main(string[] args)
         {
@@ -30,21 +30,12 @@ namespace homeronet
             Log.Debug("Building kernel");
             Kernel = new StandardKernel(new HomeroModule());
 
-            Log.Info("Reading client authentication configuration file..");
-            AuthConfigRoot = new AuthenticationConfigurationRoot();
-            AuthConfigRoot.Clients = JsonConvert.DeserializeObject<Dictionary<string, ClientAuthenticationConfiguration>> (File.ReadAllText(@"clientauth.json"));
 
-            if (AuthConfigRoot.Clients == null)
-            {
-                Log.Error("Configuration root could not load.");
-                Console.ReadKey();
-            }
-
-            Log.Debug("Building configuration factory");
-            Kernel.Bind<IClientAuthenticationConfiguration>().ToMethod(GetAuthConfiguration);
+            Log.Debug("Setting up Config factory");
+            Kernel.Bind<IConfiguration>().ToMethod(context => ConfigurationFactory.Instance.GetConfiguration(context.Request?.Target?.Member?.DeclaringType?.Name));
 
             Log.Debug("Binding Discord");
-            Kernel.Bind<IClient>().To<DiscordClient>().InSingletonScope().WithParameter(new Parameter("ClientName", "DiscordClient", true));
+            Kernel.Bind<IClient>().To<DiscordClient>().InSingletonScope();
 
             Log.Info("Loading all plugins.");
             foreach (IPlugin plugin in Kernel.GetAll<IPlugin>())
@@ -79,26 +70,6 @@ namespace homeronet
 
             Log.Info("Homero running. Press any key to quit.");
             Console.ReadKey();
-        }
-
-        private static ClientAuthenticationConfiguration GetAuthConfiguration(IContext context)
-        {
-            // TODO: Proper config factory.
-            IParameter clientNameParam = context.Parameters.FirstOrDefault(x => x.Name == "ClientName");
-            if (clientNameParam != null)
-            {
-                string clientName = clientNameParam.GetValue(context, null) as string;
-                if (!String.IsNullOrEmpty(clientName) && AuthConfigRoot.Clients.ContainsKey(clientName))
-                {
-                    return AuthConfigRoot.Clients[clientName];
-                }
-                else
-                {
-                    Log.Warn("A client asked for auth details without a client name! Returning empty config.");
-                    return new ClientAuthenticationConfiguration();
-                }
-            }
-            return null;
         }
 
         private static void ClientOnMessageReceived(object sender, MessageReceivedEventArgs e)

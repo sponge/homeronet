@@ -87,10 +87,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client\AuthenticationConfigurationRoot.cs" />
     <Compile Include="Client\DiscordClient.cs" />
     <Compile Include="Client\IClient.cs" />
-    <Compile Include="Client\IClientAuthenticationConfiguration.cs" />
     <Compile Include="Client\IrcClient.cs" />
     <Compile Include="Client\SlackClient.cs" />
     <Compile Include="Client\TwitchClient.cs" />
@@ -113,6 +111,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Services\IConfiguration.cs" />
+    <Compile Include="Services\IConfigurationFactory.cs" />
+    <Compile Include="Services\ILogger.cs" />
+    <Compile Include="Services\Configuration\JsonConfiguration.cs" />
+    <Compile Include="Services\NLogLogger.cs" />
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Utility\UriWebClient.cs">
       <SubType>Component</SubType>

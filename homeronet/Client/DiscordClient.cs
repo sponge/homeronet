@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.API.Client;
+using homeronet.Services;
 using User = Discord.User;
 
 namespace homeronet.Client
@@ -15,17 +16,18 @@ namespace homeronet.Client
     {
 
         private Discord.DiscordClient _discordClient;
-        private IClientAuthenticationConfiguration _clientAuthenticationConfiguration;
+        private IConfiguration _config;
 
         #region Constructors
 
-        public DiscordClient(IClientAuthenticationConfiguration config)
+        public DiscordClient(IConfiguration config)
         {
-            ClientAuthenticationConfiguration = config;
+            _config = config;
 
-            if (String.IsNullOrEmpty(ClientAuthenticationConfiguration.ApiKey))
+            if (String.IsNullOrEmpty(_config.GetValue<string>("key")))
             {
-                throw new Exception("No API key specified.");
+                _config.SetValue("key","THISISNOTAREALAPIKEY");
+                throw new Exception("No API key specified. Created a default file for editing.");
             }
 
 
@@ -53,7 +55,7 @@ namespace homeronet.Client
 
         public async Task<bool> Connect()
         {
-            await _discordClient.Connect(ClientAuthenticationConfiguration.ApiKey);
+            await _discordClient.Connect(_config.GetValue<string>("key"));
             return true; // uh why can't i get the connect result?
         }
 
@@ -112,12 +114,6 @@ namespace homeronet.Client
             {
                 return _discordClient.State == ConnectionState.Connected;
             }
-        }
-
-        public IClientAuthenticationConfiguration ClientAuthenticationConfiguration
-        {
-            get { return _clientAuthenticationConfiguration; }
-            set { _clientAuthenticationConfiguration = value; }
         }
 
         public string Name => "Discord.NET Client";

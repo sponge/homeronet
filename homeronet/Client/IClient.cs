@@ -19,7 +19,6 @@ namespace homeronet.Client
         Task<bool> Connect();
         Task SendMessage(IStandardMessage message);
         bool IsConnected { get; }
-        IClientAuthenticationConfiguration ClientAuthenticationConfiguration { get; set; }
         event EventHandler<MessageReceivedEventArgs> MessageReceived;
      }
 }

@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using NLog;
+
+namespace homeronet.Services
+{
+    public class NLogLogger : ILogger
+    {
+        private readonly Logger _logger;
+        public NLogLogger()
+        {
+            _logger = LogManager.GetLogger("Homero");
+        }
+        public void Info(object message, string callingMethod = null)
+        {
+            _logger.Info(message.ToString);
+        }
+
+        public void Warn(object message, string callingMethod = null)
+        {
+            _logger.Warn(message.ToString);
+        }
+
+        public void Debug(object message, string callingMethod = null)
+        {
+            _logger.Debug(message.ToString);
+        }
+
+        public void Error(object message, string callingMethod = null)
+        {
+            _logger.Error(message.ToString);
+        }
+    }
+}
