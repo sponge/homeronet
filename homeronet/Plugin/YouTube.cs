@@ -7,9 +7,6 @@ using Ninject;
 using Ninject.Parameters;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace homeronet.Plugin {
@@ -57,7 +54,7 @@ namespace homeronet.Plugin {
 
             var items = (JArray)results.SelectToken("items");
             var rnd = _random.Next(items.Count);
-            string videoId = results.SelectToken("items[" + rnd + "].id.videoId").ToString();
+            string videoId = results.SelectToken($"items[{rnd}].id.videoId").ToString();
 
             var videoJson = _webClient.DownloadString(string.Format(_infoUrl, videoId, _youtubeConfig.ApiKey));
             var videoInfo = JsonConvert.DeserializeObject<JObject>(videoJson);
@@ -70,7 +67,7 @@ namespace homeronet.Plugin {
             ret.viewCount = videoInfo.SelectToken("items[0].statistics.viewCount")?.ToString();
             ret.channelTitle = videoInfo.SelectToken("items[0].snippet.channelTitle")?.ToString();
             ret.publishedAt = videoInfo.SelectToken("items[0].snippet.publishedAt")?.ToString();
-            ret.videoUrl = "http://youtu.be/" + videoId;
+            ret.videoUrl = $"http://youtu.be/{videoId}";
 
             return ret;
         }
@@ -81,22 +78,23 @@ namespace homeronet.Plugin {
         public Task<IStandardMessage> ProcessTextCommand(ITextCommand command) {
             return new Task<IStandardMessage>(() => {
                 if (command.Command == "youtube" || command.Command == "yt") {
-                    if (command.Arguments == null || command.Arguments.Count == 0) {
+                    // TODO: update this with the proper check once lilpp decides on api design
+                    if (command.Arguments?.Count < 1) {
                         return command.InnerMessage.CreateResponse("youtube <query> -- returns the first YouTube search result for <query>");
                     }
                     else {
                         var vid = SearchVideo(string.Join(" ", command.Arguments), false);
                         // TODO: flesh this out, return a message for irc, and a message for discord that has less and markdown formatting
-                        return command.InnerMessage.CreateResponse(vid.title + " - " + vid.videoUrl);
+                        return command.InnerMessage.CreateResponse($"{vid.title} - {vid.videoUrl}");
                     }
                 }
                 else if (command.Command == "kula") {
                     var vid = SearchVideo("kula world", true);
-                    return command.InnerMessage.CreateResponse(vid.title + " - " + vid.videoUrl);
+                    return command.InnerMessage.CreateResponse($"{vid.title} - {vid.videoUrl}");
                 }
                 else if (command.Command == "sylauxe") {
                     var vid = SearchVideo(_sylauxeSearches[_random.Next(_sylauxeSearches.Count)], true);
-                    return command.InnerMessage.CreateResponse(vid.title + " - " + vid.videoUrl);
+                    return command.InnerMessage.CreateResponse($"{vid.title} - {vid.videoUrl}");
                 }
 
                 return null;
