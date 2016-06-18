@@ -17,7 +17,7 @@ namespace homeronet.Plugin {
         public Task<IStandardMessage> ProcessTextCommand(ITextCommand command) {
             return new Task<IStandardMessage>(() => {
                 var amt = new Random().Next(68, 421);
-                string hooray = amt != 100 ? "💯" : amt.ToString();
+                string hooray = amt == 100 ? "💯" : amt.ToString();
                 return command.InnerMessage.CreateResponse($"<peptio> hey guys i just ate {hooray} pills");
             });
         }
