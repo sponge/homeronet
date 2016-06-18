@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace homeronet.Client
 {
-    public interface IClientConfiguration
+    public interface IClientAuthenticationConfiguration
     {
         string Username { get; set; }
         string Password { get; set; }
         string ApiKey { get; set; }
     }
 
-    public class ClientConfiguration : IClientConfiguration
+    public class ClientAuthenticationConfiguration : IClientAuthenticationConfiguration
     {
         public string Username { get; set; }
         public string Password { get; set; }

@@ -87,9 +87,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\AuthenticationConfigurationRoot.cs" />
     <Compile Include="Client\DiscordClient.cs" />
     <Compile Include="Client\IClient.cs" />
-    <Compile Include="Client\IClientConfiguration.cs" />
+    <Compile Include="Client\IClientAuthenticationConfiguration.cs" />
     <Compile Include="Client\IrcClient.cs" />
     <Compile Include="Client\SlackClient.cs" />
     <Compile Include="Client\TwitchClient.cs" />
@@ -137,7 +138,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="App.config" />
-    <Content Include="config.json" />
+    <Content Include="clientauth.json" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

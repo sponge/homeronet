@@ -8,9 +8,11 @@ using Ninject;
 using Ninject.Parameters;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Ninject.Activation;
 
 namespace homeronet
 {
@@ -18,6 +20,7 @@ namespace homeronet
     {
         public static IKernel Kernel { get; private set; }
         public static Logger Log { get; private set; }
+        public static AuthenticationConfigurationRoot AuthConfigRoot { get; private set; }
 
         private static void Main(string[] args)
         {
@@ -27,24 +30,18 @@ namespace homeronet
             Log.Debug("Building kernel");
             Kernel = new StandardKernel(new HomeroModule());
 
-            Log.Debug("Building configuration factory");
-            Kernel.Bind<IClientConfiguration>().ToMethod((context =>
+            Log.Info("Reading client authentication configuration file..");
+            AuthConfigRoot = new AuthenticationConfigurationRoot();
+            AuthConfigRoot.Clients = JsonConvert.DeserializeObject<Dictionary<string, ClientAuthenticationConfiguration>> (File.ReadAllText(@"clientauth.json"));
+
+            if (AuthConfigRoot.Clients == null)
             {
-                // TODO: Proper config factory.
-                IParameter clientNameParam = context.Parameters.FirstOrDefault(x => x.Name == "ClientName");
-                if (clientNameParam != null)
-                {
-                    string clientName = clientNameParam.GetValue(context, null) as string;
-                    using (StreamReader r = new StreamReader("config.json"))
-                    {
-                        // TODO: Strict contract
-                        string json = r.ReadToEnd();
-                        dynamic jsonConfig = JsonConvert.DeserializeObject<dynamic>(json);
-                        return new ClientConfiguration() { ApiKey = jsonConfig[clientName]["ApiKey"].ToString(), Username = jsonConfig[clientName]["Username"].ToString(), Password = jsonConfig[clientName]["Password"].ToString() };
-                    }
-                }
-                return null;
-            }));
+                Log.Error("Configuration root could not load.");
+                Console.ReadKey();
+            }
+
+            Log.Debug("Building configuration factory");
+            Kernel.Bind<IClientAuthenticationConfiguration>().ToMethod(GetAuthConfiguration);
 
             Log.Debug("Binding Discord");
             Kernel.Bind<IClient>().To<DiscordClient>().InSingletonScope().WithParameter(new Parameter("ClientName", "DiscordClient", true));
@@ -82,6 +79,26 @@ namespace homeronet
 
             Log.Info("Homero running. Press any key to quit.");
             Console.ReadKey();
+        }
+
+        private static ClientAuthenticationConfiguration GetAuthConfiguration(IContext context)
+        {
+            // TODO: Proper config factory.
+            IParameter clientNameParam = context.Parameters.FirstOrDefault(x => x.Name == "ClientName");
+            if (clientNameParam != null)
+            {
+                string clientName = clientNameParam.GetValue(context, null) as string;
+                if (!String.IsNullOrEmpty(clientName) && AuthConfigRoot.Clients.ContainsKey(clientName))
+                {
+                    return AuthConfigRoot.Clients[clientName];
+                }
+                else
+                {
+                    Log.Warn("A client asked for auth details without a client name! Returning empty config.");
+                    return new ClientAuthenticationConfiguration();
+                }
+            }
+            return null;
         }
 
         private static void ClientOnMessageReceived(object sender, MessageReceivedEventArgs e)

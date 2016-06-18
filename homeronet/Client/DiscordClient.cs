@@ -15,15 +15,15 @@ namespace homeronet.Client
     {
 
         private Discord.DiscordClient _discordClient;
-        private IClientConfiguration _clientConfiguration;
+        private IClientAuthenticationConfiguration _clientAuthenticationConfiguration;
 
         #region Constructors
 
-        public DiscordClient(IClientConfiguration config)
+        public DiscordClient(IClientAuthenticationConfiguration config)
         {
-            ClientConfiguration = config;
+            ClientAuthenticationConfiguration = config;
 
-            if (String.IsNullOrEmpty(ClientConfiguration.ApiKey))
+            if (String.IsNullOrEmpty(ClientAuthenticationConfiguration.ApiKey))
             {
                 throw new Exception("No API key specified.");
             }
@@ -53,7 +53,7 @@ namespace homeronet.Client
 
         public async Task<bool> Connect()
         {
-            await _discordClient.Connect(ClientConfiguration.ApiKey);
+            await _discordClient.Connect(ClientAuthenticationConfiguration.ApiKey);
             return true; // uh why can't i get the connect result?
         }
 
@@ -94,6 +94,10 @@ namespace homeronet.Client
 
         private void DiscordClientOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
+            if (messageEventArgs.User.Id == _discordClient.CurrentUser.Id)
+            {
+                return;
+            }
             DiscordMessage message = new DiscordMessage(this, messageEventArgs.Message);
             MessageReceived?.Invoke(this, new MessageReceivedEventArgs(message));
         }
@@ -110,10 +114,10 @@ namespace homeronet.Client
             }
         }
 
-        public IClientConfiguration ClientConfiguration
+        public IClientAuthenticationConfiguration ClientAuthenticationConfiguration
         {
-            get { return _clientConfiguration; }
-            set { _clientConfiguration = value; }
+            get { return _clientAuthenticationConfiguration; }
+            set { _clientAuthenticationConfiguration = value; }
         }
 
         public string Name => "Discord.NET Client";
