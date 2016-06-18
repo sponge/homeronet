@@ -98,7 +98,7 @@
     <Compile Include="Messages\IStandardMessage.cs" />
     <Compile Include="Messages\ITextCommand.cs" />
     <Compile Include="Messages\IVoiceMessage.cs" />
-    <Compile Include="Plugin\CurrencyConverter.cs" />
+    <Compile Include="Plugin\Currency.cs" />
     <Compile Include="Plugin\DiscordNowPlaying.cs" />
     <Compile Include="Plugin\Fortune.cs" />
     <Compile Include="Plugin\Homero.cs" />
@@ -106,6 +106,7 @@
     <Compile Include="Plugin\IPlugin.cs" />
     <Compile Include="Plugin\IrcReflect.cs" />
     <Compile Include="Plugin\Reddit.cs" />
+    <Compile Include="Plugin\Border.cs" />
     <Compile Include="Plugin\Tone.cs" />
     <Compile Include="Plugin\Trek.cs" />
     <Compile Include="Program.cs" />
