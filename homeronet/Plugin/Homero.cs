@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Discord.Logging;
+using homeronet.Services;
 
 namespace homeronet.Plugin {
 

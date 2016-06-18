@@ -9,9 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using homeronet.Services;
 using Ninject.Activation;
+using Ninject.Extensions.Conventions;
 
 namespace homeronet
 {
@@ -22,7 +24,6 @@ namespace homeronet
         private static ILogger Logger { get; set; }
         private static void Main(string[] args)
         {
-            Console.WriteLine("Starting up logger and Homero core.");
             Kernel = new StandardKernel();
             Kernel.Bind<ILogger>().ToMethod(context => LoggerFactory.Instance.GetLogger(context.Request?.Target?.Member?.DeclaringType?.Name));
             Logger = Kernel.Get<ILogger>();
@@ -30,6 +31,9 @@ namespace homeronet
 
             Logger.Debug("Setting up Config factory");
             Kernel.Bind<IConfiguration>().ToMethod(context => ConfigurationFactory.Instance.GetConfiguration(context.Request?.Target?.Member?.DeclaringType?.Name));
+            
+            Logger.Info("Loading standard plugins.");
+            Kernel.Load(new HomeroModule());
 
             Logger.Debug("Binding Discord");
             Kernel.Bind<IClient>().To<DiscordClient>().InSingletonScope();

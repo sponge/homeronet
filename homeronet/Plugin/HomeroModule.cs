@@ -11,10 +11,10 @@ namespace homeronet.Plugin {
 
         public override void Load() {
             // TODO: Define per-client scopes if requested.
-            Kernel.Bind<IPlugin>().To<Homero>().InSingletonScope();
-            Kernel.Bind<IPlugin>().To<Tone>().InSingletonScope();
-            Kernel.Bind<IPlugin>().To<DiscordNowPlaying>().InSingletonScope();
-            Kernel.Bind<IPlugin>().To<Fortune>().InSingletonScope();
+            Bind<IPlugin>().To<Homero>().InSingletonScope();
+            Bind<IPlugin>().To<Tone>().InSingletonScope();
+            Bind<IPlugin>().To<DiscordNowPlaying>().InSingletonScope();
+            Bind<IPlugin>().To<Fortune>().InSingletonScope();
         }
     }
 }
