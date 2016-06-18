@@ -17,7 +17,8 @@ namespace homeronet.Plugin {
             Kernel.Bind<IPlugin>().To<Fortune>().InSingletonScope();
             Kernel.Bind<IPlugin>().To<Trek>().InSingletonScope();
             Kernel.Bind<IPlugin>().To<Reddit>().InSingletonScope();
-            Kernel.Bind<IPlugin>().To<CurrencyConverter>().InSingletonScope();
+            Kernel.Bind<IPlugin>().To<Currency>().InSingletonScope();
+            Kernel.Bind<IPlugin>().To<Border>().InSingletonScope();
         }
     }
 }
