@@ -352,7 +352,7 @@ namespace homeronet.Plugin {
                 string summary = $"{geoResult.FormattedAddress} | {weather.currently.summary} | {weather.currently.temperature}{(unit == Unit.us ? "F" : "C")} | Humidity: {weather.currently.humidity * 100}%"
                     + $"\n{weather.minutely.summary}";
 
-                // TODO: create forecast based on discord or irc
+                sendingClient.SendMessage(command.InnerMessage.CreateResponse(summary));
 
                 if (sendingClient is DiscordClient) {
                     WeatherRendererInfo info = new WeatherRendererInfo();
@@ -378,8 +378,6 @@ namespace homeronet.Plugin {
                 }
 
                 // TODO: save to persistent store for username if dontsave isn't specified
-
-                sendingClient.SendMessage(command.InnerMessage.CreateResponse(summary));
 
                 return null;
             });
