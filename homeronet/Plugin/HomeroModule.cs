@@ -17,6 +17,16 @@ namespace homeronet.Plugin {
             Kernel.Bind<IPlugin>().To<Fortune>().InSingletonScope();
             Kernel.Bind<IPlugin>().To<Trek>().InSingletonScope();
             Kernel.Bind<IPlugin>().To<Weather>().InSingletonScope();
+            Kernel.Bind<IPlugin>().To<YouTube>().InSingletonScope();
+            Kernel.Bind<IPlugin>().To<Reddit>().InSingletonScope();
+            Kernel.Bind<IPlugin>().To<Currency>().InSingletonScope();
+            Kernel.Bind<IPlugin>().To<Border>().InSingletonScope();
+            Kernel.Bind<IPlugin>().To<Thinker>().InSingletonScope();
+            Kernel.Bind<IPlugin>().To<Beats>().InSingletonScope();
+            Kernel.Bind<IPlugin>().To<YeahWoo>().InSingletonScope();
+            Kernel.Bind<IPlugin>().To<Temperature>().InSingletonScope();
+            Kernel.Bind<IPlugin>().To<SBEmail>().InSingletonScope();
+            Kernel.Bind<IPlugin>().To<Pepito>().InSingletonScope();
         }
     }
 }
