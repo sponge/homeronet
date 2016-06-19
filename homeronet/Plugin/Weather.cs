@@ -51,7 +51,6 @@ namespace homeronet.Plugin {
             // background
             using (var paint = new SKPaint()) {
                 var colors = new[] { colorLtBlue, colorBlue };
-                var shader = SKShader.CreateLinearGradient(new SKPoint(0, rect.Top), new SKPoint(0, rect.Bottom), colors, null, SKShaderTileMode.Clamp);
 
                 paint.Color = SKColors.Black;
                 canvas.DrawRect(rect, paint);
@@ -65,8 +64,8 @@ namespace homeronet.Plugin {
                 canvas.DrawRect(rect, paint);
 
                 rect = new SKRect(rect.Left + 2, rect.Top + 2, rect.Right - 2, rect.Bottom - 2);
-                paint.Shader = shader;
-                canvas.DrawRect(rect, paint);
+                var grad = SKBitmap.Decode("Resources/Weather/gradient.png");
+                canvas.DrawBitmap(grad, rect);
             }
 
             var w = (rect.Right - rect.Left);
@@ -150,18 +149,22 @@ namespace homeronet.Plugin {
             // background
             using (var paint = new SKPaint()) {
                 var colors = new[] { colorDkBlue, colorOrange };
-                var shader1 = SKShader.CreateLinearGradient(new SKPoint(0, 84), new SKPoint(0, height), colors, null, SKShaderTileMode.Clamp);
-                var shader2 = SKShader.CreateLinearGradient(new SKPoint(0, 80), new SKPoint(0, 0), colors, null, SKShaderTileMode.Clamp);
+
+                var headerHeight = 84;
+
+                var shaderGradient = SKShader.CreateLinearGradient(new SKPoint(0, headerHeight), new SKPoint(0, height), colors, null, SKShaderTileMode.Clamp);
+                var shaderNoise = SKShader.CreatePerlinNoiseTurbulence(0.99f, 0.99f, 1, 0.0f);
+                var shaderComp = SKShader.CreateCompose(shaderGradient, shaderNoise, SKXferMode.Multiply);
 
                 paint.Color = colorDkBlue;
-                paint.Shader = shader1;
+                paint.Shader = shaderComp;
 
                 // background
                 canvas.DrawRect(new SKRect(0, 0, width, height), paint);
 
                 // header background
-                paint.Shader = shader2;
-                canvas.DrawRect(new SKRect(0, 0, width, 84), paint);
+                var grad = SKBitmap.Decode("Resources/Weather/gradient_orange.png");
+                canvas.DrawBitmap(grad, new SKRect(0, 0, width, headerHeight));
 
                 // top right cutout
                 paint.Shader = null;
@@ -170,8 +173,8 @@ namespace homeronet.Plugin {
                     var slant = 80;
                     path.MoveTo(width - baseX, 0);
                     path.LineTo(width, 0);
-                    path.LineTo(width, 80);
-                    path.LineTo(width - baseX - slant, 80);
+                    path.LineTo(width, headerHeight);
+                    path.LineTo(width - baseX - slant, headerHeight);
                     canvas.DrawPath(path, paint);
                 }
 
