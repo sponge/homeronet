@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using homeronet.Plugin;
 using Ninject.Modules;
 
 namespace Homeronet.Plugin.Standard
@@ -11,7 +12,7 @@ namespace Homeronet.Plugin.Standard
     {
         public override void Load()
         {
-
+            Bind<IPlugin>().To<Ping>();
         }
     }
 }

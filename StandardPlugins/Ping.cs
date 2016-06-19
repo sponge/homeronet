@@ -12,18 +12,22 @@ namespace Homeronet.Plugin.Standard
     public class Ping : IPlugin
     {
         private readonly IConfiguration _config;
-        public Ping(IConfiguration config)
+        private readonly ILogger _logger;
+
+        public Ping(IConfiguration config, ILogger logger)
         {
             _config = config;
+            _logger = logger;
         }
 
         public void Startup()
         {
-
+            _logger.Info("I ping 2!");
         }
 
         public void Shutdown()
         {
+            _logger.Info("I no longer ping!");
         }
 
         public Task<IStandardMessage> ProcessTextCommand(ITextCommand command)

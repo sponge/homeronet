@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using homeronet.Manager.Assembly;
 using homeronet.Services;
 using Ninject.Activation;
 using Ninject.Extensions.Conventions;
@@ -22,8 +23,12 @@ namespace homeronet
         public static IKernel Kernel { get; private set; }
 
         private static ILogger Logger { get; set; }
+        private static FileSystemWatcher PluginWatcher { get; set; }
+
         private static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.SetShadowCopyFiles();
+
             Kernel = new StandardKernel();
             Kernel.Bind<ILogger>().ToMethod(context => LoggerFactory.Instance.GetLogger(context.Request?.Target?.Member?.DeclaringType?.Name));
             Logger = Kernel.Get<ILogger>();
@@ -34,6 +39,31 @@ namespace homeronet
             
             Logger.Info("Loading standard plugins.");
             Kernel.Load(new HomeroModule());
+
+            Logger.Info("Scanning and loading plugin directory.");
+            Kernel.Load("Plugins\\Homeronet.Plugin.*.dll");
+            //PluginAppDomain pluginDomain = new PluginAppDomain(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Plugins","Homeronet.Plugin.Standard.dll"), Kernel);
+            
+            Logger.Info("Setting up file change monitoring.");
+            PluginWatcher = new FileSystemWatcher();
+
+            // TODO: Configurable Path, don't depend on appdomain.
+            PluginWatcher.Path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins\\");
+
+            PluginWatcher.NotifyFilter = NotifyFilters.Attributes |
+    NotifyFilters.CreationTime |
+    NotifyFilters.FileName |
+    NotifyFilters.LastAccess |
+    NotifyFilters.LastWrite |
+    NotifyFilters.Size |
+    NotifyFilters.Security;
+            PluginWatcher.Filter = "Homeronet.Plugin.*.dll";
+            PluginWatcher.Changed += PluginWatcherOnChanged;
+            PluginWatcher.Created += PluginWatcherOnChanged;
+            PluginWatcher.Renamed += PluginWatcherOnChanged;
+
+            PluginWatcher.EnableRaisingEvents = true;
+
 
             Logger.Debug("Binding Discord");
             Kernel.Bind<IClient>().To<DiscordClient>().InSingletonScope();
@@ -71,6 +101,14 @@ namespace homeronet
 
             Logger.Info("Homero running. Press any key to quit.");
             Console.ReadKey();
+        }
+
+        private static void PluginWatcherOnChanged(object sender, FileSystemEventArgs fileSystemEventArgs)
+        {
+            Logger.Info("Plugin folder DLL change detected. Reloading all plugins.");
+            Kernel.Unbind<IPlugin>();
+            Kernel.Unload("Plugins\\Homeronet.Plugin.*.dll");
+            Kernel.Load("Plugins\\Homeronet.Plugin.*.dll");
         }
 
         private static void ClientOnMessageReceived(object sender, MessageReceivedEventArgs e)
