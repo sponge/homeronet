@@ -307,8 +307,12 @@ namespace homeronet.Plugin {
                 IClient sendingClient = command.InnerMessage.SendingClient;
 
                 // parse out commandline
-                if (command.Arguments.Count > 0) {
-                    inputLocation = command.Arguments[0];
+                if (command.Arguments?.Count > 0) {
+                    inputLocation = String.Join(" ", command.Arguments);
+                }
+                else
+                {
+                    return null;
                 }
 
                 if (command.Arguments.Count > 1) {
@@ -322,10 +326,10 @@ namespace homeronet.Plugin {
                 GeocodeResult geoResult = null;
                 if (!locationValid && inputLocation != null) {
                     // TODO: migrate to async
-                    var geo = _geocode.GeocodeAddress(inputLocation).Result;
+                    GeocodeResponse geo = _geocode.GeocodeAddress(inputLocation).Result;
                     if (geo.Status == GeocodeStatus.Ok) {
                         geoResult = geo.Results[0];
-                        var location = geoResult.Geometry.Location;
+                        GeoCoordinate location = geoResult.Geometry.Location;
                         lat = (float)location.Latitude;
                         lng = (float)location.Longitude;
                         locationValid = true;
@@ -336,41 +340,46 @@ namespace homeronet.Plugin {
                     return command.InnerMessage.CreateResponse("gotta give me a zipcode or something");
                 }
 
-                var country = (from address in geoResult.AddressComponents where address.Types.Contains("country") select address.ShortName).FirstOrDefault();
-                var unit = country == "US" ? Unit.us : Unit.si;
+                string country = geoResult.AddressComponents
+                    .Where(address => address.Types.Contains("country"))
+                    .Select(address => address.ShortName)
+                    .FirstOrDefault();
+                
+                Unit unit = country == "US" ? Unit.us : Unit.si;
 
-                var weather = new ForecastIORequest(_forecastConfig.ApiKey, lat, lng, unit).Get();
-
-                // TODO: create string
+                ForecastIOResponse weather = new ForecastIORequest(_forecastConfig.ApiKey, lat, lng, unit).Get();
+                
+                string summary = $"{geoResult.FormattedAddress} | {weather.currently.summary} | {weather.currently.temperature}{(unit == Unit.us ? "F" : "C")} | Humidity: {weather.currently.humidity * 100}%"
+                    + $"\n{weather.minutely.summary}";
 
                 // TODO: create forecast based on discord or irc
 
                 if (sendingClient is DiscordClient) {
-                    var info = new WeatherRendererInfo();
+                    WeatherRendererInfo info = new WeatherRendererInfo();
                     info.unit = unit;
                     info.address = geoResult.FormattedAddress;
                     info.weather = weather;
-                    var stream = CreateWeatherImage(info);
+                    Stream stream = CreateWeatherImage(info);
 
                     // TODO: bad, just duplicating discordclient code
                     // Is it a PM or a public message?
-                    var _discordClient = (sendingClient as DiscordClient).RootClient;
-                    var message = command.InnerMessage;
+                    Discord.DiscordClient _discordClient = (sendingClient as DiscordClient).RootClient;
+                    IStandardMessage message = command.InnerMessage;
                     if (message.IsPrivate) {
-                        var targetChannel = _discordClient.PrivateChannels.FirstOrDefault(x => x.Name == message.Channel);
-                        var sendMessage = targetChannel?.SendFile("weather.png", stream).Result;
+                        Discord.Channel targetChannel = _discordClient.PrivateChannels.FirstOrDefault(x => x.Name == message.Channel);
+                        Discord.Message sendMessage = targetChannel?.SendFile("weather.png", stream).Result;
                     }
                     else {
                         Discord.Channel targetedChannel = (_discordClient.Servers
                             .FirstOrDefault(x => x.Name == message.Server)?.TextChannels)?.FirstOrDefault(x => x.Name == message.Channel);
 
-                        var sendMessage = targetedChannel?.SendFile("weather.png", stream).Result;
+                        Discord.Message sendMessage = targetedChannel?.SendFile("weather.png", stream).Result;
                     }
                 }
 
                 // TODO: save to persistent store for username if dontsave isn't specified
 
-                sendingClient.SendMessage(command.InnerMessage.CreateResponse("weather goes here"));
+                sendingClient.SendMessage(command.InnerMessage.CreateResponse(summary));
 
                 return null;
             });
@@ -385,3 +394,4 @@ namespace homeronet.Plugin {
         }
     }
 }
+ 
