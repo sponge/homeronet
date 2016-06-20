@@ -15,8 +15,10 @@ namespace homeronet.Plugin {
             Bind<IPlugin>().To<Tone>().InSingletonScope();
             Bind<IPlugin>().To<DiscordNowPlaying>().InSingletonScope();
             Bind<IPlugin>().To<Fortune>().InSingletonScope();
-            Bind<IPlugin>().To<SieveTest>().InSingletonScope();
-
+            Bind<IPlugin>().To<Beats>().InSingletonScope();
+            Bind<IPlugin>().To<Border>().InSingletonScope();
+            Bind<IPlugin>().To<Currency>().InSingletonScope();
+            //Bind<IPlugin>().To<SieveTest>().InSingletonScope();
         }
     }
 }
