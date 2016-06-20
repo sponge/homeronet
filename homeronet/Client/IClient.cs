@@ -20,5 +20,6 @@ namespace homeronet.Client
         Task SendMessage(IStandardMessage message);
         bool IsConnected { get; }
         event EventHandler<MessageReceivedEventArgs> MessageReceived;
-     }
+        event EventHandler<MessageSentEventArgs> MessageSent;
+    }
 }

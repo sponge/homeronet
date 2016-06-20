@@ -48,7 +48,7 @@ namespace homeronet.Client
         #region Events
 
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
-
+        public event EventHandler<MessageSentEventArgs> MessageSent; 
         #endregion Events
 
         #region Async Methods
@@ -72,7 +72,10 @@ namespace homeronet.Client
                 var targetChannel = _discordClient.PrivateChannels.FirstOrDefault(x => x.Name == message.Channel);
                 var sendMessage = targetChannel?.SendMessage(message.Message);
                 if (sendMessage != null)
+                {
                     await sendMessage;
+                    MessageSent?.Invoke(this, new MessageSentEventArgs(message));
+                }
             }
             else
             {
@@ -81,7 +84,10 @@ namespace homeronet.Client
 
                 var sendMessage = targetedChannel?.SendMessage(message.Message);
                 if (sendMessage != null)
+                {
                     await sendMessage;
+                    MessageSent?.Invoke(this, new MessageSentEventArgs(message));
+                }
             }
         }
 

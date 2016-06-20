@@ -8,7 +8,7 @@ using homeronet.Messages;
 
 namespace homeronet.EventArgs
 {
-    public class MessageReceivedEventArgs
+    public class MessageReceivedEventArgs : System.EventArgs
     {
         public IStandardMessage Message { get; set; }
         
