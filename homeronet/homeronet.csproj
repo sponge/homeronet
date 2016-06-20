@@ -97,6 +97,7 @@
     <Compile Include="Client\SlackClient.cs" />
     <Compile Include="Client\TwitchClient.cs" />
     <Compile Include="EventArgs\CommandReceivedEventArgs.cs" />
+    <Compile Include="EventArgs\CommandSieveEventArgs.cs" />
     <Compile Include="EventArgs\MessageReceivedEventArgs.cs" />
     <Compile Include="EventArgs\MessageSentEventArgs.cs" />
     <Compile Include="Manager\Assembly\PluginAppDomain.cs" />
