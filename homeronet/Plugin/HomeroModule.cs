@@ -10,6 +10,8 @@ namespace Homero.Plugin {
             Bind<IPlugin>().To<Tone>().InSingletonScope();
             Bind<IPlugin>().To<DiscordNowPlaying>().InSingletonScope();
             Bind<IPlugin>().To<Fortune>().InSingletonScope();
+            Bind<IPlugin>().To<Border>().InSingletonScope();
+            Bind<IPlugin>().To<Currency>().InSingletonScope();
         }
     }
 }

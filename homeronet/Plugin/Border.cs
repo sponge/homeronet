@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 ﻿using System;
+=======
+﻿using homeronet.Client;
+using homeronet.EventArgs;
+using homeronet.Messages;
+using homeronet.Services;
+using System;
+>>>>>>> origin/feature/hot_reload_plugins
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -126,6 +134,11 @@ namespace Homero.Plugin
             return outputLines;
         }
 
+        public Border(IMessageBroker broker)
+        {
+            broker.CommandReceived += BrokerOnCommandReceived;
+        }
+
         public void Startup()
         {
         }
@@ -135,37 +148,29 @@ namespace Homero.Plugin
             get { return new List<string>() { "rip", "bread" }; }
         }
 
-        public Task<IStandardMessage> ProcessTextCommand(ITextCommand command)
+        public void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            return new Task<IStandardMessage>(() =>
+            IClient client = sender as IClient;
+            string message = String.Join(" ", e.Command.Arguments);
+            List<string> wrappedText = WrapText(message, BORDER_MAX_WIDTH);
+            List<string> outputLines = new List<string>();
+
+            if (e.Command.Command == "rip")
             {
-                string message = String.Join(" ", command.Arguments);
-                List<string> wrappedText = WrapText(message, BORDER_MAX_WIDTH );
-                List<string> outputLines = new List<string>();
+                outputLines = FormatTextToHeadstone(wrappedText);
+            }
+            else if (e.Command.Command == "bread")
+            {
+                outputLines = FormatTextToBread(wrappedText);
+            }
 
-                if (command.Command == "rip")
-                {
-                    outputLines = FormatTextToHeadstone(wrappedText);
-                }
-                else if (command.Command == "bread")
-                {
-                    outputLines = FormatTextToBread(wrappedText);
-                }
-
-                if (command.InnerMessage.SendingClient is DiscordClient)
-                {
-                    string combinedText = String.Format("```{0}```", String.Join("\n", outputLines));
-                    command.InnerMessage.SendingClient.SendMessage(command.InnerMessage.CreateResponse(combinedText));
-                }
-
-                return null;
-            });
+            if (client is DiscordClient)
+            {
+                string combinedText = String.Format("```{0}```", String.Join("\n", outputLines));
+                client.ReplyTo(e.Command, combinedText);
+            }
         }
-
-        public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message)
-        {
-            return null;
-        }
+        
 
         public void Shutdown()
         {

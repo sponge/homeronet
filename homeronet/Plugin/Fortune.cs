@@ -3,23 +3,28 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Homero.Messages;
+using Homero.Client;
+using Homero.EventArgs;
+using Homero.Services;
 
-namespace Homero.Plugin {
+namespace Homero.Plugin
+{
 
-    public class Fortune : IPlugin {
+    public class Fortune : IPlugin
+    {
         private List<string> _registeredCommands = new List<string>();
         private Dictionary<string, List<string>> _fortunes = new Dictionary<string, List<string>>();
         private Random _random = new Random();
 
-        private struct FortuneFile {
+        private struct FortuneFile
+        {
             public String command;
             public String path;
             public bool stripNewLines;
             public bool isMultiline;
 
-            public FortuneFile(string command, string path, bool stripNewLines, bool isMultiline) : this() {
+            public FortuneFile(string command, string path, bool stripNewLines, bool isMultiline) : this()
+            {
                 this.command = command;
                 this.path = path;
                 this.stripNewLines = stripNewLines;
@@ -36,44 +41,49 @@ namespace Homero.Plugin {
             new FortuneFile("truth", "Resources/trolldb.txt", true, true),
         };
 
-        public void Startup() {
+        public Fortune(IMessageBroker broker)
+        {
             // TODO: should we strip messages > 500 chars? was that an irc thing or a not annoying the channel thing?
             var pattern = new Regex("\r\n?|\n");
 
-            foreach (var fortuneFile in _fortuneFiles) {
+            foreach (var fortuneFile in _fortuneFiles)
+            {
                 var text = File.ReadAllText(fortuneFile.path);
                 _registeredCommands.Add(fortuneFile.command);
 
                 var stringList = text.Split(new string[] { fortuneFile.isMultiline ? "\n%" : "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(str => str.Trim());
 
-                if (fortuneFile.stripNewLines) {
+                if (fortuneFile.stripNewLines)
+                {
                     stringList = stringList.Select(str => pattern.Replace(str, " "));
                 }
 
                 _fortunes[fortuneFile.command] = stringList.ToList();
             }
+
+            broker.CommandReceived += BrokerOnCommandReceived;
         }
 
-        public void Shutdown() {
+        public void Startup()
+        {
         }
 
-        public Task<IStandardMessage> ProcessTextCommand(ITextCommand command) {
-            return new Task<IStandardMessage>(() => {
-                var response = "nope";
-                if (_fortunes.ContainsKey(command.Command)) {
-                    response = _fortunes[command.Command][_random.Next(_fortunes.Count)];
-                }
-
-                return command.InnerMessage.CreateResponse(response);
-            });
+        public void Shutdown()
+        {
         }
 
-        public List<string> RegisteredTextCommands {
+        public void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
+        {
+            IClient client = sender as IClient;
+            if (_fortunes.ContainsKey(e.Command.Command))
+            {
+                client?.ReplyTo(e.Command, _fortunes[e.Command.Command][_random.Next(_fortunes.Count)]);
+            }
+        }
+
+        public List<string> RegisteredTextCommands
+        {
             get { return _registeredCommands; }
-        }
-
-        public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message) {
-            return null;
         }
     }
 }
