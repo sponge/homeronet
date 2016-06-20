@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using homeronet.Client;
 using homeronet.EventArgs;
 using homeronet.Messages;
+using homeronet.Plugin;
 using homeronet.Properties;
 using Ninject;
 using WeakEvent;
@@ -44,7 +45,7 @@ namespace homeronet.Services
 
         private void ClientOnMessageSent(object sender, MessageSentEventArgs e)
         {
-                _messageSentEventSource.Raise(sender, e);
+                _messageSentEventSource.RaiseAsync(sender, e);
         }
 
         private void ClientOnMessageReceived(object sender, MessageReceivedEventArgs e)
@@ -53,7 +54,15 @@ namespace homeronet.Services
             if (e.Message.Message.StartsWith(Settings.Default.CommandPrefix))
             {
                 TextCommand command = new TextCommand(e.Message);
-                _commandEventSource.Raise(sender, new CommandReceivedEventArgs(command));
+                _commandEventSource.RaiseAsync(sender, new CommandReceivedEventArgs(command), delegate(object o)
+                {
+                    IPlugin pluginInstance = o as IPlugin;
+                    if (pluginInstance?.RegisteredTextCommands?.Contains(command.Command) == true)
+                    {
+                        return true;
+                    }
+                    return false;
+                });
                 return;
             }
 

@@ -30,12 +30,24 @@ namespace WeakEvent
 
         public void RaiseAsync(object sender, TEventArgs e)
         {
+            RaiseAsync(sender, e, null);
+        }
+
+        public void RaiseAsync(object sender, TEventArgs e, Predicate<object> filter)
+        {
             Task<List<WeakDelegate>> asyncRaise = new Task<List<WeakDelegate>>(() =>
             {
                 List<WeakDelegate> result = new List<WeakDelegate>();
                 List<WeakDelegate> handlerCopy = new List<WeakDelegate>(_handlers); // Local copy to play around with.
                 foreach (var handler in handlerCopy)
                 {
+                    if (filter != null)
+                    {
+                        if (!filter(handler.GetTargetInstance()))
+                        {
+                            continue;
+                        }
+                    }
                     if (!handler.Invoke(sender, e))
                     {
                         result.Add(handler);
@@ -120,7 +132,6 @@ namespace WeakEvent
             private readonly WeakReference _weakTarget;
             private readonly MethodInfo _method;
             private readonly OpenEventHandler _openHandler;
-
             public WeakDelegate(Delegate handler)
             {
                 _weakTarget = handler.Target != null ? new WeakReference(handler.Target) : null;
@@ -139,6 +150,11 @@ namespace WeakEvent
                 }
                 _openHandler(target, sender, e);
                 return true;
+            }
+
+            public object GetTargetInstance() // TODO: Getter
+            {
+                return _weakTarget?.Target;
             }
 
             public bool IsMatch(EventHandler<TEventArgs> handler)

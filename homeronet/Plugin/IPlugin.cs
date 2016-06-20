@@ -12,6 +12,6 @@ namespace homeronet.Plugin
     {
         void Startup();
         void Shutdown();
-        // List<string> RegisteredTextCommands { get; }
+        List<string> RegisteredTextCommands { get; }
     }
 }
