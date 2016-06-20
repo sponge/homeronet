@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using homeronet.Client;
-using homeronet.Messages;
+using Homero.Client;
+using Homero.Messages;
 using Ninject;
 
-namespace homeronet.Plugin
+namespace Homero.Plugin
 {
     public class IrcReflect : IPlugin
     {

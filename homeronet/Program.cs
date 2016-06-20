@@ -1,12 +1,12 @@
-﻿using homeronet.Client;
-using homeronet.Plugin;
-using homeronet.Services;
+﻿using System;
+using System.IO;
+using Homero.Client;
+using Homero.Plugin;
+using Homero.Services;
 using Ninject;
 using Ninject.Extensions.Conventions;
-using System;
-using System.IO;
 
-namespace homeronet
+namespace Homero
 {
     public class Program
     {

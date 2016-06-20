@@ -1,8 +1,8 @@
-﻿using RestSharp.Extensions;
-using System;
+﻿using System;
 using System.IO;
+using RestSharp.Extensions;
 
-namespace homeronet.Messages.Attachments
+namespace Homero.Messages.Attachments
 {
     public class ImageAttachment : IAttachment
     {

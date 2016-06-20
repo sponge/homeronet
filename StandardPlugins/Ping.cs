@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using homeronet.Messages;
-using homeronet.Plugin;
-using homeronet.Services;
+using Homero.Messages;
+using Homero.Plugin;
+using Homero.Services;
 
 namespace Homeronet.Plugin.Standard
 {

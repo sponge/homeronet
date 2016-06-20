@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using homeronet.Messages;
 using System.Net;
+using System.Threading.Tasks;
+using Homero.Messages;
 using Newtonsoft.Json;
 
-namespace homeronet.Plugin
+namespace Homero.Plugin
 {
     public class Currency : IPlugin
     {

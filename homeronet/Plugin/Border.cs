@@ -1,12 +1,12 @@
-﻿using homeronet.Client;
-using homeronet.Messages;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Homero.Client;
+using Homero.Messages;
 
-namespace homeronet.Plugin
+namespace Homero.Plugin
 {
     public class Border : IPlugin
     {

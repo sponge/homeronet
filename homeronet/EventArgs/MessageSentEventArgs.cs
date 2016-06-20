@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using homeronet.Messages;
+﻿using Homero.Messages;
 
-namespace homeronet.EventArgs
+namespace Homero.EventArgs
 {
     public class MessageSentEventArgs : System.EventArgs
     {

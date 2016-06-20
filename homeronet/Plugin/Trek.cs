@@ -1,18 +1,13 @@
-﻿using homeronet.Client;
-using homeronet.Messages;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
-
+using Homero.Messages;
+using Newtonsoft.Json;
 using TrekQuotes = System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>>>;
 
-namespace homeronet.Plugin {
+namespace Homero.Plugin {
 
     public class Trek : IPlugin {
         private List<string> _registeredCommands = new List<string>() { "trek" };

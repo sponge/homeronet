@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace homeronet.Utility
+namespace Homero.Utility
 {
     /// <summary>
     /// WebClient that exposes ResponseUri.

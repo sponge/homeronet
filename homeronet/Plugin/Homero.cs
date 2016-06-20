@@ -1,12 +1,11 @@
-﻿using homeronet.Utility;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using homeronet.Client;
-using homeronet.EventArgs;
-using homeronet.Services;
+using Homero.Client;
+using Homero.EventArgs;
+using Homero.Services;
+using Homero.Utility;
 
-namespace homeronet.Plugin
+namespace Homero.Plugin
 {
 
     public class Homero : IPlugin

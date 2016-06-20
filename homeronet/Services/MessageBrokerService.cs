@@ -1,13 +1,13 @@
-﻿using homeronet.Client;
-using homeronet.EventArgs;
-using homeronet.Messages;
-using homeronet.Plugin;
-using homeronet.Properties;
+﻿using System;
+using Homero.Client;
+using Homero.EventArgs;
+using Homero.Messages;
+using Homero.Plugin;
+using Homero.Properties;
+using Homero.Utility;
 using Ninject;
-using System;
-using WeakEvent;
 
-namespace homeronet.Services
+namespace Homero.Services
 {
     public class MessageBrokerService : IMessageBroker
     {

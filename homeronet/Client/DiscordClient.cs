@@ -1,14 +1,14 @@
-﻿using Discord;
-using homeronet.EventArgs;
-using homeronet.Messages;
-using homeronet.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using homeronet.Messages.Attachments;
+using Discord;
+using Homero.EventArgs;
+using Homero.Messages;
+using Homero.Messages.Attachments;
+using Homero.Services;
 
-namespace homeronet.Client
+namespace Homero.Client
 {
     public class DiscordClient : IClient
     {

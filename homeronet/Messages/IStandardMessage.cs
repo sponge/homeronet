@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using homeronet.Client;
-using homeronet.Messages.Attachments;
+using Homero.Messages.Attachments;
 
-namespace homeronet.Messages
+namespace Homero.Messages
 {
     public interface IStandardMessage
     {

@@ -1,15 +1,14 @@
-﻿using homeronet.Client;
-using homeronet.Messages;
-using homeronet.Utility;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Homero.Messages;
+using Homero.Utility;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Ninject;
 using Ninject.Parameters;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace homeronet.Plugin {
+namespace Homero.Plugin {
 
     public class YouTube : IPlugin {
 

@@ -1,9 +1,8 @@
-﻿using homeronet.Messages;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Homero.Messages;
 
-namespace homeronet.Plugin {
+namespace Homero.Plugin {
 
     public class YeahWoo : IPlugin {
         private List<string> _registeredCommands = new List<string>() { };

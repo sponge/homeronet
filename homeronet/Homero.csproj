@@ -7,8 +7,8 @@
     <ProjectGuid>{FF9F1CD6-7472-452C-AA36-A0EBF6014DD3}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>homeronet</RootNamespace>
-    <AssemblyName>homeronet</AssemblyName>
+    <RootNamespace>Homero</RootNamespace>
+    <AssemblyName>Homero.NET</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

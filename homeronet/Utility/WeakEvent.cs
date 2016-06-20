@@ -1,15 +1,15 @@
 ﻿// MODIFIED VERSION OF https://github.com/thomaslevesque/WeakEvent
 // TODO: ALL LICENSING INFO (PAY RESPECT TO THE MAN!)
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace WeakEvent
+namespace Homero.Utility
 {
     public class WeakEventSource<TEventArgs>
     {

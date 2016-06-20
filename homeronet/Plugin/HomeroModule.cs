@@ -1,11 +1,6 @@
 ﻿using Ninject.Modules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace homeronet.Plugin {
+namespace Homero.Plugin {
 
     public class HomeroModule : NinjectModule {
 
@@ -15,8 +10,6 @@ namespace homeronet.Plugin {
             Bind<IPlugin>().To<Tone>().InSingletonScope();
             Bind<IPlugin>().To<DiscordNowPlaying>().InSingletonScope();
             Bind<IPlugin>().To<Fortune>().InSingletonScope();
-            Bind<IPlugin>().To<SieveTest>().InSingletonScope();
-
         }
     }
 }

@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using homeronet.Client;
-using homeronet.EventArgs;
-using homeronet.Messages;
-using homeronet.Services;
+using Homero.Client;
+using Homero.EventArgs;
+using Homero.Messages;
+using Homero.Services;
 
-namespace homeronet.Plugin
+namespace Homero.Plugin
 {
     public class Tone : IPlugin
     {

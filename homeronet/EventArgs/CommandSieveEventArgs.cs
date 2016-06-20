@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using homeronet.Messages;
-using homeronet.Plugin;
+﻿using Homero.Messages;
+using Homero.Plugin;
 
-namespace homeronet.EventArgs
+namespace Homero.EventArgs
 {
     public class CommandSieveEventArgs
     {

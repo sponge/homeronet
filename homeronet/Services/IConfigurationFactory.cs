@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Homero.Services.Configuration;
 
-namespace homeronet.Services
+namespace Homero.Services
 {
     public interface IConfigurationFactory
     {

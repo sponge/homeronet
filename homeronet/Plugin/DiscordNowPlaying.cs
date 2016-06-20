@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using homeronet.Client;
-using homeronet.Messages;
+using Homero.Messages;
 
-namespace homeronet.Plugin
+namespace Homero.Plugin
 {
     public class DiscordNowPlaying : IPlugin
     {

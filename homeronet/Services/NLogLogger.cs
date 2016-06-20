@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NLog;
+﻿using NLog;
 
-namespace homeronet.Services
+namespace Homero.Services
 {
     public class NLogLogger : ILogger
     {

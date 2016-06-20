@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
-using homeronet.EventArgs;
-using homeronet.Messages;
-using homeronet.Messages.Attachments;
+using Homero.EventArgs;
+using Homero.Messages;
+using Homero.Messages.Attachments;
 
-namespace homeronet.Client
+namespace Homero.Client
 {
     public interface IClient
     {

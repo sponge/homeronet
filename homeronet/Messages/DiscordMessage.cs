@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Discord;
-using homeronet.Client;
-using homeronet.Messages.Attachments;
+using Homero.Client;
+using Homero.Messages.Attachments;
 
-namespace homeronet.Messages
+namespace Homero.Messages
 {
     public class DiscordMessage : IStandardMessage
     {

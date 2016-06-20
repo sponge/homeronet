@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace homeronet.Properties {
+namespace Homero.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

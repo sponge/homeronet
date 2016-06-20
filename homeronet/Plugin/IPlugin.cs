@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
-using homeronet.Messages;
+﻿using System.Collections.Generic;
 
-namespace homeronet.Plugin
+namespace Homero.Plugin
 {
     public interface IPlugin
     {
