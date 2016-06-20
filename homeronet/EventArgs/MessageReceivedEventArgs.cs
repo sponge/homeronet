@@ -16,5 +16,5 @@ namespace homeronet.EventArgs
         {
             Message = message;
         }
-    }
+        }
 }

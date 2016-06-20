@@ -24,8 +24,6 @@ namespace homeronet.Plugin
             {"realbusinessmen", "realbusinessmen"}
         };
 
-        private int threadNumber = 0;
-
         public Homero(ILogger logger, IMessageBroker broker)
         {
             _logger = logger;
@@ -45,19 +43,12 @@ namespace homeronet.Plugin
         }
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            if (e.Command.Command == "threadtest")
-            {
-                int localThreadNumber = threadNumber;
-                ((IClient)sender).SendMessage(e.Command.InnerMessage.CreateResponse($"Hello! I'm thread #{localThreadNumber}. I will sleep for 5 sec."));
-                threadNumber += 1;
-                Thread.Sleep(TimeSpan.FromSeconds(5));
-                ((IClient)sender).SendMessage(e.Command.InnerMessage.CreateResponse($"Hello again! Thread #{localThreadNumber} is awake!"));
+            IClient client = sender as IClient;
 
-            }
             if (_tumblrMap.ContainsKey(e.Command.Command))
             {
                 _webClient.DownloadString("http://" + _tumblrMap[e.Command.Command] + ".tumblr.com/random");
-                ((IClient)sender).SendMessage(e.Command.InnerMessage.CreateResponse(_webClient.ResponseUri?.ToString()));
+                client?.ReplyTo(e.Command, _webClient.ResponseUri?.ToString());
             }
         }
 

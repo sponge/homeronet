@@ -15,7 +15,6 @@ namespace homeronet.Messages
         string Channel { get; }
         string Server { get; }
         bool IsPrivate { get; }
-        IClient SendingClient { get; }
         IStandardMessage CreateResponse(string message = null);
     }
 
@@ -26,9 +25,7 @@ namespace homeronet.Messages
         public string Target { get; set; }
         public string Channel { get; set; }
         public string Server { get; set; }
-        /// <exclude />
         public bool IsPrivate { get; set; }
-        public IClient SendingClient { get; set; }
 
         public IStandardMessage CreateResponse(string message = null)
         {
@@ -41,7 +38,6 @@ namespace homeronet.Messages
                 Message = String.IsNullOrEmpty(message) ? String.Empty : message,
                 Server = this.Server,
                 Sender = this.Target, // not exactly true but it'll do...
-                SendingClient = this.SendingClient
             };
         }
     }

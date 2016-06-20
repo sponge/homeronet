@@ -35,7 +35,7 @@ namespace homeronet.Plugin
                     IClient client = Program.Kernel.Get<IrcClient>() as IClient;
                     if (client != null)
                     {
-                        client.SendMessage(new StandardMessage()
+                        client.DispatchMessage(new StandardMessage()
                         {
                             Message = $"<{message.Sender}> {message.Message}",
                             Channel = "#sa-minecraft"

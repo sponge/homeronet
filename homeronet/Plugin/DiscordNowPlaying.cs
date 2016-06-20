@@ -21,6 +21,7 @@ namespace homeronet.Plugin
 
         public Task<IStandardMessage> ProcessTextCommand(ITextCommand command)
         {
+            /*
             return new Task<IStandardMessage>(() =>
             {
                 if (command.InnerMessage.SendingClient is DiscordClient)
@@ -34,6 +35,8 @@ namespace homeronet.Plugin
                 }
                 return null;
             });
+            */
+            return null;
         }
 
         public List<string> RegisteredTextCommands

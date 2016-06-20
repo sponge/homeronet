@@ -59,12 +59,32 @@ namespace homeronet.Client
             return true; // uh why can't i get the connect result?
         }
 
+        public void ReplyTo(IStandardMessage originalMessage, string reply)
+        {
+            ReplyTo(originalMessage, originalMessage.CreateResponse(reply)); // TODO: Remove CreateResponse and remove from Interface.
+        }
+
+        public void ReplyTo(IStandardMessage originalMessage, IStandardMessage reply)
+        {
+            DispatchMessage(reply);
+        }
+
+        public void ReplyTo(ITextCommand originalCommand, string reply)
+        {
+            ReplyTo(originalCommand, originalCommand.InnerMessage.CreateResponse(reply));
+        }
+
+        public void ReplyTo(ITextCommand originalCommand, IStandardMessage reply)
+        {
+            DispatchMessage(reply);
+        }
+
         /// <summary>
         /// Sends the message.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns>Task.</returns>
-        public async Task SendMessage(IStandardMessage message)
+        public async Task DispatchMessage(IStandardMessage message)
         {
             // Is it a PM or a public message?
             if (message.IsPrivate)
@@ -95,10 +115,6 @@ namespace homeronet.Client
 
         #region Methods
 
-        public void Initialize()
-        {
-            // Not used....yet.
-        }
 
         private void DiscordClientOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
@@ -122,11 +138,17 @@ namespace homeronet.Client
             }
         }
 
+
+
         public string Name => "Discord.NET Client";
 
         public string Description => "Client that connects to Discord using the Discord.NET library.";
 
         public Version Version => new Version(0,0,1);
+        public bool MarkdownSupported => true;
+        public bool AudioSupported => true;
+        public bool IrcFormattingSupported => false;
+        public bool OEmbedSupported => true;
 
         public Discord.DiscordClient RootClient
         {

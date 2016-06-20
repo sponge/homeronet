@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using homeronet.Client;
+using homeronet.EventArgs;
 using homeronet.Messages;
+using homeronet.Services;
 
 namespace homeronet.Plugin
 {
@@ -26,7 +28,13 @@ namespace homeronet.Plugin
         private List<string> _registeredCommands = new List<string>()
         {
             "tone"
-        }; 
+        };
+
+        public Tone(IMessageBroker broker)
+        {
+            broker.CommandReceived += BrokerOnCommandReceived;
+        }
+
         public void Startup()
         {
         }
@@ -35,25 +43,25 @@ namespace homeronet.Plugin
         {
         }
 
-        public Task<IStandardMessage> ProcessTextCommand(ITextCommand command)
+        private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            return new Task<IStandardMessage>(() =>
+            IClient client = sender as IClient;
+            if (e.Command.Command == "tone")
+            {
+                // Don't hold up dispatch at all and run this long thing as a task.
+                Task.Run(() =>
                 {
-                    if (command.Command == "tone")
+                    foreach (string msg in _tonyOutput)
                     {
-                        IClient sendingClient = command.InnerMessage.SendingClient;
-                        
-                        foreach (string msg in _tonyOutput)
-                        {
-                            sendingClient.SendMessage(command.InnerMessage.CreateResponse(msg));
-                            Thread.Sleep(TimeSpan.FromSeconds(1));
-                        }
-
-                        return null;
+                        client?.ReplyTo(e.Command, msg);
+                        Thread.Sleep(TimeSpan.FromSeconds(1));
                     }
-                    return null;
+
                 });
+
+            }
         }
+
 
         public List<string> RegisteredTextCommands
         {

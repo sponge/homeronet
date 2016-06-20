@@ -15,10 +15,18 @@ namespace homeronet.Client
         string Name { get; }
         string Description { get; }
         Version Version { get; }
-        void Initialize();
+        bool MarkdownSupported { get; }
+        bool AudioSupported { get; }
+        bool IrcFormattingSupported { get; }
         Task<bool> Connect();
-        Task SendMessage(IStandardMessage message);
+        Task DispatchMessage(IStandardMessage message);
+        void ReplyTo(IStandardMessage originalMessage, string reply);
+        void ReplyTo(IStandardMessage originalMessage, IStandardMessage reply);
+        void ReplyTo(ITextCommand originalCommand, string reply);
+        void ReplyTo(ITextCommand originalCommand, IStandardMessage reply);
+        
         bool IsConnected { get; }
+
         event EventHandler<MessageReceivedEventArgs> MessageReceived;
         event EventHandler<MessageSentEventArgs> MessageSent;
     }
