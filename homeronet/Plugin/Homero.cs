@@ -1,14 +1,9 @@
-﻿using homeronet.Messages;
-using homeronet.Utility;
+﻿using homeronet.Utility;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Linq;
 using homeronet.Client;
 using homeronet.EventArgs;
-using homeronet.Messages.Attachments;
 using homeronet.Services;
 
 namespace homeronet.Plugin
@@ -17,9 +12,8 @@ namespace homeronet.Plugin
     public class Homero : IPlugin
     {
         private UriWebClient _webClient;
-        private List<string> _registeredCommands = new List<string>() { "homero", "dog", "realbusinessmen" };
         private ILogger _logger;
-        private Dictionary<String, String> _tumblrMap = new Dictionary<String, String>() {
+        private readonly Dictionary<string, string> _tumblrMap = new Dictionary<string, string>() {
             {"homero", "simpsons-latino"},
             {"dog", "goodassdog"},
             {"realbusinessmen", "realbusinessmen"}
@@ -28,6 +22,8 @@ namespace homeronet.Plugin
         public Homero(ILogger logger, IMessageBroker broker)
         {
             _logger = logger;
+            _webClient = new UriWebClient();
+
             broker.MessageReceived += BrokerOnMessageReceived;
             broker.CommandReceived += BrokerOnCommandReceived;
         }
@@ -35,7 +31,6 @@ namespace homeronet.Plugin
         public void Startup()
         {
             _logger.Info("I startup, ola.");
-            _webClient = new UriWebClient();
         }
 
         public void Shutdown()
@@ -45,18 +40,14 @@ namespace homeronet.Plugin
 
         public List<string> RegisteredTextCommands
         {
-            get { return _registeredCommands; }
+            get { return _tumblrMap.Keys.ToList(); }
         }
 
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
             IClient client = sender as IClient;
-           
-            if (_tumblrMap.ContainsKey(e.Command.Command))
-            {
-                _webClient.DownloadString("http://" + _tumblrMap[e.Command.Command] + ".tumblr.com/random");
-                client?.ReplyTo(e.Command, _webClient.ResponseUri?.ToString());
-            }
+            _webClient.DownloadString("http://" + _tumblrMap[e.Command.Command] + ".tumblr.com/random");
+            client?.ReplyTo(e.Command, _webClient.ResponseUri?.ToString());
         }
 
         private void BrokerOnMessageReceived(object sender, MessageReceivedEventArgs e)
