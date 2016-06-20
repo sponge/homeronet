@@ -1,18 +1,12 @@
-<<<<<<< HEAD
 ﻿using System;
-=======
-﻿using homeronet.Client;
-using homeronet.EventArgs;
-using homeronet.Messages;
-using homeronet.Services;
-using System;
->>>>>>> origin/feature/hot_reload_plugins
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Homero.Client;
+using Homero.EventArgs;
 using Homero.Messages;
+using Homero.Services;
 
 namespace Homero.Plugin
 {

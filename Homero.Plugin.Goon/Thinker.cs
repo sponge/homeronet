@@ -38,11 +38,22 @@ namespace Homero.Plugin.Goon
 
             StringBuilder response = new StringBuilder();
 
+            if (client?.MarkdownSupported == true)
+            {
+                response.Append("```");
+            }
+
             for (var i = 0; i < thought.Length; i++)
             {
                 string lnUsed = i + 1 == thinkerLine ? ThinkerTemplate : ThinkerEmptyLnTemplate;
                 response.AppendFormat(lnUsed, thought[i]);
             }
+
+            if (client?.MarkdownSupported == true)
+            {
+                response.Append("```");
+            }
+
 
             client?.ReplyTo(e.Command, response.ToString());
         }
