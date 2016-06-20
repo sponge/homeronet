@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using homeronet.Client;
+using homeronet.Messages.Attachments;
 
 namespace homeronet.Messages
 {
@@ -15,6 +16,7 @@ namespace homeronet.Messages
         string Channel { get; }
         string Server { get; }
         bool IsPrivate { get; }
+        List<IAttachment> Attachments { get; } 
         IStandardMessage CreateResponse(string message = null);
     }
 
@@ -26,6 +28,12 @@ namespace homeronet.Messages
         public string Channel { get; set; }
         public string Server { get; set; }
         public bool IsPrivate { get; set; }
+        public List<IAttachment> Attachments { get; set; }
+
+        public StandardMessage()
+        {
+            Attachments = new List<IAttachment>();
+        }
 
         public IStandardMessage CreateResponse(string message = null)
         {

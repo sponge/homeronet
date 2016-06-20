@@ -100,6 +100,10 @@
     <Compile Include="EventArgs\MessageReceivedEventArgs.cs" />
     <Compile Include="EventArgs\MessageSentEventArgs.cs" />
     <Compile Include="Manager\Assembly\PluginAppDomain.cs" />
+    <Compile Include="Messages\Attachments\AudioAttachment.cs" />
+    <Compile Include="Messages\Attachments\FileAttachment.cs" />
+    <Compile Include="Messages\Attachments\IAttachment.cs" />
+    <Compile Include="Messages\Attachments\ImageAttachment.cs" />
     <Compile Include="Messages\DiscordMessage.cs" />
     <Compile Include="Messages\IStandardMessage.cs" />
     <Compile Include="Messages\ITextCommand.cs" />

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using homeronet.EventArgs;
 using homeronet.Messages;
+using homeronet.Messages.Attachments;
 
 namespace homeronet.Client
 {
@@ -21,8 +22,16 @@ namespace homeronet.Client
         Task<bool> Connect();
         Task DispatchMessage(IStandardMessage message);
         void ReplyTo(IStandardMessage originalMessage, string reply);
+        void ReplyTo(IStandardMessage originalMessage, IAttachment attachment);
+        void ReplyTo(IStandardMessage originalMessage, string reply, IAttachment attachment);
+        void ReplyTo(IStandardMessage originalMessage, string reply, List<IAttachment> attachments);
+
         void ReplyTo(IStandardMessage originalMessage, IStandardMessage reply);
         void ReplyTo(ITextCommand originalCommand, string reply);
+        void ReplyTo(ITextCommand originalCommand, string reply, IAttachment attachment);
+        void ReplyTo(ITextCommand originalCommand, IAttachment attachment);
+        void ReplyTo(ITextCommand originalCommand, string reply, List<IAttachment> attachments);
+
         void ReplyTo(ITextCommand originalCommand, IStandardMessage reply);
         
         bool IsConnected { get; }

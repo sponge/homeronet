@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using homeronet.Client;
 using homeronet.EventArgs;
+using homeronet.Messages.Attachments;
 using homeronet.Services;
 
 namespace homeronet.Plugin
@@ -44,7 +45,10 @@ namespace homeronet.Plugin
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
             IClient client = sender as IClient;
-
+            if (e.Command.Command == "attachtest")
+            {
+                client?.ReplyTo(e.Command, new ImageAttachment("D:\\toadie.jpg"));
+            }
             if (_tumblrMap.ContainsKey(e.Command.Command))
             {
                 _webClient.DownloadString("http://" + _tumblrMap[e.Command.Command] + ".tumblr.com/random");

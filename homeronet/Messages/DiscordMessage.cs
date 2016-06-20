@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using homeronet.Client;
+using homeronet.Messages.Attachments;
 
 namespace homeronet.Messages
 {
@@ -48,6 +49,25 @@ namespace homeronet.Messages
         public bool IsPrivate
         {
             get { return _inner.Channel == null || _inner.Channel.Name.StartsWith("@"); }
+        }
+
+        public List<IAttachment> Attachments
+        {
+            get
+            {
+                // Bloody expensive call. We need to back this property at some point.
+                List<IAttachment> result = new List<IAttachment>();
+
+                foreach (Message.Attachment attach in _inner.Attachments)
+                {
+                    result.Add(new FileAttachment()
+                    {
+                        Name = attach.Filename,
+                        Uri = new Uri(attach.Url)
+                    });
+                }
+                return result;
+            }
         }
 
         public Message InnerMessage

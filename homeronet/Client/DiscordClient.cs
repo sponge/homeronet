@@ -1,20 +1,17 @@
-﻿using homeronet.EventArgs;
+﻿using Discord;
+using homeronet.EventArgs;
 using homeronet.Messages;
+using homeronet.Services;
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Discord;
-using Discord.API.Client;
-using homeronet.Services;
-using User = Discord.User;
+using homeronet.Messages.Attachments;
 
 namespace homeronet.Client
 {
     public class DiscordClient : IClient
     {
-
         private Discord.DiscordClient _discordClient;
         private IConfiguration _config;
 
@@ -26,10 +23,9 @@ namespace homeronet.Client
 
             if (String.IsNullOrEmpty(_config.GetValue<string>("key")))
             {
-                _config.SetValue("key","THISISNOTAREALAPIKEY");
+                _config.SetValue("key", "THISISNOTAREALAPIKEY");
                 throw new Exception("No API key specified. Created a default file for editing.");
             }
-
 
             _discordClient = new Discord.DiscordClient(x =>
             {
@@ -39,16 +35,16 @@ namespace homeronet.Client
             });
 
             _discordClient.MessageReceived += DiscordClientOnMessageReceived;
-
         }
-
 
         #endregion Constructors
 
         #region Events
 
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
-        public event EventHandler<MessageSentEventArgs> MessageSent; 
+
+        public event EventHandler<MessageSentEventArgs> MessageSent;
+
         #endregion Events
 
         #region Async Methods
@@ -64,6 +60,25 @@ namespace homeronet.Client
             ReplyTo(originalMessage, originalMessage.CreateResponse(reply)); // TODO: Remove CreateResponse and remove from Interface.
         }
 
+        public void ReplyTo(IStandardMessage originalMessage, string reply, IAttachment attachment)
+        {
+            IStandardMessage msg = originalMessage.CreateResponse(reply);
+            msg.Attachments.Add(attachment);
+            ReplyTo(originalMessage, msg);
+        }
+
+        public void ReplyTo(IStandardMessage originalMessage, IAttachment attachment)
+        {
+            ReplyTo(originalMessage, String.Empty, attachment);
+        }
+
+        public void ReplyTo(IStandardMessage originalMessage, string reply, List<IAttachment> attachments)
+        {
+            IStandardMessage msg = originalMessage.CreateResponse(reply);
+            msg.Attachments.AddRange(attachments);
+            ReplyTo(originalMessage, msg);
+        }
+
         public void ReplyTo(IStandardMessage originalMessage, IStandardMessage reply)
         {
             DispatchMessage(reply);
@@ -72,6 +87,24 @@ namespace homeronet.Client
         public void ReplyTo(ITextCommand originalCommand, string reply)
         {
             ReplyTo(originalCommand, originalCommand.InnerMessage.CreateResponse(reply));
+        }
+        public void ReplyTo(ITextCommand originalCommand, IAttachment attachment)
+        {
+            ReplyTo(originalCommand, String.Empty, attachment);
+        }
+
+        public void ReplyTo(ITextCommand originalCommand, string reply, IAttachment attachment)
+        {
+            IStandardMessage msg = originalCommand.InnerMessage.CreateResponse(reply);
+            msg.Attachments.Add(attachment);
+            ReplyTo(originalCommand, msg);
+        }
+
+        public void ReplyTo(ITextCommand originalCommand, string reply, List<IAttachment> attachments)
+        {
+            IStandardMessage msg = originalCommand.InnerMessage.CreateResponse(reply);
+            msg.Attachments.AddRange(attachments);
+            ReplyTo(originalCommand, msg);
         }
 
         public void ReplyTo(ITextCommand originalCommand, IStandardMessage reply)
@@ -86,75 +119,82 @@ namespace homeronet.Client
         /// <returns>Task.</returns>
         public async Task DispatchMessage(IStandardMessage message)
         {
+            Discord.Channel targetChannel = null;
+
             // Is it a PM or a public message?
             if (message.IsPrivate)
             {
-                var targetChannel = _discordClient.PrivateChannels.FirstOrDefault(x => x.Name == message.Channel);
-                var sendMessage = targetChannel?.SendMessage(message.Message);
-                if (sendMessage != null)
-                {
-                    await sendMessage;
-                    MessageSent?.Invoke(this, new MessageSentEventArgs(message));
-                }
+                targetChannel = _discordClient.PrivateChannels.FirstOrDefault(x => x.Name == message.Channel);
             }
             else
             {
-                Discord.Channel targetedChannel = (_discordClient.Servers
-                    .FirstOrDefault(x => x.Name == message.Server)?.TextChannels)?.FirstOrDefault(x => x.Name == message.Channel);
-
-                var sendMessage = targetedChannel?.SendMessage(message.Message);
-                if (sendMessage != null)
-                {
-                    await sendMessage;
-                    MessageSent?.Invoke(this, new MessageSentEventArgs(message));
-                }
+                targetChannel = (_discordClient.Servers
+                    .FirstOrDefault(x => x.Name == message.Server)?.TextChannels)?.FirstOrDefault(
+                        x => x.Name == message.Channel);
             }
-        }
 
-        #endregion Async Methods
+            bool sentAttachment = false;
 
-        #region Methods
+            foreach (IAttachment attachment in message.Attachments)
+            {
+                await targetChannel?.SendFile(attachment.Name, attachment.DataStream);
+                sentAttachment = true;
+            }
 
-
-        private void DiscordClientOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
-        {
-            if (messageEventArgs.User.Id == _discordClient.CurrentUser.Id)
+            if (String.IsNullOrEmpty(message.Message) && sentAttachment)
             {
                 return;
             }
-            DiscordMessage message = new DiscordMessage(this, messageEventArgs.Message);
-            MessageReceived?.Invoke(this, new MessageReceivedEventArgs(message));
-        }
 
-        #endregion Methods
-
-        #region Properties
-
-        public bool IsConnected
-        {
-            get
+            var sendMessage = targetChannel?.SendMessage(message.Message);
+            if (sendMessage != null)
             {
-                return _discordClient.State == ConnectionState.Connected;
+                await sendMessage;
+                MessageSent?.Invoke(this, new MessageSentEventArgs(message));
             }
         }
 
+    #endregion Async Methods
 
+    #region Methods
 
-        public string Name => "Discord.NET Client";
-
-        public string Description => "Client that connects to Discord using the Discord.NET library.";
-
-        public Version Version => new Version(0,0,1);
-        public bool MarkdownSupported => true;
-        public bool AudioSupported => true;
-        public bool IrcFormattingSupported => false;
-        public bool OEmbedSupported => true;
-
-        public Discord.DiscordClient RootClient
+    private void DiscordClientOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
+    {
+        if (messageEventArgs.User.Id == _discordClient.CurrentUser.Id)
         {
-            get { return _discordClient; }
+            return;
         }
-
-        #endregion Properties
+        DiscordMessage message = new DiscordMessage(this, messageEventArgs.Message);
+        MessageReceived?.Invoke(this, new MessageReceivedEventArgs(message));
     }
+
+    #endregion Methods
+
+    #region Properties
+
+    public bool IsConnected
+    {
+        get
+        {
+            return _discordClient.State == ConnectionState.Connected;
+        }
+    }
+
+    public string Name => "Discord.NET Client";
+
+    public string Description => "Client that connects to Discord using the Discord.NET library.";
+
+    public Version Version => new Version(0, 0, 1);
+    public bool MarkdownSupported => true;
+    public bool AudioSupported => true;
+    public bool IrcFormattingSupported => false;
+    public bool OEmbedSupported => true;
+
+    public Discord.DiscordClient RootClient
+    {
+        get { return _discordClient; }
+    }
+
+    #endregion Properties
+}
 }
