@@ -96,7 +96,9 @@
     <Compile Include="Client\IrcClient.cs" />
     <Compile Include="Client\SlackClient.cs" />
     <Compile Include="Client\TwitchClient.cs" />
+    <Compile Include="EventArgs\CommandReceivedEventArgs.cs" />
     <Compile Include="EventArgs\MessageReceivedEventArgs.cs" />
+    <Compile Include="EventArgs\MessageSentEventArgs.cs" />
     <Compile Include="Manager\Assembly\PluginAppDomain.cs" />
     <Compile Include="Messages\DiscordMessage.cs" />
     <Compile Include="Messages\IStandardMessage.cs" />
@@ -121,11 +123,14 @@
     <Compile Include="Services\ILogger.cs" />
     <Compile Include="Services\Configuration\JsonConfiguration.cs" />
     <Compile Include="Services\ILoggerFactory.cs" />
+    <Compile Include="Services\IMessageBroker.cs" />
+    <Compile Include="Services\MessageBrokerService.cs" />
     <Compile Include="Services\NLogLogger.cs" />
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Utility\UriWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Utility\WeakEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\business.txt">

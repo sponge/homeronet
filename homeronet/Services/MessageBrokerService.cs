@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using homeronet.Client;
+﻿using homeronet.Client;
 using homeronet.EventArgs;
 using homeronet.Messages;
 using homeronet.Properties;
 using Ninject;
+using System;
 using WeakEvent;
 
 namespace homeronet.Services
@@ -23,6 +19,7 @@ namespace homeronet.Services
             add { _commandEventSource.Subscribe(value); }
             remove { _commandEventSource.Unsubscribe(value); }
         }
+
         public event EventHandler<MessageReceivedEventArgs> MessageReceived
         {
             add { _messageReceivedEventSource.Subscribe(value); }
@@ -35,7 +32,6 @@ namespace homeronet.Services
             remove { _messageSentEventSource.Unsubscribe(value); }
         }
 
-
         public MessageBrokerService(IKernel kernel)
         {
             foreach (IClient client in kernel.GetAll<IClient>())
@@ -47,7 +43,7 @@ namespace homeronet.Services
 
         private void ClientOnMessageSent(object sender, MessageSentEventArgs e)
         {
-            _messageSentEventSource.Raise(sender, e);
+            _messageSentEventSource.RaiseAsync(sender, e);
         }
 
         private void ClientOnMessageReceived(object sender, MessageReceivedEventArgs e)
@@ -56,11 +52,11 @@ namespace homeronet.Services
             if (e.Message.Message.StartsWith(Settings.Default.CommandPrefix))
             {
                 TextCommand command = new TextCommand(e.Message);
-                _commandEventSource.Raise(sender, new CommandReceivedEventArgs(command));
+                _commandEventSource.RaiseAsync(sender, new CommandReceivedEventArgs(command));
                 return;
             }
 
-            _messageReceivedEventSource.Raise(sender, e);
+            _messageReceivedEventSource.RaiseAsync(sender, e);
         }
     }
 }

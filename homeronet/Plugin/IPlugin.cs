@@ -12,9 +12,6 @@ namespace homeronet.Plugin
     {
         void Startup();
         void Shutdown();
-
-        Task<IStandardMessage> ProcessTextCommand(ITextCommand command);
-        List<string> RegisteredTextCommands { get; }
-        Task<IStandardMessage> ProcessTextMessage(IStandardMessage message);
+        // List<string> RegisteredTextCommands { get; }
     }
 }

@@ -6,11 +6,15 @@ using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using homeronet.Client;
+using homeronet.EventArgs;
 using homeronet.Services;
 
-namespace homeronet.Plugin {
+namespace homeronet.Plugin
+{
 
-    public class Homero : IPlugin {
+    public class Homero : IPlugin
+    {
         private UriWebClient _webClient;
         private List<string> _registeredCommands = new List<string>() { "homero", "dog", "realbusinessmen" };
         private ILogger _logger;
@@ -20,40 +24,46 @@ namespace homeronet.Plugin {
             {"realbusinessmen", "realbusinessmen"}
         };
 
-        public Homero(ILogger logger)
+        private int threadNumber = 0;
+
+        public Homero(ILogger logger, IMessageBroker broker)
         {
             _logger = logger;
+            broker.MessageReceived += BrokerOnMessageReceived;
+            broker.CommandReceived += BrokerOnCommandReceived;
         }
 
-        public void Startup() {
+        public void Startup()
+        {
             _logger.Info("I startup, ola.");
             _webClient = new UriWebClient();
         }
 
-        public void Shutdown() {
+        public void Shutdown()
+        {
+            // ignored
+        }
+        private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
+        {
+            if (e.Command.Command == "threadtest")
+            {
+                int localThreadNumber = threadNumber;
+                ((IClient)sender).SendMessage(e.Command.InnerMessage.CreateResponse($"Hello! I'm thread #{localThreadNumber}. I will sleep for 5 sec."));
+                threadNumber += 1;
+                Thread.Sleep(TimeSpan.FromSeconds(5));
+                ((IClient)sender).SendMessage(e.Command.InnerMessage.CreateResponse($"Hello again! Thread #{localThreadNumber} is awake!"));
+
+            }
+            if (_tumblrMap.ContainsKey(e.Command.Command))
+            {
+                _webClient.DownloadString("http://" + _tumblrMap[e.Command.Command] + ".tumblr.com/random");
+                ((IClient)sender).SendMessage(e.Command.InnerMessage.CreateResponse(_webClient.ResponseUri?.ToString()));
+            }
         }
 
-        public Task<IStandardMessage> ProcessTextCommand(ITextCommand command) {
-            return new Task<IStandardMessage>(() => {
-                if (_tumblrMap.ContainsKey(command.Command)) {
-                    _webClient.DownloadString("http://" + _tumblrMap[command.Command] + ".tumblr.com/random");
-                    return command.InnerMessage.CreateResponse(_webClient.ResponseUri?.ToString());
-                }
-                return null;
-            });
-        }
-
-        public List<string> RegisteredTextCommands {
-            get { return _registeredCommands; }
-        }
-
-        public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message) {
-            return new Task<IStandardMessage>(() => {
-                if (message.Message == "hello homero") {
-                    return message.CreateResponse("hi friend");
-                }
-                return null;
-            });
+        private void BrokerOnMessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+            _logger.Info(e.Message.Message);
         }
     }
 }
