@@ -142,6 +142,7 @@
     <Compile Include="Services\NLogLogger.cs" />
     <Compile Include="Utility\CustomEventHandlers.cs" />
     <Compile Include="Utility\Logger.cs" />
+    <Compile Include="Utility\Paths.cs" />
     <Compile Include="Utility\UriWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
