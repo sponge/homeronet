@@ -1,47 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Homero.Client;
+using Homero.EventArgs;
 using Homero.Messages;
+using Homero.Services;
 
-namespace Homero.Plugin {
+namespace Homero.Plugin.Converter
+{
 
-    public class Temperature : IPlugin {
+    public class Temperature : IPlugin
+    {
         private List<string> _registeredCommands = new List<string>() { "temperature" };
 
-        public void Startup() {
+        public Temperature(IMessageBroker broker)
+        {
+            broker.CommandReceived += Broker_CommandReceived;
         }
 
-        public void Shutdown() {
+        private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
+        {
+            IClient client = sender as IClient;
+            double temp;
+            try
+            {
+                temp = double.Parse(e.Command.Arguments[0]);
+            }
+            catch (Exception)
+            {
+                client?.ReplyTo(e.Command, ".temperature <temp> -- converts <temp> from C to F and F to C");
+                return;
+            }
+
+            if (Math.Abs(temp) == 420)
+            {
+                client?.ReplyTo(e.Command, "SMOKE WEED EVERY DAY DONT GIVE A FUCK");
+                return;
+            }
+            else if (Math.Abs(temp) > 500)
+            {
+                client?.ReplyTo(e.Command, "2 hot 4 u");
+                return;
+            }
+
+            double c = (temp - 32) * (5.0 / 9.0);
+            double f = (temp * (9.0 / 5.0)) + 32;
+
+            client?.ReplyTo(e.Command, String.Format("{0:0.0}F is {1:0.0}C. {0:0.0}C is {2:0.0}F.", temp, c, f));
         }
 
-        public Task<IStandardMessage> ProcessTextCommand(ITextCommand command) {
-            return new Task<IStandardMessage>(() => {
-                double temp;
-                try {
-                    temp = double.Parse(command.Arguments[0]);
-                } catch (Exception) {
-                    return command.InnerMessage.CreateResponse(".temperature <temp> -- converts <temp> from C to F and F to C");
-                }
+        public void Startup()
+        {
+        }
 
-                if (Math.Abs(temp) == 420) {
-                    return command.InnerMessage.CreateResponse("SMOKE WEED EVERY DAY DONT GIVE A FUCK");
-                } else if(Math.Abs(temp) > 500) {
-                    return command.InnerMessage.CreateResponse("2 hot 4 u");
-                }
-
-                double c = (temp - 32) * (5.0 / 9.0);
-                double f = (temp * (9.0 / 5.0)) + 32;
-
-                return command.InnerMessage.CreateResponse(String.Format("{0:0.0}F is {1:0.0}C. {0:0.0}C is {2:0.0}F.", temp, c, f));
-            });
+        public void Shutdown()
+        {
         }
 
         public List<string> RegisteredTextCommands {
             get { return _registeredCommands; }
-        }
-
-        public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message) {
-            return null;
         }
     }
 }
