@@ -11,7 +11,10 @@ namespace Homero.Plugin.Goon
     {
         public override void Load()
         {
-
+            Bind<IPlugin>().To<Fortune>().InSingletonScope();
+            Bind<IPlugin>().To<Border>().InSingletonScope();
+            Bind<IPlugin>().To<Thinker>().InSingletonScope();
+            Bind<IPlugin>().To<Trek>().InSingletonScope();
         }
     }
 }
