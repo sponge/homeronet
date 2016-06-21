@@ -109,21 +109,11 @@
     <Compile Include="Messages\IStandardMessage.cs" />
     <Compile Include="Messages\ITextCommand.cs" />
     <Compile Include="Messages\IVoiceMessage.cs" />
-    <Compile Include="Plugin\Currency.cs" />
-    <Compile Include="Plugin\DiscordNowPlaying.cs" />
-    <Compile Include="Plugin\Fortune.cs" />
     <Compile Include="Plugin\Homero.cs" />
     <Compile Include="Plugin\HomeroModule.cs" />
     <Compile Include="Plugin\IPlugin.cs" />
     <Compile Include="Plugin\IrcReflect.cs" />
-    <Compile Include="Plugin\Reddit.cs" />
-    <Compile Include="Plugin\Border.cs" />
-    <Compile Include="Plugin\Pepito.cs" />
     <Compile Include="Plugin\SBEmail.cs" />
-    <Compile Include="Plugin\Temperature.cs" />
-    <Compile Include="Plugin\Tone.cs" />
-    <Compile Include="Plugin\Trek.cs" />
-    <Compile Include="Plugin\YeahWoo.cs" />
     <Compile Include="Plugin\YouTube.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -149,24 +139,6 @@
     <Compile Include="Utility\WeakEvent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\business.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\deepthoughts.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\fatgoon.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\jerk.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\lilpp_list.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\trolldb.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="App.config" />
     <Content Include="clientauth.json" />
     <Content Include="NLog.config">
@@ -179,9 +151,6 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Resources\trek.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup />

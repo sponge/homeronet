@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Homero.Client;
 using Homero.EventArgs;
-using Homero.Messages;
 using Homero.Services;
 
-namespace Homero.Plugin
+namespace Homero.Plugin.Circlejerk
 {
     public class Tone : IPlugin
     {
@@ -66,9 +67,6 @@ namespace Homero.Plugin
             get { return _registeredCommands; }
         }
 
-        public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message)
-        {
-            return null;
-        }
     }
+
 }

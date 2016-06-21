@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Homero.Messages;
 using Newtonsoft.Json.Linq;
 
-namespace Homero.Plugin
+namespace Homero.Plugin.Circlejerk
 {
     public class Reddit : IPlugin
     {

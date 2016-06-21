@@ -7,7 +7,7 @@ using Homero.Client;
 using Homero.EventArgs;
 using Homero.Services;
 
-namespace Homero.Plugin
+namespace Homero.Plugin.Converter
 {
     public class Currency : IPlugin
     {
@@ -32,7 +32,7 @@ namespace Homero.Plugin
 
             if (e.Command.Arguments?.Count != 3)
             {
-                client.ReplyTo(e.Command, HELP_MESSAGE);
+                client?.ReplyTo(e.Command, HELP_MESSAGE);
                 return;
             }
             decimal amount = Decimal.Parse(e.Command.Arguments.First());
@@ -43,7 +43,7 @@ namespace Homero.Plugin
             dynamic response = JsonConvert.DeserializeObject<dynamic>(_webClient.DownloadString(url));
             decimal rate = response["rates"][currencyTo];
 
-            client.ReplyTo(e.Command, String.Format(OUPUT_FORMAT, amount, currencyFrom, (rate * amount).ToString(), currencyTo));
+            client?.ReplyTo(e.Command, String.Format(OUPUT_FORMAT, amount, currencyFrom, rate * amount, currencyTo));
         }
 
         public void Startup()
