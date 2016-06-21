@@ -47,6 +47,7 @@
     <ProjectReference Include="..\homeronet\Homero.csproj">
       <Project>{FF9F1CD6-7472-452C-AA36-A0EBF6014DD3}</Project>
       <Name>Homero</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
