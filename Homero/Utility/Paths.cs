@@ -25,7 +25,7 @@ namespace Homero.Utility
         {
             get
             {
-                return Path.Combine(AssemblyDirectory,"Resources");
+                return Path.Combine(AssemblyDirectory,"Plugins","Resources");
             }
         }
     }
