@@ -31,9 +31,6 @@ namespace Homero
             Logger.Debug("Configuring Message Broker");
             Kernel.Bind<IMessageBroker>().To<MessageBrokerService>().InSingletonScope();
 
-            Logger.Info("Loading standard plugins.");
-            Kernel.Load(new HomeroModule());
-
             Logger.Info("Scanning and loading plugin directory.");
             Kernel.Load("Plugins\\Homero.Plugin.*.dll");
 
@@ -52,6 +49,7 @@ namespace Homero
                 {
                     Logger.Warn($"Error starting {plugin.GetType()}.");
                     Logger.Error(e);
+                    Kernel.Unbind(plugin.GetType());
                 }
             }
 

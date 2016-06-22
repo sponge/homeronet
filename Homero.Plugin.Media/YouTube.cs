@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Homero.Messages;
+using Homero.Services;
 using Homero.Utility;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Ninject;
 using Ninject.Parameters;
 
-namespace Homero.Plugin {
+namespace Homero.Plugin.Media {
 
-    public class YouTube : IPlugin {
+    public class YouTube : IPlugin
+    {
 
         private struct YouTubeVideo {
             public string title;
@@ -39,8 +41,18 @@ namespace Homero.Plugin {
             "anime obama"
         };
 
-        private IClientConfiguration _youtubeConfig;
+        private string _ytApiKey = String.Empty;
 
+        public YouTube(IMessageBroker broker, IConfiguration config)
+        {
+            _ytApiKey = config.GetValue<string>("ApiKey");
+            if (String.IsNullOrEmpty(_ytApiKey))
+            {
+                config.SetValue("ApiKey", "SETANAPIKEYDINGUS");
+                throw new Exception("No API key provided!");
+            }
+        }
+        
         public void Startup() {
             _webClient = new UriWebClient();
             _youtubeConfig = Program.Kernel.Get<IClientConfiguration>(new Parameter("ClientName", "YouTube", true));
