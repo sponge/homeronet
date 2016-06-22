@@ -1,9 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "homeronet", "homeronet\homeronet.csproj", "{FF9F1CD6-7472-452C-AA36-A0EBF6014DD3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero", "Homero\Homero.csproj", "{FF9F1CD6-7472-452C-AA36-A0EBF6014DD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Plugin.Goon", "Homero.Plugin.Goon\Homero.Plugin.Goon.csproj", "{9AC76BA3-9417-44E3-A1D5-3611977C501B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Plugin.Converter", "Homero.Plugin.Converter\Homero.Plugin.Converter.csproj", "{7A89EAC8-65D6-44BE-B18E-55C80F097780}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Plugin.Discord", "Homero.Plugin.Discord\Homero.Plugin.Discord.csproj", "{E19EBA33-7DCD-4E67-90E8-7B7DC42AE308}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Plugin.Circlejerk", "Homero.Plugin.Circlejerk\Homero.Plugin.Circlejerk.csproj", "{90EC9347-D537-49A3-B99A-BB911DFF0D55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Plugin.Media", "Homero.Plugin.Media\Homero.Plugin.Media.csproj", "{E29BAFF4-C58F-483A-823A-30EA7D6E011D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +25,26 @@ Global
 		{FF9F1CD6-7472-452C-AA36-A0EBF6014DD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF9F1CD6-7472-452C-AA36-A0EBF6014DD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF9F1CD6-7472-452C-AA36-A0EBF6014DD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AC76BA3-9417-44E3-A1D5-3611977C501B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AC76BA3-9417-44E3-A1D5-3611977C501B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AC76BA3-9417-44E3-A1D5-3611977C501B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AC76BA3-9417-44E3-A1D5-3611977C501B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A89EAC8-65D6-44BE-B18E-55C80F097780}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A89EAC8-65D6-44BE-B18E-55C80F097780}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A89EAC8-65D6-44BE-B18E-55C80F097780}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A89EAC8-65D6-44BE-B18E-55C80F097780}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E19EBA33-7DCD-4E67-90E8-7B7DC42AE308}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E19EBA33-7DCD-4E67-90E8-7B7DC42AE308}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E19EBA33-7DCD-4E67-90E8-7B7DC42AE308}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E19EBA33-7DCD-4E67-90E8-7B7DC42AE308}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90EC9347-D537-49A3-B99A-BB911DFF0D55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90EC9347-D537-49A3-B99A-BB911DFF0D55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90EC9347-D537-49A3-B99A-BB911DFF0D55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90EC9347-D537-49A3-B99A-BB911DFF0D55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E29BAFF4-C58F-483A-823A-30EA7D6E011D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E29BAFF4-C58F-483A-823A-30EA7D6E011D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E29BAFF4-C58F-483A-823A-30EA7D6E011D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E29BAFF4-C58F-483A-823A-30EA7D6E011D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
