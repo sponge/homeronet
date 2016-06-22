@@ -15,6 +15,7 @@ namespace Homero.Client
         bool MarkdownSupported { get; }
         bool AudioSupported { get; }
         bool IrcFormattingSupported { get; }
+        bool InlineOrOembedSupported { get; }
         Task<bool> Connect();
         Task DispatchMessage(IStandardMessage message);
         void ReplyTo(IStandardMessage originalMessage, string reply);

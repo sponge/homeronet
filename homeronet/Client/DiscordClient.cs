@@ -57,7 +57,8 @@ namespace Homero.Client
 
         public void ReplyTo(IStandardMessage originalMessage, string reply)
         {
-            ReplyTo(originalMessage, originalMessage.CreateResponse(reply)); // TODO: Remove CreateResponse and remove from Interface.
+            ReplyTo(originalMessage, originalMessage.CreateResponse(reply));
+                // TODO: Remove CreateResponse and remove from Interface.
         }
 
         public void ReplyTo(IStandardMessage originalMessage, string reply, IAttachment attachment)
@@ -88,6 +89,7 @@ namespace Homero.Client
         {
             ReplyTo(originalCommand, originalCommand.InnerMessage.CreateResponse(reply));
         }
+
         public void ReplyTo(ITextCommand originalCommand, IAttachment attachment)
         {
             ReplyTo(originalCommand, String.Empty, attachment);
@@ -154,47 +156,44 @@ namespace Homero.Client
             }
         }
 
-    #endregion Async Methods
+        #endregion Async Methods
 
-    #region Methods
+        #region Methods
 
-    private void DiscordClientOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
-    {
-        if (messageEventArgs.User.Id == _discordClient.CurrentUser.Id)
+        private void DiscordClientOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
-            return;
+            if (messageEventArgs.User.Id == _discordClient.CurrentUser.Id)
+            {
+                return;
+            }
+            DiscordMessage message = new DiscordMessage(this, messageEventArgs.Message);
+            MessageReceived?.Invoke(this, new MessageReceivedEventArgs(message));
         }
-        DiscordMessage message = new DiscordMessage(this, messageEventArgs.Message);
-        MessageReceived?.Invoke(this, new MessageReceivedEventArgs(message));
-    }
 
-    #endregion Methods
+        #endregion Methods
 
-    #region Properties
+        #region Properties
 
-    public bool IsConnected
-    {
-        get
+        public bool IsConnected
         {
-            return _discordClient.State == ConnectionState.Connected;
+            get { return _discordClient.State == ConnectionState.Connected; }
         }
+
+        public string Name => "Discord.NET Client";
+
+        public string Description => "Client that connects to Discord using the Discord.NET library.";
+
+        public Version Version => new Version(0, 0, 1);
+        public bool MarkdownSupported => true;
+        public bool AudioSupported => true;
+        public bool IrcFormattingSupported => false;
+        public bool InlineOrOembedSupported => true;
+
+        public Discord.DiscordClient RootClient
+        {
+            get { return _discordClient; }
+        }
+
+        #endregion Properties
     }
-
-    public string Name => "Discord.NET Client";
-
-    public string Description => "Client that connects to Discord using the Discord.NET library.";
-
-    public Version Version => new Version(0, 0, 1);
-    public bool MarkdownSupported => true;
-    public bool AudioSupported => true;
-    public bool IrcFormattingSupported => false;
-    public bool OEmbedSupported => true;
-
-    public Discord.DiscordClient RootClient
-    {
-        get { return _discordClient; }
-    }
-
-    #endregion Properties
-}
 }

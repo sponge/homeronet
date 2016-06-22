@@ -1,31 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
+using Homero.Client;
+using Homero.EventArgs;
 using Homero.Messages;
 using Homero.Services;
 using Homero.Utility;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Ninject;
-using Ninject.Parameters;
 
 namespace Homero.Plugin.Media {
 
     public class YouTube : IPlugin
     {
-
-        private struct YouTubeVideo {
-            public string title;
-            public string length;
-            public string likeCount;
-            public string dislikeCount;
-            public string viewCount;
-            public string channelTitle;
-            public string publishedAt;
-            public string videoUrl;
-        }
-
-        private UriWebClient _webClient;
+        private WebClient _webClient;
         private Random _random = new Random();
 
         private static string _searchUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=50&q={0}&key={1}";
@@ -51,73 +40,89 @@ namespace Homero.Plugin.Media {
                 config.SetValue("ApiKey", "SETANAPIKEYDINGUS");
                 throw new Exception("No API key provided!");
             }
+            _webClient = new WebClient();
+            broker.CommandReceived += BrokerOnCommandReceived;
         }
-        
+
+        private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
+        {
+            IClient client = sender as IClient;
+            YouTubeVideo video = null;
+
+            if (e.Command.Command == "youtube" || e.Command.Command == "yt")
+            {
+                // TODO: update this with the proper check once lilpp decides on api design
+                if (e.Command.Arguments.Count <= 0)
+                {
+                    client?.ReplyTo(e.Command, "youtube <query> -- returns the first YouTube search result for <query>");
+                    return;
+                }
+
+                video = SearchVideo(string.Join(" ", e.Command.Arguments), false);
+            }
+            else if (command.Command == "kula")
+            {
+                video = SearchVideo("kula world", true);
+                return command.InnerMessage.CreateResponse($"{vid.title} - {vid.videoUrl}");
+            }
+            else if (command.Command == "sylauxe")
+            {
+                video = SearchVideo(_sylauxeSearches[_random.Next(_sylauxeSearches.Count)], true);
+            }
+
+            if (video != null)
+            {
+                if (client?.InlineOrOembedSupported == true)
+                {
+                    client.ReplyTo(e.Command, $"{video.Title} - {video.VideoUrl}");
+                }
+                else
+                {
+                    client?.ReplyTo(e.Command, $"{vid.title} - {vid.videoUrl} - 👍 {vid.likeCount} 	👎 {vid.dislikeCount} - {vid.viewCount} views - {vid.channelTitle} on {vid.publishedAt}");
+                }
+            }
+
+        }
+
         public void Startup() {
-            _webClient = new UriWebClient();
-            _youtubeConfig = Program.Kernel.Get<IClientConfiguration>(new Parameter("ClientName", "YouTube", true));
         }
 
         private YouTubeVideo SearchVideo(string searchTerm, bool randomResult) {
             searchTerm = Uri.EscapeUriString(searchTerm);
-            var json = _webClient.DownloadString(string.Format(_searchUrl, searchTerm, _youtubeConfig.ApiKey));
+            var json = _webClient.DownloadString(string.Format(_searchUrl, searchTerm, _ytApiKey));
             var results = JsonConvert.DeserializeObject<JObject>(json);
 
             var items = (JArray)results.SelectToken("items");
             var rnd = _random.Next(items.Count);
             string videoId = results.SelectToken($"items[{rnd}].id.videoId").ToString();
 
-            var videoJson = _webClient.DownloadString(string.Format(_infoUrl, videoId, _youtubeConfig.ApiKey));
+            var videoJson = _webClient.DownloadString(string.Format(_infoUrl, videoId, _ytApiKey));
             var videoInfo = JsonConvert.DeserializeObject<JObject>(videoJson);
 
-            var ret = new YouTubeVideo();
-            ret.title = videoInfo.SelectToken("items[0].snippet.title").ToString();
-            ret.length = videoInfo.SelectToken("items[0].contentDetails.duration")?.ToString().Replace("PT", "").ToLower();
-            ret.likeCount = videoInfo.SelectToken("items[0].statistics.likeCount")?.ToString();
-            ret.dislikeCount = videoInfo.SelectToken("items[0].statistics.dislikeCount")?.ToString();
-            ret.viewCount = videoInfo.SelectToken("items[0].statistics.viewCount")?.ToString();
-            ret.channelTitle = videoInfo.SelectToken("items[0].snippet.channelTitle")?.ToString();
-            ret.publishedAt = videoInfo.SelectToken("items[0].snippet.publishedAt")?.ToString();
-            ret.videoUrl = $"http://youtu.be/{videoId}";
+            var ret = new YouTubeVideo
+            {
+                Title = videoInfo.SelectToken("items[0].snippet.title").ToString(),
+                Length =
+                    videoInfo.SelectToken("items[0].contentDetails.duration")?.ToString().Replace("PT", "").ToLower(),
+                LikeCount = videoInfo.SelectToken("items[0].statistics.likeCount")?.ToString(),
+                DislikeCount = videoInfo.SelectToken("items[0].statistics.dislikeCount")?.ToString(),
+                ViewCount = videoInfo.SelectToken("items[0].statistics.viewCount")?.ToString(),
+                ChannelTitle = videoInfo.SelectToken("items[0].snippet.channelTitle")?.ToString(),
+                PublishedAt = videoInfo.SelectToken("items[0].snippet.publishedAt")?.ToString(),
+                VideoUrl = $"http://youtu.be/{videoId}"
+            };
 
             return ret;
         }
 
-        public void Shutdown() {
-        }
-
-        public Task<IStandardMessage> ProcessTextCommand(ITextCommand command) {
-            return new Task<IStandardMessage>(() => {
-                if (command.Command == "youtube" || command.Command == "yt") {
-                    // TODO: update this with the proper check once lilpp decides on api design
-                    if (command.Arguments?.Count < 1) {
-                        return command.InnerMessage.CreateResponse("youtube <query> -- returns the first YouTube search result for <query>");
-                    }
-                    else {
-                        var vid = SearchVideo(string.Join(" ", command.Arguments), false);
-                        // TODO: flesh this out, return a message for irc, and a message for discord that has less and markdown formatting
-                        return command.InnerMessage.CreateResponse($"{vid.title} - {vid.videoUrl}");
-                    }
-                }
-                else if (command.Command == "kula") {
-                    var vid = SearchVideo("kula world", true);
-                    return command.InnerMessage.CreateResponse($"{vid.title} - {vid.videoUrl}");
-                }
-                else if (command.Command == "sylauxe") {
-                    var vid = SearchVideo(_sylauxeSearches[_random.Next(_sylauxeSearches.Count)], true);
-                    return command.InnerMessage.CreateResponse($"{vid.title} - {vid.videoUrl}");
-                }
-
-                return null;
-            });
+        public void Shutdown()
+        {
         }
 
         public List<string> RegisteredTextCommands {
             get { return _registeredCommands; }
         }
 
-        public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message) {
-            return null;
-        }
     }
 }
+ 
