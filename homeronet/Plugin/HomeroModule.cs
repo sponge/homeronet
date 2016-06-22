@@ -7,9 +7,6 @@ namespace Homero.Plugin {
         public override void Load() {
             // TODO: Define per-client scopes if requested.
             Bind<IPlugin>().To<Homero>().InSingletonScope();
-            Bind<IPlugin>().To<DiscordNowPlaying>().InSingletonScope();
-            Bind<IPlugin>().To<Border>().InSingletonScope();
-            Bind<IPlugin>().To<Currency>().InSingletonScope();
         }
     }
 }

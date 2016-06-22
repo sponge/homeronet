@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Homero.Client;
 using Homero.Plugin;
 using Homero.Services;
@@ -34,7 +35,7 @@ namespace Homero
             Kernel.Load(new HomeroModule());
 
             Logger.Info("Scanning and loading plugin directory.");
-            Kernel.Load("Plugins\\Homeronet.Plugin.*.dll");
+            Kernel.Load("Plugins\\Homero.Plugin.*.dll");
 
             Logger.Debug("Loading all clients.");
             Kernel.Bind(x => x.FromThisAssembly().SelectAllClasses().InheritedFrom<IClient>().BindAllInterfaces().Configure(b => b.InSingletonScope()));
@@ -71,6 +72,8 @@ namespace Homero
 
             Logger.Info("Homero running. Press any key to quit.");
             Console.ReadKey();
+
+            Kernel.GetAll<IPlugin>().ToList().ForEach(x => x.Shutdown());
         }
     }
 }
