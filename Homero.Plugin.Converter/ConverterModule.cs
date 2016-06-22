@@ -11,6 +11,9 @@ namespace Homero.Plugin.Converter
     {
         public override void Load()
         {
+            Bind<IPlugin>().To<Beats>().InSingletonScope();
+            Bind<IPlugin>().To<Currency>().InSingletonScope();
+            Bind<IPlugin>().To<Temperature>().InSingletonScope();
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Homero.Plugin.Media
         public string PublishedAt;
         public string VideoUrl;
 
-        public static YouTubeVideo SearchVideo(string searchTerm, string apiKey, bool randomResult = false)
+        public static YouTubeVideo Search(string searchTerm, string apiKey, bool randomResult = false)
         {
             WebClient client = new WebClient();
             Random rng = new Random();

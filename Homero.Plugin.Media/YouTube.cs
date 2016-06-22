@@ -17,8 +17,7 @@ namespace Homero.Plugin.Media {
         private WebClient _webClient;
         private Random _random = new Random();
 
-        private static string _searchUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=50&q={0}&key={1}";
-        private static string _infoUrl = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id={0}&key={1}";
+
 
         private List<string> _registeredCommands = new List<string>() { "youtube", "yt", "kula", "sylauxe" };
 
@@ -58,16 +57,15 @@ namespace Homero.Plugin.Media {
                     return;
                 }
 
-                video = SearchVideo(string.Join(" ", e.Command.Arguments), false);
+                video = YouTubeVideo.Search(string.Join(" ", e.Command.Arguments), _ytApiKey);
             }
-            else if (command.Command == "kula")
+            else if (e.Command.Command == "kula")
             {
-                video = SearchVideo("kula world", true);
-                return command.InnerMessage.CreateResponse($"{vid.title} - {vid.videoUrl}");
+                video = YouTubeVideo.Search("kula world", _ytApiKey, true);
             }
-            else if (command.Command == "sylauxe")
+            else if (e.Command.Command == "sylauxe")
             {
-                video = SearchVideo(_sylauxeSearches[_random.Next(_sylauxeSearches.Count)], true);
+                video = YouTubeVideo.Search(_sylauxeSearches[_random.Next(_sylauxeSearches.Count)], _ytApiKey, true);
             }
 
             if (video != null)
@@ -78,41 +76,12 @@ namespace Homero.Plugin.Media {
                 }
                 else
                 {
-                    client?.ReplyTo(e.Command, $"{vid.title} - {vid.videoUrl} - 👍 {vid.likeCount} 	👎 {vid.dislikeCount} - {vid.viewCount} views - {vid.channelTitle} on {vid.publishedAt}");
+                    client?.ReplyTo(e.Command, $"{video.Title} - {video.VideoUrl} - 👍 {video.LikeCount} 	👎 {video.DislikeCount} - {video.ViewCount} views - {video.ChannelTitle} on {video.PublishedAt}");
                 }
             }
-
         }
 
         public void Startup() {
-        }
-
-        private YouTubeVideo SearchVideo(string searchTerm, bool randomResult) {
-            searchTerm = Uri.EscapeUriString(searchTerm);
-            var json = _webClient.DownloadString(string.Format(_searchUrl, searchTerm, _ytApiKey));
-            var results = JsonConvert.DeserializeObject<JObject>(json);
-
-            var items = (JArray)results.SelectToken("items");
-            var rnd = _random.Next(items.Count);
-            string videoId = results.SelectToken($"items[{rnd}].id.videoId").ToString();
-
-            var videoJson = _webClient.DownloadString(string.Format(_infoUrl, videoId, _ytApiKey));
-            var videoInfo = JsonConvert.DeserializeObject<JObject>(videoJson);
-
-            var ret = new YouTubeVideo
-            {
-                Title = videoInfo.SelectToken("items[0].snippet.title").ToString(),
-                Length =
-                    videoInfo.SelectToken("items[0].contentDetails.duration")?.ToString().Replace("PT", "").ToLower(),
-                LikeCount = videoInfo.SelectToken("items[0].statistics.likeCount")?.ToString(),
-                DislikeCount = videoInfo.SelectToken("items[0].statistics.dislikeCount")?.ToString(),
-                ViewCount = videoInfo.SelectToken("items[0].statistics.viewCount")?.ToString(),
-                ChannelTitle = videoInfo.SelectToken("items[0].snippet.channelTitle")?.ToString(),
-                PublishedAt = videoInfo.SelectToken("items[0].snippet.publishedAt")?.ToString(),
-                VideoUrl = $"http://youtu.be/{videoId}"
-            };
-
-            return ret;
         }
 
         public void Shutdown()

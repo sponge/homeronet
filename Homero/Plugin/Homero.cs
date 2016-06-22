@@ -29,7 +29,7 @@ namespace Homero.Plugin
 
         public void Startup()
         {
-            _logger.Info("I startup, ola.");
+            // ignored
         }
 
         public void Shutdown()

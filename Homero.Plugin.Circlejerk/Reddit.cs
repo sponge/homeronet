@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Homero.Client;
+using Homero.EventArgs;
 using Homero.Messages;
+using Homero.Services;
 using Newtonsoft.Json.Linq;
 
 namespace Homero.Plugin.Circlejerk
@@ -42,9 +45,14 @@ namespace Homero.Plugin.Circlejerk
             }
         };
 
-        public void Startup()
+        public Reddit(IMessageBroker broker)
         {
             _webClient = new WebClient();
+            broker.CommandReceived += BrokerOnCommandReceived;
+        }
+
+        public void Startup()
+        {
         }
 
         public List<string> RegisteredTextCommands
@@ -52,31 +60,20 @@ namespace Homero.Plugin.Circlejerk
             get { return _commandForName.Keys.ToList(); }
         }
 
-        public Task<IStandardMessage> ProcessTextCommand(ITextCommand command)
+        private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            return new Task<IStandardMessage>(() =>
-            {
-                if (_commandForName.ContainsKey(command.Command))
-                {
-                    RedditCommand redditCommand = _commandForName[command.Command];
-                    Random random = new Random();
+            IClient client = sender as IClient;
+            RedditCommand redditCommand = _commandForName[e.Command.Command];
+            Random random = new Random();
 
-                    string subreddit = redditCommand.Subreddits[random.Next(redditCommand.Subreddits.Count)];
+            string subreddit = redditCommand.Subreddits[random.Next(redditCommand.Subreddits.Count)];
 
-                    JObject jsonParsed = JObject.Parse(_webClient.DownloadString("http://reddit.com/r/" + subreddit + ".json"));
-                    List<dynamic> postList = jsonParsed["data"]["children"].ToObject<List<dynamic>>();
+            JObject jsonParsed = JObject.Parse(_webClient.DownloadString("http://reddit.com/r/" + subreddit + ".json"));
+            List<dynamic> postList = jsonParsed["data"]["children"].ToObject<List<dynamic>>();
 
-                    string message = postList[random.Next(postList.Count)]["data"]["title"];
+            string message = postList[random.Next(postList.Count)]["data"]["title"];
 
-                    return command.InnerMessage.CreateResponse(redditCommand.FormatMessage(message));
-                }
-                return null;
-            });
-        }
-
-        public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message)
-        {
-            return null;
+            client?.ReplyTo(e.Command, redditCommand.FormatMessage(message));
         }
 
         public void Shutdown()

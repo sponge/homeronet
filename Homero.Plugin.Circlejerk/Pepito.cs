@@ -27,7 +27,7 @@ namespace Homero.Plugin.Circlejerk
         private void Broker_CommandReceived(object sender, EventArgs.CommandReceivedEventArgs e)
         {
             IClient client = sender as IClient;
-            var amt = new Random().Next(68, 421);
+            int amt = new Random().Next(68, 421);
             string hooray = amt == 100 ? "💯" : amt.ToString();
             client?.ReplyTo(e.Command ,$"<peptio> hey guys i just ate {hooray} pills");
         }

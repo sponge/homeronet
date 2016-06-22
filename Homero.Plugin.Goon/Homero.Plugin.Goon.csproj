@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\homeronet\bin\Debug\Plugins\</OutputPath>
+    <OutputPath>..\Homero\bin\Debug\Plugins\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -57,7 +57,7 @@
     <Compile Include="Trek.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\homeronet\Homero.csproj">
+    <ProjectReference Include="..\Homero\Homero.csproj">
       <Project>{ff9f1cd6-7472-452c-aa36-a0ebf6014dd3}</Project>
       <Name>Homero</Name>
       <Private>False</Private>

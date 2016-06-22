@@ -158,7 +158,7 @@ namespace Homero.Plugin
                 outputLines = FormatTextToBread(wrappedText);
             }
 
-            if (client is DiscordClient)
+            if (client?.MarkdownSupported == true)
             {
                 string combinedText = String.Format("```{0}```", String.Join("\n", outputLines));
                 client.ReplyTo(e.Command, combinedText);
