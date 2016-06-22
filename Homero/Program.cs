@@ -42,7 +42,7 @@ namespace Homero
             {
                 try
                 {
-                    Logger.Info($"Starting ${plugin.GetType()}");
+                    Logger.Info($"Starting {plugin.GetType()}");
                     plugin.Startup();
                 }
                 catch (Exception e)

@@ -30,15 +30,11 @@ namespace Homero.Plugin.Media {
         };
 
         private string _ytApiKey = String.Empty;
-
+        private IConfiguration config;
         public YouTube(IMessageBroker broker, IConfiguration config)
         {
+            this.config = config;
             _ytApiKey = config.GetValue<string>("ApiKey");
-            if (String.IsNullOrEmpty(_ytApiKey))
-            {
-                config.SetValue("ApiKey", "SETANAPIKEYDINGUS");
-                throw new Exception("No API key provided!");
-            }
             _webClient = new WebClient();
             broker.CommandReceived += BrokerOnCommandReceived;
         }
@@ -81,7 +77,13 @@ namespace Homero.Plugin.Media {
             }
         }
 
-        public void Startup() {
+        public void Startup()
+        {
+            if (String.IsNullOrEmpty(_ytApiKey))
+            {
+                config.SetValue("ApiKey", "SETANAPIKEYDINGUS");
+                throw new Exception("No API key provided!");
+            }
         }
 
         public void Shutdown()
