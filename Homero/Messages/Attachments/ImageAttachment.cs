@@ -11,6 +11,11 @@ namespace Homero.Messages.Attachments
         private Stream _stream;
         private byte[] _data;
 
+        public ImageAttachment()
+        {
+            
+        }
+
         public ImageAttachment(string FilePath)
         {
             Name = Path.GetFileName(FilePath);
