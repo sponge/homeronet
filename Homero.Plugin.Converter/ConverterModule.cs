@@ -14,6 +14,8 @@ namespace Homero.Plugin.Converter
             Bind<IPlugin>().To<Beats>().InSingletonScope();
             Bind<IPlugin>().To<Currency>().InSingletonScope();
             Bind<IPlugin>().To<Temperature>().InSingletonScope();
+            Bind<IPlugin>().To<Saturn>().InSingletonScope();
+            Bind<IPlugin>().To<Jab>().InSingletonScope();
         }
     }
 }
