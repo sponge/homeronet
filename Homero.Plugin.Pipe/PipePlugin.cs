@@ -38,7 +38,7 @@ namespace Homero.Plugin.Pipe
             };
 
             commandChain.RemoveAt(0);
-            pipeClient._commandChain = commandChain;
+            pipeClient.CommandChain = commandChain;
             pipeClient.FireFirstMessage(firstCommand);
         }
 
