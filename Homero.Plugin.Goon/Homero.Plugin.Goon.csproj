@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Border.cs" />
+    <Compile Include="Bully.cs" />
     <Compile Include="Fortune.cs" />
     <Compile Include="FortuneFile.cs" />
     <Compile Include="GoonModule.cs" />

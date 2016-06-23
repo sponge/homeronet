@@ -1,6 +1,6 @@
 ﻿namespace Homero.Client
 {
-    class IrcClient
+    public class IrcClient
     {
     }
 }
