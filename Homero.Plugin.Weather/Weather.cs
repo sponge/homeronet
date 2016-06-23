@@ -33,7 +33,7 @@ namespace Homero.Plugin.Weather
             {
                 _config.SetValue("geocode_api", "AREALAPIKEYNEEDED");
                 _config.SetValue("forecast_api", "AREALAPIKEYNEEDED");
-                throw new Exception("Forecast/Geocode API's needed.");
+                throw new Exception("Forecast.IO API key needed.");
             }
 
             _geocodeApiKey = _config.GetValue<string>("geocode_api");
@@ -42,7 +42,6 @@ namespace Homero.Plugin.Weather
 
         public void Shutdown()
         {
-            throw new NotImplementedException();
         }
 
         public List<string> RegisteredTextCommands
