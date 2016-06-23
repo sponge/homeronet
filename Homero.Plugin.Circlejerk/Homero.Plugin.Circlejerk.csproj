@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CirclejerkModule.cs" />
+    <Compile Include="Depths.cs" />
     <Compile Include="Pepito.cs" />
     <Compile Include="Reddit.cs" />
     <Compile Include="Tone.cs" />
