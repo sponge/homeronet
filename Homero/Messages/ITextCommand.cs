@@ -11,7 +11,7 @@ namespace Homero.Messages
         List<string> Arguments { get; }
     }
 
-    class TextCommand : ITextCommand
+    public class TextCommand : ITextCommand
     {
         public IStandardMessage InnerMessage { get; set; }
         public string Command { get; set; }
