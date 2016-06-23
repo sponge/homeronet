@@ -129,6 +129,7 @@
     <Compile Include="Services\MessageBrokerService.cs" />
     <Compile Include="Services\NLogLogger.cs" />
     <Compile Include="Utility\CustomEventHandlers.cs" />
+    <Compile Include="Utility\IrcColors.cs" />
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Utility\Paths.cs" />
     <Compile Include="Utility\UriWebClient.cs">

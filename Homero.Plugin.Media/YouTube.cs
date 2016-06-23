@@ -46,8 +46,7 @@ namespace Homero.Plugin.Media {
 
             if (e.Command.Command == "youtube" || e.Command.Command == "yt")
             {
-                // TODO: update this with the proper check once lilpp decides on api design
-                if (e.Command.Arguments.Count <= 0)
+                if (e.Command.Arguments.Count == 0)
                 {
                     client?.ReplyTo(e.Command, "youtube <query> -- returns the first YouTube search result for <query>");
                     return;
