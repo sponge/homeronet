@@ -96,11 +96,17 @@ namespace Homero.Plugin.Converter {
                     client?.ReplyTo(e.Command, outStr);
                 }
                 else {
-                    var fancy = "\u0B9C\u06E9\u06DE\u06E9\u0B9C";
+                    var fancy = "ஜ۩۞۩ஜ";
 
-                    var padLen = Math.Max((outStr.Length * 2 - fancy.Length) / 2 - 1, 0);
+                    var padLen = (outStr.Length * 2 - fancy.Length) / 2 - 1;
 
-                    var spaces = "".PadLeft(padLen, '\u25AC');
+                    var spaces = "";
+                    if (padLen < 0) {
+                        outStr = outStr.PadLeft(fancy.Length / 2 + 1).PadRight(fancy.Length);
+                    } else {
+                        spaces = "".PadLeft(padLen, '\u25AC');
+                    }
+                    
 
                     fancy = $"{spaces}{fancy}{spaces}";
 
