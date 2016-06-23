@@ -36,7 +36,7 @@ namespace Homero.Plugin.Circlejerk {
                 client?.ReplyTo(e.Command, $"<LilPP> i hate {lines[i]}");
             }
             else if (e.Command.Command == "sponge") {
-                var verb = i % 3 == 0 ? "love" : "hate";
+                var verb = i % 3 == 0 ? "love" : i % 3 == 1 ? "am ambivalent towards" : "hate";
                 client?.ReplyTo(e.Command, $"<sponge> i {verb} {lines[i]}");
             }
             
