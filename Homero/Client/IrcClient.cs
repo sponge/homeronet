@@ -9,6 +9,7 @@ using Homero.Messages.Attachments;
 using Homero.Services;
 using IrcDotNet;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Homero.Client
 {
@@ -88,7 +89,7 @@ namespace Homero.Client
                 if (attachment is ImageAttachment)
                 {
                     string image = await UploadImageToImgur(attachment);
-                    _ircClient.LocalUser.SendMessage(channel, "http://i.imgur.com/" + image);
+                    _ircClient.LocalUser.SendMessage(channel, image);
                     //  MessageSent?.Invoke(this, new MessageSentEventArgs(message));
                 }
             }
@@ -150,20 +151,18 @@ namespace Homero.Client
         {
             using (HttpClient client = new HttpClient())
             {
-                Dictionary<string, string> postData = new Dictionary<string, string>()
-                {
-                    { "image", Convert.ToBase64String(attachment.Data) }
-                };
+                MultipartFormDataContent content = new MultipartFormDataContent();
+                content.Add(new ByteArrayContent(attachment.Data), "image");
 
-                client.DefaultRequestHeaders.Add("Authorization", "Client-ID " + "hello client id");
+                client.DefaultRequestHeaders.Add("Authorization", "Client-ID " + "2aae75cdaf31d78");
 
-                HttpResponseMessage response = await client.PostAsync("https://api.imgur.com/3/image", new FormUrlEncodedContent(postData));
+                HttpResponseMessage response = await client.PostAsync("https://api.imgur.com/3/image", content);
                 string jsonSource = await response.Content.ReadAsStringAsync();
-                dynamic jsonObj = JsonConvert.DeserializeObject<dynamic>(jsonSource);
+                JObject jsonObj = JsonConvert.DeserializeObject<JObject>(jsonSource);
 
-                if (jsonObj.success)
+                if ((bool)jsonObj.GetValue("success"))
                 {
-                    return jsonObj.id;
+                    return jsonObj.SelectToken("data.link").ToString();
                 }
                 return null;
             }
