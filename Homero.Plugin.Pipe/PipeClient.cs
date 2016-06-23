@@ -16,8 +16,9 @@ namespace Homero.Plugin.Pipe
     {
         private IClient _innerClient;
         private MessageBrokerService _messageBroker;
-        public List<string> _commandChain = new List<string>();
         private ITextCommand _innerCommand;
+
+        public List<string> CommandChain { get; set; }
         public PipeClient(IClient innerClient, IMessageBroker broker, ITextCommand innerCommand)
         {
             _innerCommand = innerCommand;
@@ -98,30 +99,16 @@ namespace Homero.Plugin.Pipe
 
         public void ReplyTo(ITextCommand originalCommand, string reply)
         {
-            if (_commandChain.Count == 0)
+            if (CommandChain.Count == 0)
             {
                 _innerClient.ReplyTo(_innerCommand, reply);
             }
             else
             {
-                StandardMessage curMessage = new StandardMessage()
-                {
-                    /*
-                    Attachments = originalCommand.InnerMessage.Attachments,
-                    Channel = originalCommand.InnerMessage.Channel,
-                    IsPrivate = originalCommand.InnerMessage.IsPrivate,
-                    Message = reply,
-                    Sender = originalCommand.InnerMessage.Sender,
-                    Server = originalCommand.InnerMessage.Server,
-                    Target = originalCommand.InnerMessage.Target
-                    */
-                };
-                
                 TextCommand newCommand = new TextCommand();
-                newCommand.InnerMessage = curMessage;
-                newCommand.Command = _commandChain.First();
+                newCommand.Command = CommandChain.First();
                 newCommand.Arguments = reply.Split(' ').ToList();
-                _commandChain.RemoveAt(0);
+                CommandChain.RemoveAt(0);
                 _messageBroker.RaiseCommandReceived(this, newCommand);
             }
         }

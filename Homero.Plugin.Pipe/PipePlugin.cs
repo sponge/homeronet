@@ -25,20 +25,20 @@ namespace Homero.Plugin.Pipe
             IClient client = sender as IClient;
 
             PipeClient pipeClient = new PipeClient(client, _broker, e.Command);
-            List<string> commands = string.Join(" ", e.Command.Arguments).Split('|').ToList();
+            List<string> commandChain = string.Join(" ", e.Command.Arguments).Split('|').ToList();
 
-            for (int i = 0; i < commands.Count; i++)
+            for (int i = 0; i < commandChain.Count; i++)
             {
-                commands[i] = commands[i].Trim();
+                commandChain[i] = commandChain[i].Trim();
             }
             TextCommand firstCommand = new TextCommand()
             {
-                Arguments = commands[0].Split(' ').Skip(1).ToList(),
-                Command = commands[0].Split(' ')[0]
+                Arguments = commandChain[0].Split(' ').Skip(1).ToList(),
+                Command = commandChain[0].Split(' ')[0]
             };
 
-            commands.RemoveAt(0);
-            pipeClient._commandChain = commands;
+            commandChain.RemoveAt(0);
+            pipeClient._commandChain = commandChain;
             pipeClient.FireFirstMessage(firstCommand);
         }
 
