@@ -46,6 +46,7 @@ namespace Homero.Plugin.Goon {
             var imgName = _images[_random.Next(_images.Count)];
             var imgUrl = $"{baseUrl}{imgName}";
 
+            // TODO: fix me when pp fixes image attachments
             //if (client?.InlineOrOembedSupported == true) {
             //    var img = new ImageAttachment(imgName) { DataStream = _webClient.OpenRead(imgUrl) };
             //    client?.ReplyTo(e.Command, img);

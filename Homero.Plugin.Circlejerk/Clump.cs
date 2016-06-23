@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Homero.Client;
 using Homero.Messages;
 using Homero.Services;
+using Homero.Utility;
 
 namespace Homero.Plugin.Circlejerk {
     public class Clump : IPlugin {
@@ -24,7 +25,7 @@ namespace Homero.Plugin.Circlejerk {
         private void Broker_CommandReceived(object sender, EventArgs.CommandReceivedEventArgs e) {
             IClient client = sender as IClient;
 
-            string prefix = client?.IrcFormattingSupported == true ? "\x0306" : "";
+            string prefix = client?.IrcFormattingSupported == true ? "" + ControlCode.Color + ColorCode.Violet : "";
             var outStr = $"{prefix}{_clump}";
             client?.ReplyTo(e.Command, outStr);
         }
