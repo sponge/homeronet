@@ -16,6 +16,7 @@ namespace Homero.Plugin.Circlejerk
             Bind<IPlugin>().To<Tone>().InSingletonScope();
             Bind<IPlugin>().To<YeahWoo>().InSingletonScope();
             Bind<IPlugin>().To<Depths>().InSingletonScope();
+            Bind<IPlugin>().To<Clump>().InSingletonScope();
         }
     }
 }

@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aus.cs" />
     <Compile Include="Border.cs" />
     <Compile Include="Fortune.cs" />
     <Compile Include="FortuneFile.cs" />

@@ -14,7 +14,7 @@ namespace Homero.Plugin.Goon {
 
         private Random _random;
         private UriWebClient _webClient;
-        private List<string> _images = new List<string>();
+        private List<string> _images;
 
         public Wip(IMessageBroker broker) {
             _random = new Random();
@@ -24,6 +24,7 @@ namespace Homero.Plugin.Goon {
         }
 
         public void Startup() {
+            _images = new List<string>();
         }
 
         public void Shutdown() {

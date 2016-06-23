@@ -16,6 +16,7 @@ namespace Homero.Plugin.Goon
             Bind<IPlugin>().To<Thinker>().InSingletonScope();
             Bind<IPlugin>().To<Trek>().InSingletonScope();
             Bind<IPlugin>().To<Wip>().InSingletonScope();
+            Bind<IPlugin>().To<Aus>().InSingletonScope();
         }
     }
 }
