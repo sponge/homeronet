@@ -154,7 +154,7 @@ namespace Homero.Client
                 MultipartFormDataContent content = new MultipartFormDataContent();
                 content.Add(new ByteArrayContent(attachment.Data), "image");
 
-                client.DefaultRequestHeaders.Add("Authorization", "Client-ID " + "2aae75cdaf31d78");
+                client.DefaultRequestHeaders.Add("Authorization", "Client-ID " + _config.GetValue<string>("imgur_client_id"));
 
                 HttpResponseMessage response = await client.PostAsync("https://api.imgur.com/3/image", content);
                 string jsonSource = await response.Content.ReadAsStringAsync();
