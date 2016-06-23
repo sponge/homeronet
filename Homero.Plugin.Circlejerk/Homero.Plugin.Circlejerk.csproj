@@ -51,6 +51,7 @@
     <Compile Include="CirclejerkModule.cs" />
     <Compile Include="Clump.cs" />
     <Compile Include="Depths.cs" />
+    <Compile Include="Hate.cs" />
     <Compile Include="Pepito.cs" />
     <Compile Include="Reddit.cs" />
     <Compile Include="Tone.cs" />
@@ -67,6 +68,9 @@
   <ItemGroup>
     <Content Include="Resources\lilpp_list.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\sponge_list.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
