@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Beats.cs" />
+    <Compile Include="CodeEval.cs" />
     <Compile Include="ConverterModule.cs" />
     <Compile Include="Currency.cs" />
     <Compile Include="Jab.cs" />

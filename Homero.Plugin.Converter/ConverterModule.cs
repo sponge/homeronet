@@ -16,6 +16,7 @@ namespace Homero.Plugin.Converter
             Bind<IPlugin>().To<Temperature>().InSingletonScope();
             Bind<IPlugin>().To<Saturn>().InSingletonScope();
             Bind<IPlugin>().To<Jab>().InSingletonScope();
+            Bind<IPlugin>().To<CodeEval>().InSingletonScope();
         }
     }
 }
