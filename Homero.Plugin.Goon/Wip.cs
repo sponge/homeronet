@@ -4,6 +4,8 @@ using Homero.Client;
 using Homero.Services;
 using HtmlAgilityPack;
 using System.Linq;
+using Homero.Utility;
+using Homero.Messages.Attachments;
 
 namespace Homero.Plugin.Goon {
     public class Wip : IPlugin {
@@ -11,10 +13,12 @@ namespace Homero.Plugin.Goon {
         private string baseUrl = "http://www.textfiles.com/underconstruction/";
 
         private Random _random;
+        private UriWebClient _webClient;
         private List<string> _images = new List<string>();
 
         public Wip(IMessageBroker broker) {
             _random = new Random();
+            _webClient = new UriWebClient();
 
             broker.CommandReceived += Broker_CommandReceived;
         }
@@ -38,8 +42,15 @@ namespace Homero.Plugin.Goon {
                 _images = (from image in imageNodes select image.GetAttributeValue("src", "help")).ToList();
             }
 
-            var outStr = $"{baseUrl}{_images[_random.Next(_images.Count)]}";
-            client?.ReplyTo(e.Command, outStr);
+            var imgName = _images[_random.Next(_images.Count)];
+            var imgUrl = $"{baseUrl}{imgName}";
+
+            //if (client?.InlineOrOembedSupported == true) {
+            //    var img = new ImageAttachment(imgName) { DataStream = _webClient.OpenRead(imgUrl) };
+            //    client?.ReplyTo(e.Command, img);
+            //} else {
+                client?.ReplyTo(e.Command, imgUrl);
+            //}
         }
 
         public List<string> RegisteredTextCommands {
