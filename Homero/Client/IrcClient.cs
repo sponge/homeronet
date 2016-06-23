@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Net.Http;
 using Homero.EventArgs;
 using Homero.Messages;
 using Homero.Messages.Attachments;
 using Homero.Services;
 using IrcDotNet;
+using Newtonsoft.Json;
 
 namespace Homero.Client
 {
@@ -74,37 +76,47 @@ namespace Homero.Client
             return new Task<bool>(() => true);
         }
 
-        public Task DispatchMessage(IStandardMessage message)
+        public async Task DispatchMessage(IStandardMessage message)
         {
             IrcChannel channel = _ircClient.Channels.FirstOrDefault(x => x.Name == message.Channel);
+
             _ircClient.LocalUser.SendMessage(channel, message.Message);
             MessageSent?.Invoke(this, new MessageSentEventArgs(message));
-            return null;
+
+            foreach (IAttachment attachment in message.Attachments)
+            {
+                if (attachment is ImageAttachment)
+                {
+                    string image = await UploadImageToImgur(attachment);
+                    _ircClient.LocalUser.SendMessage(channel, "http://i.imgur.com/" + image);
+                    //  MessageSent?.Invoke(this, new MessageSentEventArgs(message));
+                }
+            }
         }
 
         public void ReplyTo(IStandardMessage originalMessage, IStandardMessage reply)
         {
-            throw new NotImplementedException();
+            DispatchMessage(reply);
         }
 
         public void ReplyTo(ITextCommand originalCommand, string reply)
         {
-            DispatchMessage(originalCommand.InnerMessage.CreateResponse(reply));
+            ReplyTo(originalCommand, originalCommand.InnerMessage.CreateResponse(reply));
         }
 
         public void ReplyTo(ITextCommand originalCommand, IAttachment attachment)
         {
-            throw new NotImplementedException();
+            ReplyTo(originalCommand, String.Empty, attachment);
         }
 
         public void ReplyTo(IStandardMessage originalMessage, IAttachment attachment)
         {
-            throw new NotImplementedException();
+            ReplyTo(originalMessage, String.Empty, attachment);
         }
 
         public void ReplyTo(ITextCommand originalCommand, IStandardMessage reply)
         {
-            throw new NotImplementedException();
+            DispatchMessage(reply);
         }
 
         public void ReplyTo(IStandardMessage originalMessage, string reply)
@@ -119,7 +131,9 @@ namespace Homero.Client
 
         public void ReplyTo(ITextCommand originalCommand, string reply, IAttachment attachment)
         {
-            throw new NotImplementedException();
+            IStandardMessage message = originalCommand.InnerMessage.CreateResponse(reply);
+            message.Attachments.Add(attachment);
+            ReplyTo(originalCommand, message);
         }
 
         public void ReplyTo(IStandardMessage originalMessage, string reply, List<IAttachment> attachments)
@@ -131,5 +145,28 @@ namespace Homero.Client
         {
             throw new NotImplementedException();
         }
+
+        private async Task<string> UploadImageToImgur(IAttachment attachment)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                Dictionary<string, string> postData = new Dictionary<string, string>()
+                {
+                    { "image", Convert.ToBase64String(attachment.Data) }
+                };
+
+                client.DefaultRequestHeaders.Add("Authorization", "Client-ID " + "hello client id");
+
+                HttpResponseMessage response = await client.PostAsync("https://api.imgur.com/3/image", new FormUrlEncodedContent(postData));
+                string jsonSource = await response.Content.ReadAsStringAsync();
+                dynamic jsonObj = JsonConvert.DeserializeObject<dynamic>(jsonSource);
+
+                if (jsonObj.success)
+                {
+                    return jsonObj.id;
+                }
+                return null;
+            }
+        } 
     }
 }

@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CirclejerkModule.cs" />
+    <Compile Include="ImageTest.cs" />
     <Compile Include="Pepito.cs" />
     <Compile Include="Reddit.cs" />
     <Compile Include="Tone.cs" />
@@ -63,6 +64,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\alligator.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\lilpp_list.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
