@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Aus.cs" />
     <Compile Include="Border.cs" />
+    <Compile Include="Bully.cs" />
     <Compile Include="Fortune.cs" />
     <Compile Include="FortuneFile.cs" />
     <Compile Include="GoonModule.cs" />
@@ -83,6 +84,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
+    <None Include="Resources\atlantis.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\trek.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
