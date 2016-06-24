@@ -32,19 +32,18 @@ namespace Homero.Plugin.Goon {
         private string GetPunctuation() {
             var r = _random.Next(5);
 
-            if (r < 2) {
-                return ". ";
-            }
-        
-            if (r == 3 || r == 4) {
-                return ", ";
-            }
-
-            if (r == 5) {
-                return "... ";
-            }
-
-            return ",, ";
+            switch (r) {
+                case 0:
+                    return ",, ";
+                case 1:
+                case 2:
+                    return ". ";
+                case 3:
+                case 4:
+                    return ", ";
+                default:
+                    return "... ";
+            };         
         }
 
         public string CreateIdiot(string name) {
