@@ -11,7 +11,7 @@ namespace Homero.Messages
         List<string> Arguments { get; }
     }
 
-    class TextCommand : ITextCommand
+    public class TextCommand : ITextCommand
     {
         public IStandardMessage InnerMessage { get; set; }
         public string Command { get; set; }
@@ -26,7 +26,7 @@ namespace Homero.Messages
         {
             InnerMessage = message;
             string[] splitMsg = InnerMessage.Message.Split(' ');
-            Command = splitMsg[0].TrimStart(Settings.Default.CommandPrefix.ToCharArray());
+            Command = splitMsg[0].TrimStart(Settings.Default.CommandPrefix.ToCharArray()).Trim(new char[] { '\n', ' ' });
             Arguments = splitMsg.Length > 1 ? splitMsg.Skip(1).ToList() : new List<string>();
         }
     }

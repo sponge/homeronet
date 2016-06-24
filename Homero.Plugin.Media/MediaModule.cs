@@ -13,6 +13,7 @@ namespace Homero.Plugin.Media
         {
             Bind<IPlugin>().To<SbEmail>().InSingletonScope();
             Bind<IPlugin>().To<YouTube>().InSingletonScope();
+            Bind<IPlugin>().To<YouTubeDubber>().InSingletonScope();
         }
     }
 }

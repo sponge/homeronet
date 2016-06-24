@@ -15,6 +15,13 @@ namespace Homero.Plugin.Goon
             Bind<IPlugin>().To<Border>().InSingletonScope();
             Bind<IPlugin>().To<Thinker>().InSingletonScope();
             Bind<IPlugin>().To<Trek>().InSingletonScope();
+            Bind<IPlugin>().To<Bully>().InSingletonScope();
+            Bind<IPlugin>().To<Wip>().InSingletonScope();
+            Bind<IPlugin>().To<Aus>().InSingletonScope();
+            Bind<IPlugin>().To<Hys>().InSingletonScope();
+            Bind<IPlugin>().To<Spook>().InSingletonScope();
+            Bind<IPlugin>().To<Dominions>().InSingletonScope();
+            Bind<IPlugin>().To<DominionsRandomNumber>().InSingletonScope();
         }
     }
 }
