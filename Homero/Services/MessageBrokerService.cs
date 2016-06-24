@@ -50,34 +50,38 @@ namespace Homero.Services
             }
         }
 
-        private void ClientOnMessageSent(object sender, MessageSentEventArgs e)
+        public void ClientOnMessageSent(object sender, MessageSentEventArgs e)
         {
             _messageSentEventSource.RaiseAsync(sender, e);
         }
 
-        private void ClientOnMessageReceived(object sender, MessageReceivedEventArgs e)
+        public void ClientOnMessageReceived(object sender, MessageReceivedEventArgs e)
         {
             // Determine if plugin first.
             if (e.Message.Message.StartsWith(Settings.Default.CommandPrefix))
             {
                 TextCommand command = new TextCommand(e.Message);
-
-                _commandEventSource.RaiseAsync(sender, new CommandReceivedEventArgs(command), delegate (object o)
-                {
-                    IPlugin pluginInstance = o as IPlugin;
-                    if (pluginInstance?.RegisteredTextCommands?.Contains(command.Command) == true)
-                    {
-                        // Run Sieve.
-                        CommandSieveEventArgs sieveEvent = new CommandSieveEventArgs(pluginInstance, command);
-                        _commandSieveEventSource.Raise(this, sieveEvent);
-                        return sieveEvent.Pass;
-                    }
-                    return false;
-                });
+                RaiseCommandReceived(sender, command);
                 return;
             }
 
             _messageReceivedEventSource.Raise(sender, e);
+        }
+
+        public void RaiseCommandReceived(object sender, ITextCommand command)
+        {
+            _commandEventSource.RaiseAsync(sender, new CommandReceivedEventArgs(command), delegate (object o)
+            {
+                IPlugin pluginInstance = o as IPlugin;
+                if (pluginInstance?.RegisteredTextCommands?.Contains(command.Command) == true)
+                {
+                        // Run Sieve.
+                        CommandSieveEventArgs sieveEvent = new CommandSieveEventArgs(pluginInstance, command);
+                    _commandSieveEventSource.Raise(this, sieveEvent);
+                    return sieveEvent.Pass;
+                }
+                return false;
+            });
         }
     }
 }
