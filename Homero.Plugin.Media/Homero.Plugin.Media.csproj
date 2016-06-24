@@ -52,6 +52,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SBEmail.cs" />
     <Compile Include="YouTube.cs" />
+    <Compile Include="YouTubeDubber.cs" />
     <Compile Include="YouTubeVideo.cs" />
   </ItemGroup>
   <ItemGroup>
