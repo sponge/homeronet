@@ -1,26 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Homero.Client;
-using Homero.EventArgs;
-using Homero.Messages;
-using Homero.Services;
+using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Services;
 
 namespace Homero.Plugin.Converter
 {
-
     public class Temperature : IPlugin
     {
-        private List<string> _registeredCommands = new List<string>() { "temperature" };
-
         public Temperature(IMessageBroker broker)
         {
             broker.CommandReceived += Broker_CommandReceived;
         }
 
+        public void Startup()
+        {
+        }
+
+        public void Shutdown()
+        {
+        }
+
+        public List<string> RegisteredTextCommands { get; } = new List<string> {"temperature"};
+
         private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            IClient client = sender as IClient;
+            var client = sender as IClient;
             double temp;
             try
             {
@@ -37,28 +42,16 @@ namespace Homero.Plugin.Converter
                 client?.ReplyTo(e.Command, "SMOKE WEED EVERY DAY DONT GIVE A FUCK");
                 return;
             }
-            else if (Math.Abs(temp) > 500)
+            if (Math.Abs(temp) > 500)
             {
                 client?.ReplyTo(e.Command, "2 hot 4 u");
                 return;
             }
 
-            double c = (temp - 32) * (5.0 / 9.0);
-            double f = (temp * (9.0 / 5.0)) + 32;
+            var c = (temp - 32)*(5.0/9.0);
+            var f = (temp*(9.0/5.0)) + 32;
 
-            client?.ReplyTo(e.Command, String.Format("{0:0.0}F is {1:0.0}C. {0:0.0}C is {2:0.0}F.", temp, c, f));
-        }
-
-        public void Startup()
-        {
-        }
-
-        public void Shutdown()
-        {
-        }
-
-        public List<string> RegisteredTextCommands {
-            get { return _registeredCommands; }
+            client?.ReplyTo(e.Command, string.Format("{0:0.0}F is {1:0.0}C. {0:0.0}C is {2:0.0}F.", temp, c, f));
         }
     }
 }

@@ -13,25 +13,26 @@ namespace Homero.Plugin.Media
         private static string INFO_URL_FORMAT =
             "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id={0}&key={1}";
 
-        public string Title;
+        public string ChannelTitle;
+        public string DislikeCount;
         public string Length;
         public string LikeCount;
-        public string DislikeCount;
-        public string ViewCount;
-        public string ChannelTitle;
         public string PublishedAt;
+
+        public string Title;
         public string VideoUrl;
+        public string ViewCount;
 
         public static YouTubeVideo Search(string searchTerm, string apiKey, bool randomResult = false)
         {
-            WebClient client = new WebClient();
-            Random rng = new Random();
+            var client = new WebClient();
+            var rng = new Random();
             searchTerm = Uri.EscapeUriString(searchTerm);
             var json = client.DownloadString(string.Format(SEARCH_URL_FORMAT, searchTerm, apiKey));
             var results = JsonConvert.DeserializeObject<JObject>(json);
 
             var items = (JArray) results.SelectToken("items");
-            string videoId = String.Empty;
+            var videoId = string.Empty;
 
             if (randomResult)
             {
@@ -48,7 +49,8 @@ namespace Homero.Plugin.Media
             return new YouTubeVideo
             {
                 Title = videoInfo.SelectToken("items[0].snippet.title").ToString(),
-                Length = videoInfo.SelectToken("items[0].contentDetails.duration")?.ToString().Replace("PT", "").ToLower(),
+                Length =
+                    videoInfo.SelectToken("items[0].contentDetails.duration")?.ToString().Replace("PT", "").ToLower(),
                 LikeCount = videoInfo.SelectToken("items[0].statistics.likeCount")?.ToString(),
                 DislikeCount = videoInfo.SelectToken("items[0].statistics.dislikeCount")?.ToString(),
                 ViewCount = videoInfo.SelectToken("items[0].statistics.viewCount")?.ToString(),

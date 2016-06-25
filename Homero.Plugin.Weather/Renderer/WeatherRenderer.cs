@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ForecastIO;
-using Homero.Utility;
+using Homero.Core.Utility;
 using SkiaSharp;
 
 namespace Homero.Plugin.Weather.Renderer

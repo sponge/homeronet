@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Homero.Utility;
+using Homero.Core.Utility;
 using SkiaSharp;
 
 namespace Homero.Plugin.Weather.Renderer

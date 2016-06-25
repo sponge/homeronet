@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Homero.Client;
-using Homero.EventArgs;
-using Homero.Services;
+using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Services;
 
 namespace Homero.Plugin.Examples
 {

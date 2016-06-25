@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Homero\bin\Debug\Plugins\</OutputPath>
+    <OutputPath>$(SolutionDir)\Build\Plugins\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>$(SolutionDir)\Build\Plugins\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -49,7 +49,7 @@
     <Compile Include="StoreTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Homero\Homero.csproj">
+    <ProjectReference Include="..\Homero.Core\Homero.Core.csproj">
       <Project>{ff9f1cd6-7472-452c-aa36-a0ebf6014dd3}</Project>
       <Name>Homero</Name>
     </ProjectReference>
