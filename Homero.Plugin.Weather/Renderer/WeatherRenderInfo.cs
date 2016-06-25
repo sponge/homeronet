@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ForecastIO;
+﻿using ForecastIO;
 
 namespace Homero.Plugin.Weather
 {
@@ -13,5 +8,4 @@ namespace Homero.Plugin.Weather
         public string Address { get; set; }
         public Unit Unit { get; set; }
     }
-
 }

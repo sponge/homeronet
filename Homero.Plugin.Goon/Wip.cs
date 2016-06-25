@@ -1,42 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
-using Homero.Client;
-using Homero.Services;
-using HtmlAgilityPack;
 using System.Linq;
-using Homero.Utility;
-using Homero.Messages.Attachments;
+using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Services;
+using Homero.Core.Utility;
+using HtmlAgilityPack;
 
-namespace Homero.Plugin.Goon {
-    public class Wip : IPlugin {
-        private List<string> _registeredCommands = new List<string>() { "wip" };
-        private string baseUrl = "http://www.textfiles.com/underconstruction/";
+namespace Homero.Plugin.Goon
+{
+    public class Wip : IPlugin
+    {
+        private List<string> _images;
 
         private Random _random;
         private UriWebClient _webClient;
-        private List<string> _images;
+        private string baseUrl = "http://www.textfiles.com/underconstruction/";
 
-        public Wip(IMessageBroker broker) {
+        public Wip(IMessageBroker broker)
+        {
             _random = new Random();
             _webClient = new UriWebClient();
 
             broker.CommandReceived += Broker_CommandReceived;
         }
 
-        public void Startup() {
+        public void Startup()
+        {
             _images = new List<string>();
         }
 
-        public void Shutdown() {
+        public void Shutdown()
+        {
         }
 
-        private void Broker_CommandReceived(object sender, EventArgs.CommandReceivedEventArgs e) {
-            IClient client = sender as IClient;
+        public List<string> RegisteredTextCommands { get; } = new List<string> {"wip"};
+
+        private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
+        {
+            var client = sender as IClient;
 
             // do lazy initialization of images so we dont slowdown startup for a stupid plugin
-            if (_images.Count == 0) {
-                HtmlWeb web = new HtmlWeb();
-                HtmlDocument doc = web.Load("http://www.textfiles.com/underconstruction/");
+            if (_images.Count == 0)
+            {
+                var web = new HtmlWeb();
+                var doc = web.Load("http://www.textfiles.com/underconstruction/");
 
                 var imageNodes = doc.DocumentNode.SelectNodes("//img/@src");
 
@@ -51,12 +59,8 @@ namespace Homero.Plugin.Goon {
             //    var img = new ImageAttachment(imgName) { DataStream = _webClient.OpenRead(imgUrl) };
             //    client?.ReplyTo(e.Command, img);
             //} else {
-                client?.ReplyTo(e.Command, imgUrl);
+            client?.ReplyTo(e.Command, imgUrl);
             //}
-        }
-
-        public List<string> RegisteredTextCommands {
-            get { return _registeredCommands; }
         }
     }
 }

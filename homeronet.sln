@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero", "Homero\Homero.csproj", "{FF9F1CD6-7472-452C-AA36-A0EBF6014DD3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Core", "Homero.Core\Homero.Core.csproj", "{FF9F1CD6-7472-452C-AA36-A0EBF6014DD3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Plugin.Goon", "Homero.Plugin.Goon\Homero.Plugin.Goon.csproj", "{9AC76BA3-9417-44E3-A1D5-3611977C501B}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Plugin.Weather", "Homero.Plugin.Weather\Homero.Plugin.Weather.csproj", "{7106CE82-DFC6-4BB5-AF40-40925FABF94C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Plugin.Pipe", "Homero.Plugin.Pipe\Homero.Plugin.Pipe.csproj", "{B9F15209-14FA-49C1-A5D9-1D15E676E8F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Client", "Homero.Client\Homero.Client.csproj", "{82A3EE59-565D-464F-96C9-5111992C39F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +93,14 @@ Global
 		{B9F15209-14FA-49C1-A5D9-1D15E676E8F3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B9F15209-14FA-49C1-A5D9-1D15E676E8F3}.Release|x64.ActiveCfg = Release|x64
 		{B9F15209-14FA-49C1-A5D9-1D15E676E8F3}.Release|x64.Build.0 = Release|x64
+		{82A3EE59-565D-464F-96C9-5111992C39F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82A3EE59-565D-464F-96C9-5111992C39F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82A3EE59-565D-464F-96C9-5111992C39F4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{82A3EE59-565D-464F-96C9-5111992C39F4}.Debug|x64.Build.0 = Debug|Any CPU
+		{82A3EE59-565D-464F-96C9-5111992C39F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82A3EE59-565D-464F-96C9-5111992C39F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82A3EE59-565D-464F-96C9-5111992C39F4}.Release|x64.ActiveCfg = Release|Any CPU
+		{82A3EE59-565D-464F-96C9-5111992C39F4}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

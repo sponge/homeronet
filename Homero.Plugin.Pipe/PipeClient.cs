@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Homero.Client;
-using Homero.EventArgs;
-using Homero.Messages;
-using Homero.Messages.Attachments;
-using Homero.Services;
+using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Messages;
+using Homero.Core.Messages.Attachments;
+using Homero.Core.Services;
 
 namespace Homero.Plugin.Pipe
 {
@@ -15,16 +14,19 @@ namespace Homero.Plugin.Pipe
     public class PipeClient : IClient
     {
         private IClient _innerClient;
-        private MessageBrokerService _messageBroker;
         private ITextCommand _innerCommand;
+        private MessageBrokerService _messageBroker;
 
-        public List<string> CommandChain { get; set; }
         public PipeClient(IClient innerClient, IMessageBroker broker, ITextCommand innerCommand)
         {
             _innerCommand = innerCommand;
             _innerClient = innerClient;
-            _messageBroker = broker as MessageBrokerService; // oops im breaking IoC for this, todo: expose invocation over standard interface
+            _messageBroker = broker as MessageBrokerService;
+                // oops im breaking IoC for this, todo: expose invocation over standard interface
         }
+
+        public List<string> CommandChain { get; set; }
+
         public string Name
         {
             get { return "Pipe Client"; }
@@ -60,11 +62,6 @@ namespace Homero.Plugin.Pipe
         public Task<bool> Connect()
         {
             return null;
-        }
-
-        public void FireFirstMessage(ITextCommand command)
-        {
-            _messageBroker.RaiseCommandReceived(this, command);
         }
 
         public Task DispatchMessage(IStandardMessage message)
@@ -105,7 +102,7 @@ namespace Homero.Plugin.Pipe
             }
             else
             {
-                TextCommand newCommand = new TextCommand();
+                var newCommand = new TextCommand();
                 newCommand.Command = CommandChain.First();
                 newCommand.Arguments = reply.Split(' ').ToList();
                 CommandChain.RemoveAt(0);
@@ -131,8 +128,17 @@ namespace Homero.Plugin.Pipe
             // u also get ignored
         }
 
-        public bool IsConnected { get { return true; } }
+        public bool IsConnected
+        {
+            get { return true; }
+        }
+
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
         public event EventHandler<MessageSentEventArgs> MessageSent;
+
+        public void FireFirstMessage(ITextCommand command)
+        {
+            _messageBroker.RaiseCommandReceived(this, command);
+        }
     }
 }

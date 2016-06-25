@@ -1,51 +1,38 @@
-﻿using Homero.Services;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Homero.EventArgs;
-using Homero.Client;
+using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Services;
 
 namespace Homero.Plugin.Goon
 {
     public class Dominions : IPlugin
     {
-        private const string BASE_URL = "http://larzm42.github.io/dom4inspector/?page={0}&{0}q={1}&showmoddinginfo=1&showids=1";
-        private Dictionary<string, string> _pageNameMappings = new Dictionary<string, string>()
-        {
-            { "item", "item" },
-            { "hat", "item" },
-            { "spell", "spell" },
-            { "unit", "unit" },
-            { "site", "site" },
-            { "weapon", "wpn" },
-            { "armor", "armor" },
-            { "merc", "merc" },
-            { "event", "event" },
-        };
+        private const string BASE_URL =
+            "http://larzm42.github.io/dom4inspector/?page={0}&{0}q={1}&showmoddinginfo=1&showids=1";
 
-        public List<string> RegisteredTextCommands
+        private Dictionary<string, string> _pageNameMappings = new Dictionary<string, string>
         {
-            get { return new List<string> { "dom4" }; }
-        }
+            {"item", "item"},
+            {"hat", "item"},
+            {"spell", "spell"},
+            {"unit", "unit"},
+            {"site", "site"},
+            {"weapon", "wpn"},
+            {"armor", "armor"},
+            {"merc", "merc"},
+            {"event", "event"}
+        };
 
         public Dominions(IMessageBroker broker)
         {
             broker.CommandReceived += BrokerOnCommandReceived;
         }
 
-        private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
+        public List<string> RegisteredTextCommands
         {
-            IClient client = sender as IClient;
-            if (e.Command.Arguments?.Count >= 2)
-            {
-                string thing = e.Command.Arguments.ElementAt(0);
-                string query = String.Join(" ", e.Command.Arguments.Skip(1));
-                if (_pageNameMappings.ContainsKey(thing))
-                {
-                    client.ReplyTo(e.Command, String.Format(BASE_URL, _pageNameMappings[thing], HttpUtility.UrlEncode(query)));
-                }
-            }
+            get { return new List<string> {"dom4"}; }
         }
 
         public void Shutdown()
@@ -55,6 +42,20 @@ namespace Homero.Plugin.Goon
         public void Startup()
         {
         }
+
+        private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
+        {
+            var client = sender as IClient;
+            if (e.Command.Arguments?.Count >= 2)
+            {
+                var thing = e.Command.Arguments.ElementAt(0);
+                var query = string.Join(" ", e.Command.Arguments.Skip(1));
+                if (_pageNameMappings.ContainsKey(thing))
+                {
+                    client.ReplyTo(e.Command,
+                        string.Format(BASE_URL, _pageNameMappings[thing], HttpUtility.UrlEncode(query)));
+                }
+            }
+        }
     }
 }
-

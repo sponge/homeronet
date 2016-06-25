@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Homero.Plugin.Goon
+﻿namespace Homero.Plugin.Goon
 {
     internal class FortuneFile
     {
-        public String Command { get; set; }
-        public String Path { get; set;  }
-        public bool StripNewLines { get; set; }
-        public bool IsMultiLine { get; set; }
-
         public FortuneFile(string command, string path, bool stripNewLines, bool isMultiline)
         {
             Command = command;
@@ -20,5 +9,10 @@ namespace Homero.Plugin.Goon
             StripNewLines = stripNewLines;
             IsMultiLine = isMultiline;
         }
+
+        public string Command { get; set; }
+        public string Path { get; set; }
+        public bool StripNewLines { get; set; }
+        public bool IsMultiLine { get; set; }
     }
 }

@@ -31,7 +31,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Homero\bin\Debug\Plugins\</OutputPath>
+    <OutputPath>..\Homero.Client\bin\Debug\Plugins\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -76,9 +76,9 @@
     <Compile Include="Temperature.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Homero\Homero.csproj">
+    <ProjectReference Include="..\Homero.Core\Homero.Core.csproj">
       <Project>{ff9f1cd6-7472-452c-aa36-a0ebf6014dd3}</Project>
-      <Name>Homero</Name>
+      <Name>Homero.Core</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

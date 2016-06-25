@@ -31,7 +31,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Homero\bin\Debug\Plugins\</OutputPath>
+    <OutputPath>..\Homero.Client\bin\Debug\Plugins\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -77,9 +77,9 @@
     <Compile Include="YeahWoo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Homero\Homero.csproj">
+    <ProjectReference Include="..\Homero.Core\Homero.Core.csproj">
       <Project>{FF9F1CD6-7472-452C-AA36-A0EBF6014DD3}</Project>
-      <Name>Homero</Name>
+      <Name>Homero.Core</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
