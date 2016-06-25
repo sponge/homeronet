@@ -16,7 +16,6 @@ namespace Homero.Core.Services
         private static string CONFIG_FILE = Path.Combine(Paths.DataDirectory, "config.json");
 
         private Dictionary<string, IConfiguration> _backedConfigurations;
-            // Ensure only one instance of a configuration is grabbed from the factory.
 
         private Dictionary<string, object> _rootConfig;
 
@@ -24,6 +23,7 @@ namespace Homero.Core.Services
         {
             if (_instance != null)
             {
+                // Ensure only one instance of a configuration is grabbed from the factory.
                 throw new Exception("DOUBLE FACTORY OH NO");
             }
             _backedConfigurations = new Dictionary<string, IConfiguration>();
