@@ -95,7 +95,9 @@ namespace Homero.Core.Client
 
         public void ReplyTo(IStandardMessage originalMessage, IStandardMessage reply)
         {
+#pragma warning disable 4014
             DispatchMessage(reply);
+#pragma warning restore 4014
         }
 
         public void ReplyTo(ITextCommand originalCommand, string reply)
@@ -124,7 +126,9 @@ namespace Homero.Core.Client
 
         public void ReplyTo(ITextCommand originalCommand, IStandardMessage reply)
         {
+#pragma warning disable 4014
             DispatchMessage(reply);
+#pragma warning restore 4014
         }
 
         /// <summary>
@@ -152,7 +156,9 @@ namespace Homero.Core.Client
 
             foreach (var attachment in message.Attachments)
             {
-                await targetChannel?.SendFile(attachment.Name, attachment.DataStream);
+                var sendFile = targetChannel?.SendFile(attachment.Name, attachment.DataStream);
+                if (sendFile != null)
+                    await sendFile;
                 sentAttachment = true;
             }
 
