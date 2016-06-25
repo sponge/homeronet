@@ -239,7 +239,6 @@
     <Compile Include="Services\IDbProvider.cs" />
     <Compile Include="Services\IKvStoreFactory.cs" />
     <Compile Include="Services\ILogger.cs" />
-    <Compile Include="Services\Configuration\JsonConfiguration.cs" />
     <Compile Include="Services\ILoggerFactory.cs" />
     <Compile Include="Services\IMessageBroker.cs" />
     <Compile Include="Services\IStore.cs" />
@@ -247,7 +246,9 @@
     <Compile Include="Services\NLogLogger.cs" />
     <Compile Include="Services\SpeedyKvStore.cs" />
     <Compile Include="Utility\CustomEventHandlers.cs" />
+    <Compile Include="Utility\Dictionary.cs" />
     <Compile Include="Utility\IrcColors.cs" />
+    <Compile Include="Utility\Json.cs" />
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Utility\Paths.cs" />
     <Compile Include="Utility\TextUtils.cs" />

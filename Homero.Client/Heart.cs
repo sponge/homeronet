@@ -32,7 +32,7 @@ namespace Homero.Client
             Kernel.Bind<IConfiguration>()
                 .ToMethod(
                     context =>
-                        ConfigurationFactory.Instance.GetConfiguration(
+                        JsonConfigurationFactory.Instance.GetConfiguration(
                             context.Request?.Target?.Member?.DeclaringType?.Name));
 
             Logger.Debug("Configuring Message Broker");

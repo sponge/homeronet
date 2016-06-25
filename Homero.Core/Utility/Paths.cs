@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Homero.Core.Utility
 {
@@ -14,9 +10,9 @@ namespace Homero.Core.Utility
         {
             get
             {
-                string codeBase = Assembly.GetCallingAssembly().CodeBase;
-                UriBuilder uri = new UriBuilder(codeBase);
-                string path = Uri.UnescapeDataString(uri.Path);
+                var codeBase = Assembly.GetCallingAssembly().CodeBase;
+                var uri = new UriBuilder(codeBase);
+                var path = Uri.UnescapeDataString(uri.Path);
                 return Path.GetDirectoryName(path);
             }
         }
@@ -28,10 +24,7 @@ namespace Homero.Core.Utility
 
         public static string ResourceDirectory
         {
-            get
-            {
-                return Path.Combine(AssemblyDirectory,"Plugins","Resources");
-            }
+            get { return Path.Combine(AssemblyDirectory, "Plugins", "Resources"); }
         }
     }
 }
