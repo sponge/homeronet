@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Homero.Client;
-using Homero.EventArgs;
-using Homero.Services;
-using Homero.Utility;
+using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Services;
+using Homero.Core.Utility;
 
 namespace Homero.Plugin.Goon
 {
@@ -61,7 +61,7 @@ namespace Homero.Plugin.Goon
 
         public void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            IClient client = sender as IClient;
+            var client = sender as IClient;
             if (_fortunes.ContainsKey(e.Command.Command))
             {
                 client?.ReplyTo(e.Command, _fortunes[e.Command.Command][_random.Next(_fortunes.Count)]);
