@@ -1,25 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ForecastIO;
+﻿using ForecastIO;
 using GeocodeSharp.Google;
 using Homero.Client;
 using Homero.EventArgs;
-using Homero.Messages;
 using Homero.Messages.Attachments;
+using Homero.Plugin.Weather.Renderer;
 using Homero.Services;
+using SkiaSharp;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Homero.Plugin.Weather
 {
     public class Weather : IPlugin
     {
-        private List<string> _registeredCommands = new List<string>() {"wea", "weather"};
+        private List<string> _registeredCommands = new List<string>() { "wea", "weather" };
         private IConfiguration _config;
         private string _geocodeApiKey;
         private string _forecastIoApiKey;
+
+        private GeocodeClient _geocode;
 
         public Weather(IMessageBroker broker, IConfiguration config)
         {
@@ -31,13 +32,22 @@ namespace Homero.Plugin.Weather
         {
             if (!_config.Exists)
             {
-                _config.SetValue("geocode_api", "AREALAPIKEYNEEDED");
-                _config.SetValue("forecast_api", "AREALAPIKEYNEEDED");
+                _config.SetValue("geocode_api", "");
+                _config.SetValue("forecast_api", "");
                 throw new Exception("Forecast.IO API key needed.");
             }
 
             _geocodeApiKey = _config.GetValue<string>("geocode_api");
             _forecastIoApiKey = _config.GetValue<string>("forecast_api");
+            if (String.IsNullOrEmpty(_geocodeApiKey))
+            {
+                _geocode = new GeocodeClient();
+            }
+            else
+            {
+                _geocode = new GeocodeClient(_geocodeApiKey);
+
+            }
         }
 
         public void Shutdown()
@@ -94,7 +104,7 @@ namespace Homero.Plugin.Weather
 
             if (!locationValid)
             {
-                client?.ReplyTo(e.Command,"gotta give me a zipcode or something");
+                client?.ReplyTo(e.Command, "gotta give me a zipcode or something");
                 return;
             }
 
@@ -113,11 +123,11 @@ namespace Homero.Plugin.Weather
             if (client?.InlineOrOembedSupported == true)
             {
                 WeatherRendererInfo info = new WeatherRendererInfo();
-                info.unit = unit;
-                info.address = geoResult.FormattedAddress;
-                info.weather = weather;
+                info.Unit = unit;
+                info.Address = geoResult.FormattedAddress;
+                info.WeatherResponse = weather;
                 Stream stream = CreateWeatherImage(info);
-                client.ReplyTo(e.Command, new ImageAttachment() {DataStream = stream, Name = $"{e.Command.InnerMessage.Sender} Weather {DateTime.Now}.png"});
+                client.ReplyTo(e.Command, new ImageAttachment() { DataStream = stream, Name = $"{e.Command.InnerMessage.Sender} Weather {DateTime.Now}.png" });
             }
             else
             {
@@ -125,6 +135,20 @@ namespace Homero.Plugin.Weather
             }
 
             // TODO: save to persistent store for username if dontsave isn't specified
+        }
+
+        private Stream CreateWeatherImage(WeatherRendererInfo info)
+        {
+            WeatherRenderer weatherRenderer = new WeatherRenderer();
+            int width = 975, height = 575;
+
+            using (var surface = SKSurface.Create(width, height, SKColorType.N_32, SKAlphaType.Opaque))
+            {
+                var skcanvas = surface.Canvas;
+                weatherRenderer.DrawWeather(info, skcanvas, width, height);
+                var img = surface.Snapshot().Encode();
+                return img.AsStream();
+            }
         }
     }
 }
