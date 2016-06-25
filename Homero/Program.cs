@@ -31,6 +31,9 @@ namespace Homero
             Logger.Debug("Configuring Message Broker");
             Kernel.Bind<IMessageBroker>().To<MessageBrokerService>().InSingletonScope();
 
+            Logger.Debug("Configuring KV store");
+            Kernel.Bind<IStore>().ToMethod(context => KvStoreFactory.Instance.GetKvStore(context.Request?.Target?.Member?.DeclaringType?.Name));
+
             Logger.Info("Scanning and loading plugin directory.");
             Kernel.Load("Plugins\\Homero.Plugin.*.dll");
 

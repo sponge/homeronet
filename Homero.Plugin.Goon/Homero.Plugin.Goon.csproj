@@ -106,6 +106,7 @@
     <Content Include="Resources\jerk.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Resources\atlantis.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

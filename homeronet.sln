@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Plugin.Weather", "Ho
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Plugin.Pipe", "Homero.Plugin.Pipe\Homero.Plugin.Pipe.csproj", "{B9F15209-14FA-49C1-A5D9-1D15E676E8F3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Plugin.Examples", "Homero.Plugin.Examples\Homero.Plugin.Examples.csproj", "{B728F0AD-71F6-492B-A2CF-D90BACF08317}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,14 @@ Global
 		{B9F15209-14FA-49C1-A5D9-1D15E676E8F3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B9F15209-14FA-49C1-A5D9-1D15E676E8F3}.Release|x64.ActiveCfg = Release|x64
 		{B9F15209-14FA-49C1-A5D9-1D15E676E8F3}.Release|x64.Build.0 = Release|x64
+		{B728F0AD-71F6-492B-A2CF-D90BACF08317}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B728F0AD-71F6-492B-A2CF-D90BACF08317}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B728F0AD-71F6-492B-A2CF-D90BACF08317}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B728F0AD-71F6-492B-A2CF-D90BACF08317}.Debug|x64.Build.0 = Debug|Any CPU
+		{B728F0AD-71F6-492B-A2CF-D90BACF08317}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B728F0AD-71F6-492B-A2CF-D90BACF08317}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B728F0AD-71F6-492B-A2CF-D90BACF08317}.Release|x64.ActiveCfg = Release|Any CPU
+		{B728F0AD-71F6-492B-A2CF-D90BACF08317}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
