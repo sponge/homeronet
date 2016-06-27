@@ -54,8 +54,8 @@
       <HintPath>..\packages\Forecast.io.1.0.9\lib\net45\Forecast.io.45.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="GeocodeSharp, Version=1.3.0.0, Culture=neutral, PublicKeyToken=1ae1b40d2ef46f2d, processorArchitecture=MSIL">
-      <HintPath>..\packages\GeocodeSharp.1.3.0.0\lib\net45\GeocodeSharp.dll</HintPath>
+    <Reference Include="Geocoding, Version=3.4.0.0, Culture=neutral, PublicKeyToken=7c714700b88674c7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Geocoding.net.3.4.0\lib\net40\Geocoding.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">

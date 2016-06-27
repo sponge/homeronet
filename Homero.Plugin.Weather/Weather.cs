@@ -1,5 +1,6 @@
 ﻿using ForecastIO;
-using GeocodeSharp.Google;
+using Geocoding;
+using Geocoding.Google;
 using Homero.Client;
 using Homero.EventArgs;
 using Homero.Messages.Attachments;
@@ -20,7 +21,7 @@ namespace Homero.Plugin.Weather
         private string _geocodeApiKey;
         private string _forecastIoApiKey;
 
-        private GeocodeClient _geocode;
+        private GoogleGeocoder _geocode;
 
         public Weather(IMessageBroker broker, IConfiguration config)
         {
@@ -41,11 +42,11 @@ namespace Homero.Plugin.Weather
             _forecastIoApiKey = _config.GetValue<string>("forecast_api");
             if (String.IsNullOrEmpty(_geocodeApiKey))
             {
-                _geocode = new GeocodeClient();
+                _geocode = new GoogleGeocoder();
             }
             else
             {
-                _geocode = new GeocodeClient(_geocodeApiKey);
+                _geocode = new GoogleGeocoder() { ApiKey = _geocodeApiKey };
 
             }
         }
@@ -87,17 +88,16 @@ namespace Homero.Plugin.Weather
                 // TODO: lookup location based on username, set locationValid to true if we found one
             }
 
-            GeocodeResult geoResult = null;
+            GoogleAddress address = null;
             if (!locationValid && inputLocation != null)
             {
                 // TODO: migrate to async
-                GeocodeResponse geo = _geocode.GeocodeAddress(inputLocation).Result;
-                if (geo.Status == GeocodeStatus.Ok)
+                IEnumerable<GoogleAddress> addresses = _geocode.Geocode(inputLocation).Where(x => !x.IsPartialMatch);
+                if (addresses.Count() > 0)
                 {
-                    geoResult = geo.Results[0];
-                    GeoCoordinate location = geoResult.Geometry.Location;
-                    lat = (float)location.Latitude;
-                    lng = (float)location.Longitude;
+                    address = addresses.First();
+                    lat = (float)address.Coordinates.Latitude;
+                    lng = (float)address.Coordinates.Longitude;
                     locationValid = true;
                 }
             }
@@ -108,23 +108,20 @@ namespace Homero.Plugin.Weather
                 return;
             }
 
-            string country = geoResult.AddressComponents
-                .Where(address => address.Types.Contains("country"))
-                .Select(address => address.ShortName)
-                .FirstOrDefault();
+            string country = address[GoogleAddressType.Country].ShortName;
 
             Unit unit = country == "US" ? Unit.us : Unit.si;
 
             ForecastIOResponse weather = new ForecastIORequest(_forecastIoApiKey, lat, lng, unit).Get();
 
-            string summary = $"{geoResult.FormattedAddress} | {weather.currently.summary} | {weather.currently.temperature}{(unit == Unit.us ? "F" : "C")} | Humidity: {weather.currently.humidity * 100}%"
+            string summary = $"{address.FormattedAddress} | {weather.currently.summary} | {weather.currently.temperature}{(unit == Unit.us ? "F" : "C")} | Humidity: {weather.currently.humidity * 100}%"
                 + $"\n{weather.minutely.summary}";
 
             if (client?.InlineOrOembedSupported == true)
             {
                 WeatherRendererInfo info = new WeatherRendererInfo();
                 info.Unit = unit;
-                info.Address = geoResult.FormattedAddress;
+                info.Address = address.FormattedAddress;
                 info.WeatherResponse = weather;
                 Stream stream = CreateWeatherImage(info);
                 client.ReplyTo(e.Command, new ImageAttachment() { DataStream = stream, Name = $"{e.Command.InnerMessage.Sender} Weather {DateTime.Now}.png" });
