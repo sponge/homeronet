@@ -1,48 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using Homero.Client;
-using Homero.Services;
+﻿using System.Collections.Generic;
+using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Services;
 using HtmlAgilityPack;
-using System.Linq;
-using Homero.Utility;
-using Homero.Messages.Attachments;
 
-namespace Homero.Plugin.Goon {
-    public class Aus : IPlugin {
-        private List<string> _registeredCommands = new List<string>() { "aus" };
+namespace Homero.Plugin.Goon
+{
+    public class Aus : IPlugin
+    {
         private string _baseUrl = "http://www.boganipsum.com/";
 
         private HtmlWeb _web;
 
-        public Aus(IMessageBroker broker) {
-
+        public Aus(IMessageBroker broker)
+        {
             broker.CommandReceived += Broker_CommandReceived;
         }
 
-        public void Startup() {
+        public void Startup()
+        {
             _web = new HtmlWeb();
         }
 
-        public void Shutdown() {
+        public void Shutdown()
+        {
         }
 
-        private void Broker_CommandReceived(object sender, EventArgs.CommandReceivedEventArgs e) {
-            IClient client = sender as IClient;
+        public List<string> RegisteredTextCommands { get; } = new List<string> {"aus"};
 
-            HtmlDocument doc = _web.Load(_baseUrl);
+        private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
+        {
+            var client = sender as IClient;
+
+            var doc = _web.Load(_baseUrl);
 
             var paragraph = doc.DocumentNode.SelectSingleNode("//div[@class=\"bogan-ipsum\"]/p");
 
-            if (paragraph == null) {
+            if (paragraph == null)
+            {
                 client?.ReplyTo(e.Command, "can't figure it out m8");
                 return;
             }
 
             client?.ReplyTo(e.Command, paragraph.InnerText);
-        }
-
-        public List<string> RegisteredTextCommands {
-            get { return _registeredCommands; }
         }
     }
 }
