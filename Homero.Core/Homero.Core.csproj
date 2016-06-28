@@ -206,7 +206,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\DiscordChannel.cs" />
     <Compile Include="Client\DiscordClient.cs" />
+    <Compile Include="Client\DiscordMessage.cs" />
+    <Compile Include="Client\DiscordServer.cs" />
+    <Compile Include="Client\DiscordUser.cs" />
     <Compile Include="Client\IClient.cs" />
     <Compile Include="Client\IrcClient.cs" />
     <Compile Include="Client\SlackClient.cs" />
@@ -215,12 +219,15 @@
     <Compile Include="EventArgs\CommandSieveEventArgs.cs" />
     <Compile Include="EventArgs\MessageReceivedEventArgs.cs" />
     <Compile Include="EventArgs\MessageSentEventArgs.cs" />
+    <Compile Include="Interface\IChannel.cs" />
+    <Compile Include="Interface\ISendable.cs" />
+    <Compile Include="Interface\IServer.cs" />
+    <Compile Include="Interface\IUser.cs" />
     <Compile Include="Manager\Assembly\PluginAppDomain.cs" />
     <Compile Include="Messages\Attachments\AudioAttachment.cs" />
     <Compile Include="Messages\Attachments\FileAttachment.cs" />
     <Compile Include="Messages\Attachments\IAttachment.cs" />
     <Compile Include="Messages\Attachments\ImageAttachment.cs" />
-    <Compile Include="Messages\DiscordMessage.cs" />
     <Compile Include="Messages\IStandardMessage.cs" />
     <Compile Include="Messages\ITextCommand.cs" />
     <Compile Include="Messages\IVoiceMessage.cs" />

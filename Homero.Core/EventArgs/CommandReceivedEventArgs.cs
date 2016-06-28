@@ -1,12 +1,15 @@
-﻿using Homero.Core.Messages;
+﻿using Homero.Core.Interface;
+using Homero.Core.Messages;
 
 namespace Homero.Core.EventArgs
 {
     public class CommandReceivedEventArgs : System.EventArgs
     {
-        public ITextCommand Command;
-
-        public CommandReceivedEventArgs(ITextCommand command)
+        public ITextCommand Command { get; private set; }
+        public IUser User { get; private set; }
+        public IChannel Channel { get; private set; }
+        public IServer Server { get; private set; }
+        public CommandReceivedEventArgs(ITextCommand command, IServer server, IChannel channel, IUser user)
         {
             Command = command;
         }

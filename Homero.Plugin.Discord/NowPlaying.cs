@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Homero.Core.Client;
+using Homero.Core.Client.Discord;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
 

@@ -1,4 +1,5 @@
-﻿using Homero.Core.Messages;
+﻿using Homero.Core.Interface;
+using Homero.Core.Messages;
 
 namespace Homero.Core.EventArgs
 {
@@ -9,6 +10,9 @@ namespace Homero.Core.EventArgs
             Message = message;
         }
 
-        public IStandardMessage Message { get; set; }
+        public IStandardMessage Message { get; }
+        public IServer Server { get; }
+        public IChannel Channel { get; }
+        public IUser User { get; }
     }
 }

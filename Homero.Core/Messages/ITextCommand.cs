@@ -6,7 +6,6 @@ namespace Homero.Core.Messages
 {
     public interface ITextCommand
     {
-        IStandardMessage InnerMessage { get; }
         string Command { get; }
         List<string> Arguments { get; }
     }
@@ -19,13 +18,11 @@ namespace Homero.Core.Messages
 
         public TextCommand(IStandardMessage message)
         {
-            InnerMessage = message;
-            var splitMsg = InnerMessage.Message.Split(' ');
+            var splitMsg = message.Message.Split(' ');
             Command = splitMsg[0].TrimStart(Settings.Default.CommandPrefix.ToCharArray()).Trim('\n', ' ');
             Arguments = splitMsg.Length > 1 ? splitMsg.Skip(1).ToList() : new List<string>();
         }
 
-        public IStandardMessage InnerMessage { get; set; }
         public string Command { get; set; }
         public List<string> Arguments { get; set; }
     }
