@@ -38,6 +38,8 @@ namespace Homero.Client
             Logger.Debug("Configuring Message Broker");
             Kernel.Bind<IMessageBroker>().To<MessageBrokerService>().InSingletonScope();
 
+            Kernel.Bind<IUploader>().To<UploaderService>().InSingletonScope();
+
             Logger.Info("Scanning and loading plugin directory.");
             Kernel.Load("Plugins\\Homero.Plugin.*.dll");
 
