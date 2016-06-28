@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Homero.Client;
-using Homero.EventArgs;
-using Homero.Messages;
-using Homero.Services;
+﻿using System.Collections.Generic;
+using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Services;
 
-namespace Homero.Plugin.Circlejerk {
-
+namespace Homero.Plugin.Circlejerk
+{
     public class YeahWoo : IPlugin
     {
         public YeahWoo(IMessageBroker broker)
@@ -16,10 +13,12 @@ namespace Homero.Plugin.Circlejerk {
         }
 
 
-        public void Startup() {
+        public void Startup()
+        {
         }
 
-        public void Shutdown() {
+        public void Shutdown()
+        {
         }
 
 
@@ -27,10 +26,10 @@ namespace Homero.Plugin.Circlejerk {
 
         private void BrokerOnMessageReceived(object sender, MessageReceivedEventArgs e)
         {
-            IClient client = sender as IClient;
+            var client = sender as IClient;
             if (e.Message.Message == "yeah")
             {
-                client?.ReplyTo(e.Message,"woo");
+                client?.ReplyTo(e.Message, "woo");
             }
             else if (e.Message.Message == "woo")
             {

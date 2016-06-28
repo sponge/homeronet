@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Homero.Client;
-using Homero.Messages;
-using Homero.Services;
+using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Messages;
+using Homero.Core.Services;
 
 namespace Homero.Plugin.Circlejerk
 {
     public class Pepito : IPlugin
     {
-        private List<string> _registeredCommands = new List<string>() {"pepito"};
-
         public Pepito(IMessageBroker broker)
         {
             broker.CommandReceived += Broker_CommandReceived;
@@ -24,17 +23,14 @@ namespace Homero.Plugin.Circlejerk
         {
         }
 
-        private void Broker_CommandReceived(object sender, EventArgs.CommandReceivedEventArgs e)
-        {
-            IClient client = sender as IClient;
-            int amt = new Random().Next(68, 421);
-            string hooray = amt == 100 ? "💯" : amt.ToString();
-            client?.ReplyTo(e.Command ,$"<peptio> hey guys i just ate {hooray} pills");
-        }
+        public List<string> RegisteredTextCommands { get; } = new List<string> {"pepito"};
 
-        public List<string> RegisteredTextCommands
+        private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            get { return _registeredCommands; }
+            var client = sender as IClient;
+            var amt = new Random().Next(68, 421);
+            var hooray = amt == 100 ? "💯" : amt.ToString();
+            client?.ReplyTo(e.Command, $"<peptio> hey guys i just ate {hooray} pills");
         }
 
         public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message)

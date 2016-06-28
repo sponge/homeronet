@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ninject.Modules;
+﻿using Ninject.Modules;
 
 namespace Homero.Plugin.Media
 {
@@ -13,6 +8,7 @@ namespace Homero.Plugin.Media
         {
             Bind<IPlugin>().To<SbEmail>().InSingletonScope();
             Bind<IPlugin>().To<YouTube>().InSingletonScope();
+            Bind<IPlugin>().To<YouTubeDubber>().InSingletonScope();
         }
     }
 }

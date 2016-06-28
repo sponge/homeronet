@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Homero.Client;
-using Homero.EventArgs;
-using Homero.Services;
+using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Services;
 
 namespace Homero.Plugin.Converter
 {
     public class Beats : IPlugin
     {
-        private List<string> _registeredCommands = new List<string>() { "beats" };
-
         public Beats(IMessageBroker broker)
         {
             broker.CommandReceived += BrokerOnCommandReceived;
@@ -23,20 +21,15 @@ namespace Homero.Plugin.Converter
         {
         }
 
-        public List<string> RegisteredTextCommands
-        {
-            get { return _registeredCommands; }
-        }
+        public List<string> RegisteredTextCommands { get; } = new List<string> {"beats"};
 
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            IClient client = sender as IClient;
+            var client = sender as IClient;
 
-            DateTime now = DateTime.UtcNow;
-            double beatsTime = Math.Floor((now.Second + (now.Minute * 60) + (now.Hour * 3600)) / 86.4f);
+            var now = DateTime.UtcNow;
+            var beatsTime = Math.Floor((now.Second + (now.Minute*60) + (now.Hour*3600))/86.4f);
             client?.ReplyTo(e.Command, $"utc time: {now.ToString("H:mm:ss")} | beat time: @{beatsTime}");
-
         }
-
     }
 }

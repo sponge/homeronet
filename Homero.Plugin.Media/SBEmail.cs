@@ -1,25 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Homero.Client;
-using Homero.Messages;
-using Homero.Services;
+using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Messages;
+using Homero.Core.Services;
 
 namespace Homero.Plugin.Media
 {
     public class SbEmail : IPlugin
     {
-        private List<string> _registeredCommands = new List<string>() {"sbemail"};
-
         public SbEmail(IMessageBroker broker)
         {
             broker.CommandReceived += Broker_CommandReceived;
-        }
-
-        private void Broker_CommandReceived(object sender, EventArgs.CommandReceivedEventArgs e)
-        {
-            IClient client = sender as IClient;
-            client?.ReplyTo(e.Command, $"http://www.homestarrunner.com/sbemail{new Random().Next(206)}.html");
         }
 
         public void Startup()
@@ -31,9 +24,12 @@ namespace Homero.Plugin.Media
         }
 
 
-        public List<string> RegisteredTextCommands
+        public List<string> RegisteredTextCommands { get; } = new List<string> {"sbemail"};
+
+        private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            get { return _registeredCommands; }
+            var client = sender as IClient;
+            client?.ReplyTo(e.Command, $"http://www.homestarrunner.com/sbemail{new Random().Next(206)}.html");
         }
 
         public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message)

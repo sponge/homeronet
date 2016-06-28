@@ -1,18 +1,12 @@
-﻿using Homero.Plugin;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Homero.Client;
-using Homero.Services;
+﻿using System.Collections.Generic;
+using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Services;
 
 namespace Homero.Plugin.Discord
 {
     public class NowPlaying : IPlugin
     {
-        private List<string> _registeredTextCommands = new List<string>() { "nowplaying" };
-
         public NowPlaying(IMessageBroker broker)
         {
             broker.CommandReceived += Broker_CommandReceived;
@@ -25,7 +19,11 @@ namespace Homero.Plugin.Discord
         public void Shutdown()
         {
         }
-        private void Broker_CommandReceived(object sender, EventArgs.CommandReceivedEventArgs e)
+
+
+        public List<string> RegisteredTextCommands { get; } = new List<string> {"nowplaying"};
+
+        private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
         {
             if (sender is DiscordClient)
             {
@@ -33,14 +31,8 @@ namespace Homero.Plugin.Discord
                 // Yeah, it's kind of gross but I don't want to pull in the package in to this as well.
                 // Not yet anyway. I totally have intentions here to be discussed later.
                 dynamic client = sender as DiscordClient;
-                client?.RootClient.SetGame(String.Join(" ", e.Command.Arguments));
+                client?.RootClient.SetGame(string.Join(" ", e.Command.Arguments));
             }
-        }
-
-
-        public List<string> RegisteredTextCommands
-        {
-            get { return _registeredTextCommands; }
         }
     }
 }
