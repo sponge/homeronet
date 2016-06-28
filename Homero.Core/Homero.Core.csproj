@@ -153,8 +153,10 @@
     <Compile Include="Services\Configuration\JsonConfiguration.cs" />
     <Compile Include="Services\ILoggerFactory.cs" />
     <Compile Include="Services\IMessageBroker.cs" />
+    <Compile Include="Services\IUploader.cs" />
     <Compile Include="Services\MessageBrokerService.cs" />
     <Compile Include="Services\NLogLogger.cs" />
+    <Compile Include="Services\UploaderService.cs" />
     <Compile Include="Utility\CustomEventHandlers.cs" />
     <Compile Include="Utility\IrcColors.cs" />
     <Compile Include="Utility\Logger.cs" />
@@ -170,12 +172,6 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="DiscordClient.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="IrcClient.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
