@@ -112,17 +112,24 @@ namespace Homero.Plugin.Weather
             string summary = $"{address.FormattedAddress} | {weather.currently.summary} | {weather.currently.temperature}{(unit == Unit.us ? "F" : "C")} | Humidity: {weather.currently.humidity * 100}%"
                 + $"\n{weather.minutely.summary}";
 
-            var info = new WeatherRendererInfo();
-            info.Unit = unit;
-            info.Address = address.FormattedAddress;
-            info.WeatherResponse = weather;
-            var stream = CreateWeatherImage(info);
-            client.ReplyTo(e.Command, summary,
-                new ImageAttachment
-                {
-                    DataStream = stream,
-                    Name = $"{e.Command.InnerMessage.Sender} Weather {DateTime.Now}.png"
-                });
+            if (client?.InlineOrOembedSupported == true)
+            {
+                var info = new WeatherRendererInfo();
+                info.Unit = unit;
+                info.Address = address.FormattedAddress;
+                info.WeatherResponse = weather;
+                var stream = CreateWeatherImage(info);
+                client.ReplyTo(e.Command,
+                    new ImageAttachment
+                    {
+                        DataStream = stream,
+                        Name = $"{e.Command.InnerMessage.Sender} Weather {DateTime.Now}.png"
+                    });
+            }
+            else
+            {
+                client?.ReplyTo(e.Command, summary);
+            }
 
             // TODO: save to persistent store for username if dontsave isn't specified
         }
