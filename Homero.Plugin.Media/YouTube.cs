@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
+using System;
+using System.Collections.Generic;
+using System.Net;
 
 namespace Homero.Plugin.Media
 {
     public class YouTube : IPlugin
     {
         private Random _random = new Random();
-
 
         private List<string> _sylauxeSearches = new List<string>
         {
@@ -47,7 +46,7 @@ namespace Homero.Plugin.Media
         {
         }
 
-        public List<string> RegisteredTextCommands { get; } = new List<string> {"youtube", "yt", "kula", "sylauxe"};
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "youtube", "yt", "kula", "sylauxe" };
 
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
@@ -58,7 +57,7 @@ namespace Homero.Plugin.Media
             {
                 if (e.Command.Arguments.Count == 0)
                 {
-                    client?.ReplyTo(e.Command, "youtube <query> -- returns the first YouTube search result for <query>");
+                    e.ReplyTarget.Send("youtube <query> -- returns the first YouTube search result for <query>");
                     return;
                 }
 
@@ -77,12 +76,11 @@ namespace Homero.Plugin.Media
             {
                 if (client?.InlineOrOembedSupported == true)
                 {
-                    client.ReplyTo(e.Command, $"{video.Title} - {video.VideoUrl}");
+                    e.ReplyTarget.Send($"{video.Title} - {video.VideoUrl}");
                 }
                 else
                 {
-                    client?.ReplyTo(e.Command,
-                        $"{video.Title} - {video.VideoUrl} - 👍 {video.LikeCount} 	👎 {video.DislikeCount} - {video.ViewCount} views - {video.ChannelTitle} on {video.PublishedAt}");
+                    e.ReplyTarget.Send($"{video.Title} - {video.VideoUrl} - 👍 {video.LikeCount} 	👎 {video.DislikeCount} - {video.ViewCount} views - {video.ChannelTitle} on {video.PublishedAt}");
                 }
             }
         }

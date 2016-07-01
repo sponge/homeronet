@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 
 namespace Homero.Plugin.Converter
 {
@@ -26,7 +26,7 @@ namespace Homero.Plugin.Converter
 
         public List<string> RegisteredTextCommands
         {
-            get { return new List<string> {"currency"}; }
+            get { return new List<string> { "currency" }; }
         }
 
         public void Startup()
@@ -43,7 +43,7 @@ namespace Homero.Plugin.Converter
 
             if (e.Command.Arguments?.Count != 3)
             {
-                client?.ReplyTo(e.Command, HELP_MESSAGE);
+                e.ReplyTarget.Send(HELP_MESSAGE);
                 return;
             }
             var amount = decimal.Parse(e.Command.Arguments.First());
@@ -54,7 +54,7 @@ namespace Homero.Plugin.Converter
             dynamic response = JsonConvert.DeserializeObject<dynamic>(_webClient.DownloadString(url));
             decimal rate = response["rates"][currencyTo];
 
-            client?.ReplyTo(e.Command, string.Format(OUPUT_FORMAT, amount, currencyFrom, rate*amount, currencyTo));
+            e.ReplyTarget.Send(string.Format(OUPUT_FORMAT, amount, currencyFrom, rate * amount, currencyTo));
         }
     }
 }

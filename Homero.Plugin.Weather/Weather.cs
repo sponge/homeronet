@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using ForecastIO;
+﻿using ForecastIO;
 using GeocodeSharp.Google;
 using Homero.Core.Client;
 using Homero.Core.EventArgs;
@@ -10,6 +6,10 @@ using Homero.Core.Messages.Attachments;
 using Homero.Core.Services;
 using Homero.Plugin.Weather.Renderer;
 using SkiaSharp;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Homero.Plugin.Weather
 {
@@ -52,12 +52,10 @@ namespace Homero.Plugin.Weather
         {
         }
 
-        public List<string> RegisteredTextCommands { get; } = new List<string> {"wea", "weather"};
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "wea", "weather" };
 
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            var client = sender as IClient;
-
             string inputLocation = null;
             bool noSave = false, locationValid = false;
             float lat = 0.0f, lng = 0.0f;
@@ -91,15 +89,15 @@ namespace Homero.Plugin.Weather
                 {
                     geoResult = geo.Results[0];
                     var location = geoResult.Geometry.Location;
-                    lat = (float) location.Latitude;
-                    lng = (float) location.Longitude;
+                    lat = (float)location.Latitude;
+                    lng = (float)location.Longitude;
                     locationValid = true;
                 }
             }
 
             if (!locationValid)
             {
-                client?.ReplyTo(e.Command, "gotta give me a zipcode or something");
+                e.ReplyTarget.Send("gotta give me a zipcode or something");
                 return;
             }
 
@@ -112,29 +110,20 @@ namespace Homero.Plugin.Weather
 
             var weather = new ForecastIORequest(_forecastIoApiKey, lat, lng, unit).Get();
 
-            var summary = $"{geoResult.FormattedAddress} | {weather.currently.summary} | {weather.currently.temperature}{(unit == Unit.us ? "F" : "C")} | Humidity: {weather.currently.humidity*100}%"
+            var summary = $"{geoResult.FormattedAddress} | {weather.currently.summary} | {weather.currently.temperature}{(unit == Unit.us ? "F" : "C")} | Humidity: {weather.currently.humidity * 100}%"
                           + $"\n{weather.minutely.summary}";
 
-            if (client?.InlineOrOembedSupported == true)
-            {
-                var info = new WeatherRendererInfo();
-                info.Unit = unit;
-                info.Address = geoResult.FormattedAddress;
-                info.WeatherResponse = weather;
-                var stream = CreateWeatherImage(info);
-                client.ReplyTo(e.Command,
-                    new ImageAttachment
-                    {
-                        DataStream = stream,
-                        Name = $"{e.Command.InnerMessage.Sender} Weather {DateTime.Now}.png"
-                    });
-            }
-            else
-            {
-                client?.ReplyTo(e.Command, summary);
-            }
-
-            // TODO: save to persistent store for username if dontsave isn't specified
+            var info = new WeatherRendererInfo();
+            info.Unit = unit;
+            info.Address = geoResult.FormattedAddress;
+            info.WeatherResponse = weather;
+            var stream = CreateWeatherImage(info);
+            e.ReplyTarget.Send(summary,
+                new ImageAttachment
+                {
+                    DataStream = stream,
+                    Name = $"{e.User.Name} Weather {DateTime.Now}.png"
+                });
         }
 
         private Stream CreateWeatherImage(WeatherRendererInfo info)

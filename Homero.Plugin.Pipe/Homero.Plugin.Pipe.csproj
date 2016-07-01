@@ -62,7 +62,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PipeClient.cs" />
     <Compile Include="PipeModule.cs" />
     <Compile Include="PipePlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

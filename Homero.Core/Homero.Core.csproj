@@ -217,8 +217,7 @@
     <Compile Include="Client\TwitchClient.cs" />
     <Compile Include="EventArgs\CommandReceivedEventArgs.cs" />
     <Compile Include="EventArgs\CommandSieveEventArgs.cs" />
-    <Compile Include="EventArgs\MessageReceivedEventArgs.cs" />
-    <Compile Include="EventArgs\MessageSentEventArgs.cs" />
+    <Compile Include="EventArgs\MessageEventArgs.cs" />
     <Compile Include="Interface\IChannel.cs" />
     <Compile Include="Interface\ISendable.cs" />
     <Compile Include="Interface\IServer.cs" />

@@ -9,7 +9,7 @@ namespace Homero.Core.Interface
     public interface IUser : ISendable
     {
         string Name { get; }
-        string Nickname { get; }
 
+        string Mention { get; }
     }
 }

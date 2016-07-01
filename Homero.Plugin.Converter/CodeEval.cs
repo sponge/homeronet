@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Messages;
 using Homero.Core.Services;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Homero.Plugin.Converter
 {
     public class CodeEval : IPlugin
     {
-        WebClient _ws;
+        private WebClient _ws;
 
         public CodeEval(IMessageBroker broker)
         {
@@ -28,7 +28,7 @@ namespace Homero.Plugin.Converter
         {
         }
 
-        public List<string> RegisteredTextCommands { get; } = new List<string> {"python"};
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "python" };
 
         private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
         {
@@ -36,7 +36,7 @@ namespace Homero.Plugin.Converter
 
             if (e.Command.Arguments.Count == 0)
             {
-                client?.ReplyTo(e.Command, $"need some code to run");
+                e.ReplyTarget.Send($"need some code to run");
                 return;
             }
 
@@ -56,11 +56,11 @@ namespace Homero.Plugin.Converter
 
             if (int.Parse(result["status"]) != 0)
             {
-                client?.ReplyTo(e.Command, result["program_error"]);
+                e.ReplyTarget.Send(result["program_error"]);
             }
             else
             {
-                client?.ReplyTo(e.Command, result["program_output"]);
+                e.ReplyTarget.Send(result["program_output"]);
             }
         }
 

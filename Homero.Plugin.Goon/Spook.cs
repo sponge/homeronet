@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Messages;
 using Homero.Core.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Homero.Plugin.Goon
 {
@@ -22,7 +22,7 @@ namespace Homero.Plugin.Goon
         {
         }
 
-        public List<string> RegisteredTextCommands { get; } = new List<string> {"spook", "boo"};
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "spook", "boo" };
 
         private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
         {
@@ -41,7 +41,7 @@ namespace Homero.Plugin.Goon
                 boo = $"```{boo}```";
             }
 
-            client?.ReplyTo(e.Command, string.Format(boo, name));
+            e.ReplyTarget.Send(string.Format(boo, name));
         }
 
         public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message)

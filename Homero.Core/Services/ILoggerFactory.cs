@@ -11,7 +11,7 @@ namespace Homero.Core.Services
     public class LoggerFactory : ILoggerFactory
     {
         private Dictionary<string, ILogger> _backedLoggers;
-            // Ensure only one instance of a configuration is grabbed from the factory.
+        // Ensure only one instance of a configuration is grabbed from the factory.
 
         public LoggerFactory()
         {
@@ -48,6 +48,6 @@ namespace Homero.Core.Services
             get { return _instance ?? (_instance = new LoggerFactory()); }
         }
 
-        #endregion
+        #endregion Singleton
     }
 }

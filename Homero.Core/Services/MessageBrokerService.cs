@@ -1,11 +1,11 @@
-﻿using System;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Messages;
 using Homero.Core.Properties;
 using Homero.Core.Utility;
 using Homero.Plugin;
 using Ninject;
+using System;
 
 namespace Homero.Core.Services
 {
@@ -17,11 +17,11 @@ namespace Homero.Core.Services
         private readonly WeakEventSource<CommandSieveEventArgs> _commandSieveEventSource =
             new WeakEventSource<CommandSieveEventArgs>();
 
-        private readonly WeakEventSource<MessageReceivedEventArgs> _messageReceivedEventSource =
-            new WeakEventSource<MessageReceivedEventArgs>();
+        private readonly WeakEventSource<MessageEventArgs> _messageReceivedEventSource =
+            new WeakEventSource<MessageEventArgs>();
 
-        private readonly WeakEventSource<MessageSentEventArgs> _messageSentEventSource =
-            new WeakEventSource<MessageSentEventArgs>();
+        private readonly WeakEventSource<MessageEventArgs> _messageSentEventSource =
+            new WeakEventSource<MessageEventArgs>();
 
         public MessageBrokerService(IKernel kernel)
         {
@@ -44,39 +44,39 @@ namespace Homero.Core.Services
             remove { _commandSieveEventSource.Unsubscribe(value); }
         }
 
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived
+        public event EventHandler<MessageEventArgs> MessageReceived
         {
             add { _messageReceivedEventSource.Subscribe(value); }
             remove { _messageReceivedEventSource.Unsubscribe(value); }
         }
 
-        public event EventHandler<MessageSentEventArgs> MessageSent
+        public event EventHandler<MessageEventArgs> MessageSent
         {
             add { _messageSentEventSource.Subscribe(value); }
             remove { _messageSentEventSource.Unsubscribe(value); }
         }
 
-        public void ClientOnMessageSent(object sender, MessageSentEventArgs e)
+        public void ClientOnMessageSent(object sender, MessageEventArgs e)
         {
             _messageSentEventSource.RaiseAsync(sender, e);
         }
 
-        public void ClientOnMessageReceived(object sender, MessageReceivedEventArgs e)
+        public void ClientOnMessageReceived(object sender, MessageEventArgs e)
         {
             // Determine if plugin first.
             if (e.Message.Message.StartsWith(Settings.Default.CommandPrefix))
             {
                 var command = new TextCommand(e.Message);
-                RaiseCommandReceived(sender, command);
+                RaiseCommandReceived(sender, command, e);
                 return;
             }
 
             _messageReceivedEventSource.Raise(sender, e);
         }
 
-        public void RaiseCommandReceived(object sender, ITextCommand command)
+        public void RaiseCommandReceived(object sender, ITextCommand command, MessageEventArgs e)
         {
-            _commandEventSource.RaiseAsync(sender, new CommandReceivedEventArgs(command), delegate(object o)
+            _commandEventSource.RaiseAsync(sender, new CommandReceivedEventArgs(command, e.Server, e.Channel, e.User), delegate (object o)
             {
                 var pluginInstance = o as IPlugin;
                 if (pluginInstance?.RegisteredTextCommands?.Contains(command.Command) == true)

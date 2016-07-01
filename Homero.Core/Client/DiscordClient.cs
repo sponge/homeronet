@@ -1,12 +1,10 @@
-﻿using System;
+﻿using Discord;
+using Homero.Core.Interface;
+using Homero.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Discord;
-using Homero.Core.EventArgs;
-using Homero.Core.Interface;
-using Homero.Core.Messages;
-using Homero.Core.Services;
 
 namespace Homero.Core.Client
 {
@@ -34,39 +32,41 @@ namespace Homero.Core.Client
             });
 
             RootClient.MessageReceived += DiscordClientOnMessageReceived;
-            RootClient.MessageSent += RootClient_MessageSent;
+            RootClient.MessageSent += DiscordClientOnMessageSent;
         }
 
-        private void RootClient_MessageSent(object sender, MessageEventArgs e)
+        private void DiscordClientOnMessageSent(object sender, Discord.MessageEventArgs e)
         {
-            throw new NotImplementedException();
+            MessageSent?.Invoke(this, new EventArgs.MessageEventArgs(new DiscordMessage(e.Message), new DiscordServer(e.Server), new DiscordChannel(e.Channel), new DiscordUser(e.User)));
         }
 
         #endregion Constructors
 
         #region Methods
 
-        private void DiscordClientOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
+        private void DiscordClientOnMessageReceived(object sender, Discord.MessageEventArgs e)
         {
-            if (messageEventArgs.User.Id == RootClient.CurrentUser.Id)
+            if (e.User.Id == RootClient.CurrentUser.Id)
             {
                 return;
             }
-            var message = new DiscordMessage(this, messageEventArgs.Message);
-            MessageReceived?.Invoke(this, new MessageReceivedEventArgs(message));
+            MessageReceived?.Invoke(this, new EventArgs.MessageEventArgs(new DiscordMessage(e.Message), new DiscordServer(e.Server), new DiscordChannel(e.Channel), new DiscordUser(e.User)));
         }
 
         #endregion Methods
 
         #region Events
 
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
+        public event EventHandler<EventArgs.MessageEventArgs> MessageReceived;
 
-        public event EventHandler<MessageSentEventArgs> MessageSent;
+        public event EventHandler<EventArgs.MessageEventArgs> MessageSent;
 
         #endregion Events
 
-        #region Async Methods
+        public List<IServer> Servers
+        {
+            get { return RootClient.Servers.Select(x => new DiscordServer(x)).Cast<IServer>().ToList(); }
+        }
 
         public async Task<bool> Connect()
         {
@@ -74,31 +74,28 @@ namespace Homero.Core.Client
             return true; // uh why can't i get the connect result?
         }
 
-        public List<IServer> Servers
-        {
-            get { return RootClient.Servers.Select(x => new DiscordServer(x)).Cast<IServer>().ToList(); }
-        }
-
-        #endregion Async Methods
-
         #region Properties
+
+        public bool AudioSupported => true;
+
+        public string Description => "Client that connects to Discord using the Discord.NET library.";
+
+        public bool InlineOrOembedSupported => true;
+
+        public bool IrcFormattingSupported => false;
 
         public bool IsConnected
         {
             get { return RootClient.State == ConnectionState.Connected; }
         }
 
+        public bool MarkdownSupported => true;
+
         public string Name => "Discord.NET Client";
 
-        public string Description => "Client that connects to Discord using the Discord.NET library.";
+        public Discord.DiscordClient RootClient { get; }
 
         public Version Version => new Version(0, 0, 1);
-        public bool MarkdownSupported => true;
-        public bool AudioSupported => true;
-        public bool IrcFormattingSupported => false;
-        public bool InlineOrOembedSupported => true;
-
-        public Discord.DiscordClient RootClient { get; }
 
         #endregion Properties
     }
