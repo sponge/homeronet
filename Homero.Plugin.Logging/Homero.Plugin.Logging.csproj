@@ -85,6 +85,8 @@
     <Compile Include="Log.cs" />
     <Compile Include="LoggingModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLiteConfiguration.cs" />
+    <Compile Include="SQLiteConnectionFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

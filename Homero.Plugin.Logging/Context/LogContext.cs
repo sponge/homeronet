@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Homero.Plugin.Logging.Context
 {
+    [DbConfigurationType(typeof(SQLiteConfiguration))]
     public class LogContext : DbContext
     {
         public LogContext()
