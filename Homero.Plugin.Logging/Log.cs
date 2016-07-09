@@ -33,7 +33,7 @@ namespace Homero.Plugin.Logging
             if (e.Server.Name == null)
             {
                 contextName = $"{client.Name}.PM";
-                context = new LogContext(string.Format(Constants.LOG_CONNECTION_STRING, contextName));
+                context = new LogContext(contextName);
             }
             else
             {
@@ -41,7 +41,7 @@ namespace Homero.Plugin.Logging
                 if (!_contextStorage.ContainsKey(contextName))
                 {
                     // Cache the channel contexts. They're important and mostly static.
-                    _contextStorage[contextName] = new LogContext(string.Format(Constants.LOG_CONNECTION_STRING, contextName));
+                    _contextStorage[contextName] = new LogContext(contextName);
                 }
                 context = _contextStorage[contextName];
             }

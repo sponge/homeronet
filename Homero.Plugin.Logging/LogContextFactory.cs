@@ -9,15 +9,15 @@ using Homero.Plugin.Logging.Context;
 
 namespace Homero.Plugin.Logging
 {
-    public static class ContextFactory
+    public static class LogContextFactory
     {
 
-        public static LogContext GetContext(IClient client, IServer server)
+        public static LogContext Get(IClient client, IServer server)
         {
             
             try
             {
-                LogContext context = new LogContext(string.Format(Constants.LOG_CONNECTION_STRING, $"{client.Name}.{server.Name}"));
+                LogContext context = new LogContext($"{client.Name}.{server.Name}");
                 context.Configuration.AutoDetectChangesEnabled = false;
                 context.Configuration.EnsureTransactionsForFunctionsAndCommands = false;
                 return context;

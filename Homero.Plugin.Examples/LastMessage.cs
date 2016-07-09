@@ -23,7 +23,7 @@ namespace Homero.Plugin.Examples
 
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            using (var ctx = ContextFactory.GetContext((IClient) sender, e.Server))
+            using (var ctx = LogContextFactory.Get((IClient) sender, e.Server))
             {
                 if (ctx != null)
                 {
