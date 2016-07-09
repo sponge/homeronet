@@ -77,11 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\LogContext.cs" />
-    <Compile Include="Entity\Channel.cs" />
-    <Compile Include="Entity\Client.cs" />
     <Compile Include="Entity\Message.cs" />
-    <Compile Include="Entity\Server.cs" />
-    <Compile Include="Entity\User.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="LoggingModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Homero.Core.Client;
 
 namespace Homero.Plugin.Logging
 {
     public class Log : IPlugin
     {
-        private const string LOG_CONNECTION_STRING = "Data Source =.\\log.sqlite";
+        private const string LOG_CONNECTION_STRING = "Data Source =.\\{0}.sqlite";
+        private Dictionary<string, LogContext> _contextStorage; // This is probably not so good....
 
         public Log(IMessageBroker broker)
         {
@@ -20,30 +22,37 @@ namespace Homero.Plugin.Logging
 
         private void Broker_MessageReceived(object sender, Core.EventArgs.MessageEventArgs e)
         {
-            using (var context = new LogContext(LOG_CONNECTION_STRING))
+            IClient client = sender as IClient;
+            if (sender == null)
             {
-                User user;
-                user = context.Users.FirstOrDefault(x => x.Name == e.User.Name);
-                if (user == null)
-                {
-                    user = new User() { Name = e.User.Name };
-                    context.Users.Add(user);
-                }
-
-                context.SaveChangesAsync();
+                return;
             }
+
+            string contextName = $"{client.Name}.{e.Server.Name}";
+
+            if (!_contextStorage.ContainsKey(contextName))
+            {
+                _contextStorage[contextName] = new LogContext(string.Format(LOG_CONNECTION_STRING, contextName));
+            }
+
+            Message message = new Message();
+            message.Timestamp = DateTime.Now;
+            message.Channel = e.Channel.Name;
+            message.Content = e.Message.Message;
+            message.User = e.User.Name;
+            _contextStorage[contextName].Messages.Add(message);
+            _contextStorage[contextName].SaveChangesAsync();
         }
 
-        public List<string> RegisteredTextCommands
+        public List<string> RegisteredTextCommands => null;
+
+        public
+            void Shutdown()
         {
-            get { return null; }
         }
 
-        public void Shutdown()
-        {
-        }
-
-        public void Startup()
+        public
+            void Startup()
         {
         }
     }

@@ -11,21 +11,14 @@ namespace Homero.Plugin.Logging.Entity
 {
     public class Message
     {
-        [Key]
-        public int Id { get; set; }
-
-        public Server Server { get; set; }
-
+        [Column(Order=0), Key]
+        public DateTime Timestamp { get; set; }
+        [Column(Order=1), Key, Index]
+        public string Channel { get; set; }
         [Index]
-        public Channel Channel { get; set; }
-
-        [Index]
-        public Client Client { get; set; }
-
-        public User User { get; set; }
+        public string User { get; set; }
 
         public string Content { get; set; }
 
-        public DateTime Timestamp { get; set; }
     }
 }

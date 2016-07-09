@@ -20,15 +20,7 @@ namespace Homero.Plugin.Logging.Context
         {
         }
 
-        public DbSet<Server> Servers { get; set; }
-
-        public DbSet<Channel> Channels { get; set; }
-
-        public DbSet<User> Users { get; set; }
-
         public DbSet<Message> Messages { get; set; }
-
-        public DbSet<Client> Clients { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
