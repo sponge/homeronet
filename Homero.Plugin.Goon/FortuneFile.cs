@@ -11,8 +11,11 @@
         }
 
         public string Command { get; set; }
+
         public string Path { get; set; }
+
         public bool StripNewLines { get; set; }
+
         public bool IsMultiLine { get; set; }
     }
 }

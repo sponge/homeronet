@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
+using System.Collections.Generic;
 
 namespace Homero.Plugin.Discord
 {
@@ -20,8 +20,7 @@ namespace Homero.Plugin.Discord
         {
         }
 
-
-        public List<string> RegisteredTextCommands { get; } = new List<string> {"nowplaying"};
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "nowplaying" };
 
         private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
         {

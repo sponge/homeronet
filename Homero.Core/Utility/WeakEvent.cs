@@ -56,7 +56,7 @@ namespace Homero.Core.Utility
                 return result;
             });
 
-            asyncRaise.ContinueWith((delegate(Task<List<WeakDelegate>> task)
+            asyncRaise.ContinueWith((delegate (Task<List<WeakDelegate>> task)
             {
                 lock (_handlers)
                 {
@@ -90,7 +90,7 @@ namespace Homero.Core.Utility
             }
         }
 
-        class WeakDelegate
+        private class WeakDelegate
         {
             private readonly MethodInfo _method;
             private readonly OpenEventHandler _openHandler;
@@ -163,7 +163,7 @@ namespace Homero.Core.Utility
                 }
             }
 
-            #endregion
+            #endregion Open handler generation and cache
         }
     }
 }

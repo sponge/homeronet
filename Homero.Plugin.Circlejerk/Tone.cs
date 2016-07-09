@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Homero.Core.Client;
-using Homero.Core.EventArgs;
-using Homero.Core.Services;
 
 namespace Homero.Plugin.Circlejerk
 {
@@ -36,7 +36,6 @@ namespace Homero.Plugin.Circlejerk
         {
         }
 
-
         public List<string> RegisteredTextCommands { get; } = new List<string>
         {
             "tone"
@@ -44,7 +43,6 @@ namespace Homero.Plugin.Circlejerk
 
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            var client = sender as IClient;
             if (e.Command.Command == "tone")
             {
                 // Don't hold up dispatch at all and run this long thing as a task.
@@ -52,7 +50,7 @@ namespace Homero.Plugin.Circlejerk
                 {
                     foreach (var msg in _tonyOutput)
                     {
-                        client?.ReplyTo(e.Command, msg);
+                        e.ReplyTarget.Send(msg);
                         Thread.Sleep(TimeSpan.FromSeconds(1));
                     }
                 });

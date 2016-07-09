@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using Homero.Core.Utility;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Homero.Plugin
 {
@@ -45,12 +45,11 @@ namespace Homero.Plugin
 
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            var client = sender as IClient;
             _webClient.DownloadString("http://" + _tumblrMap[e.Command.Command] + ".tumblr.com/random");
-            client?.ReplyTo(e.Command, _webClient.ResponseUri?.ToString());
+            e.ReplyTarget.Send(_webClient.ResponseUri?.ToString());
         }
 
-        private void BrokerOnMessageReceived(object sender, MessageReceivedEventArgs e)
+        private void BrokerOnMessageReceived(object sender, MessageEventArgs e)
         {
             _logger.Info(e.Message.Message);
         }

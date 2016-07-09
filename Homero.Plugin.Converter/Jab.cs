@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Text;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Homero.Plugin.Converter
 {
@@ -21,7 +21,7 @@ namespace Homero.Plugin.Converter
         {
         }
 
-        public List<string> RegisteredTextCommands { get; } = new List<string> {"jab", "bigjab", "script"};
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "jab", "bigjab", "script" };
 
         public string FormatScript(string str)
         {
@@ -100,7 +100,7 @@ namespace Homero.Plugin.Converter
             if (e.Command.Command == "script")
             {
                 var outStr = FormatScript(str);
-                client?.ReplyTo(e.Command, str);
+                e.ReplyTarget.Send(str);
             }
             else if (e.Command.Command == "jab" || e.Command.Command == "bigjab")
             {
@@ -108,24 +108,23 @@ namespace Homero.Plugin.Converter
 
                 if (e.Command.Command == "jab")
                 {
-                    client?.ReplyTo(e.Command, outStr);
+                    e.ReplyTarget.Send(outStr);
                 }
                 else
                 {
                     var fancy = "ஜ۩۞۩ஜ";
 
-                    var padLen = (outStr.Length*2 - fancy.Length)/2 - 1;
+                    var padLen = (outStr.Length * 2 - fancy.Length) / 2 - 1;
 
                     var spaces = "";
                     if (padLen < 0)
                     {
-                        outStr = outStr.PadLeft(fancy.Length/2 + 1).PadRight(fancy.Length);
+                        outStr = outStr.PadLeft(fancy.Length / 2 + 1).PadRight(fancy.Length);
                     }
                     else
                     {
                         spaces = "".PadLeft(padLen, '\u25AC');
                     }
-
 
                     fancy = $"{spaces}{fancy}{spaces}";
 
@@ -136,7 +135,7 @@ namespace Homero.Plugin.Converter
                         outStr = $"```{outStr}```";
                     }
 
-                    client?.ReplyTo(e.Command, outStr);
+                    e.ReplyTarget.Send(outStr);
                 }
             }
         }

@@ -69,7 +69,7 @@ namespace Homero.Plugin.Converter
                 str = str.Replace(entry.Key, entry.Value);
             }
 
-            client?.ReplyTo(e.Command, str);
+            e.ReplyTarget.Send( str);
         }
     }
 }

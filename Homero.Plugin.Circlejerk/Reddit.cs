@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 
 namespace Homero.Plugin.Circlejerk
 {
@@ -79,7 +79,6 @@ namespace Homero.Plugin.Circlejerk
 
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            var client = sender as IClient;
             var redditCommand = _commandForName[e.Command.Command];
             var random = new Random();
 
@@ -90,12 +89,13 @@ namespace Homero.Plugin.Circlejerk
 
             string message = postList[random.Next(postList.Count)]["data"]["title"];
 
-            client?.ReplyTo(e.Command, redditCommand.FormatMessage(message));
+            e.ReplyTarget.Send(redditCommand.FormatMessage(message));
         }
 
         private class RedditCommand
         {
             public List<string> Subreddits { get; set; }
+
             public Func<string, string> FormatMessage { get; set; }
         }
     }

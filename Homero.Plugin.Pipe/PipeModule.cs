@@ -6,7 +6,7 @@ namespace Homero.Plugin.Pipe
     {
         public override void Load()
         {
-            Bind<IPlugin>().To<PipePlugin>();
+            //            Bind<IPlugin>().To<PipePlugin>();
         }
     }
 }

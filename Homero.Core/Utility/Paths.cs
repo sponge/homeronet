@@ -17,6 +17,11 @@ namespace Homero.Core.Utility
             }
         }
 
+        public static string DataDirectory
+        {
+            get { return Path.Combine(AssemblyDirectory, "Data"); }
+        }
+
         public static string ResourceDirectory
         {
             get { return Path.Combine(AssemblyDirectory, "Plugins", "Resources"); }
