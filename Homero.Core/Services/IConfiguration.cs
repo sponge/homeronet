@@ -51,6 +51,7 @@ namespace Homero.Core.Services
         {
             if (!_backingObject.DictionaryEqual(updatedDictionary))
             {
+                Exists = true;
                 _backingObject = updatedDictionary;
                 Changed?.Invoke(this, new System.EventArgs());
             }
