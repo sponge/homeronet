@@ -76,6 +76,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
+    <Compile Include="ContextFactory.cs" />
     <Compile Include="Context\LogContext.cs" />
     <Compile Include="Entity\Message.cs" />
     <Compile Include="Log.cs" />

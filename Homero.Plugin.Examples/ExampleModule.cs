@@ -19,6 +19,7 @@ namespace Homero.Plugin.Examples
         public override void Load()
         {
             Bind<IPlugin>().To<StoreTest>().InSingletonScope();
+            Bind<IPlugin>().To<LastMessage>().InSingletonScope();
         }
     }
 }

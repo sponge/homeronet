@@ -13,19 +13,19 @@ namespace Homero.Core.Client
         private Server _server;
         public DiscordServer(Server server)
         {
-            server = _server;
+            _server = server;
         }
 
         public string Name
         {
-            get { return _server.Name; }
+            get { return _server?.Name; }
         }
 
         public List<IChannel> Channels
         {
             get
             {
-                return _server.AllChannels.Select(x => new DiscordChannel(x)).Cast<IChannel>().ToList();
+                return _server?.AllChannels.Select(x => new DiscordChannel(x)).Cast<IChannel>().ToList();
             }
         }
     }
