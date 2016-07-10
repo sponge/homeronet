@@ -7,8 +7,9 @@ using System.Data.SQLite.EF6;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Homero.Core.Database.Provider;
 
-namespace Homero.Plugin.Logging
+namespace Homero.Core.Database.Configuration
 {
     public class SQLiteConfiguration : DbConfiguration
     {
@@ -16,7 +17,7 @@ namespace Homero.Plugin.Logging
         {
             SetProviderFactory("System.Data.SQLite", SQLiteFactory.Instance);
             SetProviderFactory("System.Data.SQLite.EF6", SQLiteProviderFactory.Instance);
-            SetDefaultConnectionFactory(new SQLiteConnectionFactory());
+            SetDefaultConnectionFactory(new SqliteConnectionFactory());
             SetProviderServices("System.Data.SQLite", (DbProviderServices)SQLiteProviderFactory.Instance.GetService(typeof(DbProviderServices)));
         }
     }
