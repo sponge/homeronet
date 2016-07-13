@@ -146,6 +146,10 @@ namespace Homero.Plugin
         public void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
             var client = sender as IClient;
+            if (e.Command.Arguments.Count == 0)
+            {
+                return;
+            }
             var message = string.Join(" ", e.Command.Arguments);
             var wrappedText = WrapText(message, BORDER_MAX_WIDTH);
             var outputLines = new List<string>();

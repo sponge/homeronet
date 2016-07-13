@@ -7,25 +7,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Homero.Core.EventArgs;
 
 namespace Homero.Core.Utility
 {
     public class WeakEventSource<TEventArgs>
     {
         private readonly List<WeakDelegate> _handlers;
+        public event EventHandler<EventFailedEventArgs> AsyncRaiseFailed;
+        public event EventHandler InvokeStarted;
+        public event EventHandler InvokeEnded;
 
         public WeakEventSource()
         {
             _handlers = new List<WeakDelegate>();
+            TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
+        }
+
+        private void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs unobservedTaskExceptionEventArgs)
+        {
+            throw new NotImplementedException();
         }
 
         public void Raise(object sender, TEventArgs e)
         {
+            InvokeStarted?.Invoke(this, null);
             lock (_handlers)
             {
                 _handlers.RemoveAll(h => !h.Invoke(sender, e));
             }
+            InvokeEnded?.Invoke(this, null);
         }
 
         public void RaiseAsync(object sender, TEventArgs e)
@@ -35,6 +48,7 @@ namespace Homero.Core.Utility
 
         public void RaiseAsync(object sender, TEventArgs e, Predicate<object> filter)
         {
+            InvokeStarted?.Invoke(sender, e as System.EventArgs);
             var asyncRaise = new Task<List<WeakDelegate>>(() =>
             {
                 var result = new List<WeakDelegate>();
@@ -48,9 +62,16 @@ namespace Homero.Core.Utility
                             continue;
                         }
                     }
-                    if (!handler.Invoke(sender, e))
+                    try
                     {
-                        result.Add(handler);
+                        if (!handler.Invoke(sender, e))
+                        {
+                            result.Add(handler);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        AsyncRaiseFailed?.Invoke(sender, new EventFailedEventArgs(e as System.EventArgs, ex));
                     }
                 }
                 return result;
@@ -62,6 +83,7 @@ namespace Homero.Core.Utility
                 {
                     _handlers.RemoveAll(x => task.Result.Contains(x));
                 }
+                InvokeEnded?.Invoke(sender, e as System.EventArgs);
             }));
 
             asyncRaise.Start();
@@ -113,6 +135,7 @@ namespace Homero.Core.Utility
                     if (target == null)
                         return false;
                 }
+
                 _openHandler(target, sender, e);
                 return true;
             }
@@ -150,6 +173,17 @@ namespace Homero.Core.Utility
                             sender, e),
                         target, sender, e);
                     return expr.Compile();
+                }
+                else if (method.GetCustomAttributes(typeof(AsyncStateMachineAttribute)) != null)
+                {
+                    var expr = Expression.Lambda<OpenEventHandler>(
+                        Expression.Call(
+                            Expression.Convert(target, method.DeclaringType),
+                            method,
+                            sender, e),
+                        target, sender, e);
+                    return expr.Compile();
+
                 }
                 else
                 {
