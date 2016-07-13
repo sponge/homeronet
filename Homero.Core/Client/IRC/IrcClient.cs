@@ -112,7 +112,7 @@ namespace Homero.Core.Client.IRC
                 return;
             }
 
-            MessageEventArgs args = new MessageEventArgs(new IrcMessage(e.Text), null,
+            MessageEventArgs args = new MessageEventArgs(new IrcMessage(e.Text), new IrcServer(client, _uploader), 
                 new IrcChannel(channel, _uploader),
                 new IrcUser(channel.Users.FirstOrDefault(x => x.User.NickName == e.Source.Name)?.User, _uploader));
 
