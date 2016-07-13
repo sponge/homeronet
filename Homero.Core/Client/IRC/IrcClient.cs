@@ -82,13 +82,17 @@ namespace Homero.Core.Client.IRC
             _clients.Add(client);
             client.LocalUser.JoinedChannel += LocalUserOnJoinedChannel;
 
-            // Join all known channels. This sucks.
-            foreach (
-                IrcServerConfiguration serverConfig in
-                    _config.GetValue<List<IrcServerConfiguration>>("servers")
-                        .Where(x => x.Host.Contains(client.ServerName)))
+            // This sucks but writing some object association stuff would suck, rather just sacrifice extra cycles on startup than hours of dev work.
+            IrcServerConfiguration serverConfiguration = _config.GetValue<List<IrcServerConfiguration>>("servers").FirstOrDefault(x => x.Host.Contains(client.ServerName));
+
+            if (serverConfiguration != null)
             {
-                foreach (string channel in serverConfig.Channels)
+                if (!string.IsNullOrEmpty(serverConfiguration.NickServPassword))
+                {
+                    client.LocalUser.SendMessage(serverConfiguration.NickservUsername, serverConfiguration.NickServPassword);
+                }
+
+                foreach (string channel in serverConfiguration.Channels)
                 {
                     client.Channels.Join(channel);
                 }
