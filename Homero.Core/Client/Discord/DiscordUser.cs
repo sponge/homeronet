@@ -1,13 +1,10 @@
-﻿using Discord;
+﻿using System;
+using System.Threading.Tasks;
+using Discord;
 using Homero.Core.Interface;
 using Homero.Core.Messages.Attachments;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Homero.Core.Client
+namespace Homero.Core.Client.Discord
 {
     public class DiscordUser : IUser
     {

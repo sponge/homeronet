@@ -1,12 +1,9 @@
-﻿using Homero.Core.EventArgs;
-using Homero.Core.Interface;
-using Homero.Core.Messages;
-using Homero.Core.Messages.Attachments;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Homero.Core.EventArgs;
 
-namespace Homero.Core.Client
+namespace Homero.Core.Interface
 {
     public interface IClient
     {

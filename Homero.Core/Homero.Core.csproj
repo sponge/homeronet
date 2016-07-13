@@ -222,13 +222,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client\DiscordChannel.cs" />
-    <Compile Include="Client\DiscordClient.cs" />
-    <Compile Include="Client\DiscordMessage.cs" />
-    <Compile Include="Client\DiscordServer.cs" />
-    <Compile Include="Client\DiscordUser.cs" />
-    <Compile Include="Client\IClient.cs" />
-    <Compile Include="Client\IrcClient.cs" />
+    <Compile Include="Client\Discord\DiscordChannel.cs" />
+    <Compile Include="Client\Discord\DiscordClient.cs" />
+    <Compile Include="Client\Discord\DiscordMessage.cs" />
+    <Compile Include="Client\Discord\DiscordServer.cs" />
+    <Compile Include="Client\Discord\DiscordUser.cs" />
+    <Compile Include="Client\IRC\IrcMessage.cs" />
+    <Compile Include="Client\IRC\IrcServer.cs" />
+    <Compile Include="Client\IRC\IrcServerConfiguration.cs" />
+    <Compile Include="Client\IRC\IrcUser.cs" />
+    <Compile Include="Interface\IClient.cs" />
+    <Compile Include="Client\IRC\IrcChannel.cs" />
+    <Compile Include="Client\IRC\IrcClient.cs" />
     <Compile Include="Client\SlackClient.cs" />
     <Compile Include="Client\TwitchClient.cs" />
     <Compile Include="Database\Configuration\SqliteConfiguration.cs" />
@@ -246,8 +251,6 @@
     <Compile Include="Messages\Attachments\FileAttachment.cs" />
     <Compile Include="Messages\Attachments\IAttachment.cs" />
     <Compile Include="Messages\Attachments\ImageAttachment.cs" />
-    <Compile Include="Messages\DiscordMessage.cs" />
-    <Compile Include="Messages\IrcMessage.cs" />
     <Compile Include="Messages\IStandardMessage.cs" />
     <Compile Include="Messages\ITextCommand.cs" />
     <Compile Include="Messages\IVoiceMessage.cs" />

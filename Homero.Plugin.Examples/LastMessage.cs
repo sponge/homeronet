@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Homero.Core.Client;
 using Homero.Core.EventArgs;
+using Homero.Core.Interface;
 using Homero.Core.Services;
 using Homero.Plugin.Logging;
 using Homero.Plugin.Logging.Entity;

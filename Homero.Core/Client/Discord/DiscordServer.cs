@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Discord;
 using Homero.Core.Interface;
 
-namespace Homero.Core.Client
+namespace Homero.Core.Client.Discord
 {
     public class DiscordServer : IServer
     {

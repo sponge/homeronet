@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Homero.Core.Client;
+using Homero.Core.Interface;
 
 namespace Homero.Plugin.Logging
 {

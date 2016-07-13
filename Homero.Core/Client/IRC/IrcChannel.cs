@@ -66,7 +66,7 @@ namespace Homero.Core.Client.IRC
 
         public List<IUser> Users
         {
-            get { return _inner.Users.GetUsers().Select(x => new IrcUser(x)).Cast<IUser>().ToList(); }
+            get { return _inner.Users.GetUsers().Select(x => new IrcUser(x, _uploader)).Cast<IUser>().ToList(); }
         }
     }
 }

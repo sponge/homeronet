@@ -4,6 +4,7 @@ using Homero.Core.Interface;
 using Homero.Core.Services;
 using System.Collections.Generic;
 using System.Linq;
+using Homero.Core.Client.IRC;
 
 namespace Homero.Plugin.Goon
 {

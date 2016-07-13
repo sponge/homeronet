@@ -4,6 +4,7 @@ using Homero.Core.Messages;
 using Homero.Core.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Homero.Core.Interface;
 
 namespace Homero.Plugin.Goon
 {

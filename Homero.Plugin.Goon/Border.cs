@@ -4,6 +4,7 @@ using Homero.Core.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Homero.Core.Interface;
 
 namespace Homero.Plugin
 {
