@@ -25,10 +25,16 @@ namespace Homero.Plugin.Discord
 
         private void BrokerOnCommandFailed(object sender, EventFailedEventArgs e)
         {
-            if (e.OriginalEventArgs is CommandReceivedEventArgs)
+            if (e.OriginalEventArgs is CommandReceivedEventArgs && sender is DiscordClient)
             {
-
-                ((CommandReceivedEventArgs)e.OriginalEventArgs).ReplyTarget.Send($"AN EXCEPTION HAS BEEN THROWN FROM {e.Exception.Source}. STACKTRACE IS AS FOLLOWS. ```{e.Exception.StackTrace}```", new ImageAttachment()
+                CommandReceivedEventArgs args = e.OriginalEventArgs as CommandReceivedEventArgs;
+                string message = String.Empty;
+                if (args.Channel.Name.Contains("homero-dev"))
+                {
+                    message =
+                        $"AN EXCEPTION HAS BEEN THROWN FROM {e.Exception.Source}. STACKTRACE IS AS FOLLOWS. ```{e.Exception.StackTrace}```";
+                }
+                args.ReplyTarget.Send(message, new ImageAttachment()
                 {
                     Name = "good job dipshit.png",
                     DataStream = File.OpenRead(Path.Combine(Paths.ResourceDirectory,"broke_bot.png"))
