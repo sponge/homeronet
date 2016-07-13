@@ -1,4 +1,5 @@
-﻿using Homero.Core.EventArgs;
+﻿using System;
+using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using HtmlAgilityPack;
 using System.Collections.Generic;

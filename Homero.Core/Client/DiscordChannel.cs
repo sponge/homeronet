@@ -54,5 +54,11 @@ namespace Homero.Core.Client
                 return new List<IUser>(_channel.Users.Select(x => new DiscordUser(x)));
             }
         }
+
+        public void SendIsTyping()
+        {
+            _channel?.SendIsTyping();
+        }
+
     }
 }
