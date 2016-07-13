@@ -47,6 +47,11 @@ namespace Homero.Core.Client
             get { return _channel.Name; }
         }
 
+        public string Topic
+        {
+            get { return _channel.Topic; }
+        }
+
         public List<IUser> Users
         {
             get

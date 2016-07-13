@@ -9,6 +9,7 @@ namespace Homero.Core.Interface
     public interface IChannel : ISendable
     {
         string Name { get; }
+        string Topic { get; }
         List<IUser> Users { get; }
     }
 }
