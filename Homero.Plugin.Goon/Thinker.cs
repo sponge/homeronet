@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Homero.Plugin.Goon
 {
@@ -29,14 +29,13 @@ namespace Homero.Plugin.Goon
             _logger.Debug("( .__. ).o O( thinkin real hard about going away now... )");
         }
 
-
-        public List<string> RegisteredTextCommands { get; } = new List<string> {"think"};
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "think" };
 
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
             var client = sender as IClient;
             var thought = string.Join(" ", e.Command.Arguments).Split('\n');
-            var thinkerLine = (int) Math.Ceiling(thought.Length/2.0f);
+            var thinkerLine = (int)Math.Ceiling(thought.Length / 2.0f);
 
             var response = new StringBuilder();
 
@@ -56,8 +55,7 @@ namespace Homero.Plugin.Goon
                 response.Append("```");
             }
 
-
-            client?.ReplyTo(e.Command, response.ToString());
+            e.ReplyTarget.Send(response.ToString());
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
+using System.Collections.Generic;
 
 namespace Homero.Plugin.Circlejerk
 {
@@ -12,7 +12,6 @@ namespace Homero.Plugin.Circlejerk
             broker.MessageReceived += BrokerOnMessageReceived;
         }
 
-
         public void Startup()
         {
         }
@@ -21,19 +20,17 @@ namespace Homero.Plugin.Circlejerk
         {
         }
 
-
         public List<string> RegisteredTextCommands => null;
 
-        private void BrokerOnMessageReceived(object sender, MessageReceivedEventArgs e)
+        private void BrokerOnMessageReceived(object sender, MessageEventArgs e)
         {
-            var client = sender as IClient;
             if (e.Message.Message == "yeah")
             {
-                client?.ReplyTo(e.Message, "woo");
+                e.ReplyTarget.Send("woo");
             }
             else if (e.Message.Message == "woo")
             {
-                client?.ReplyTo(e.Message, "yeah");
+                e.ReplyTarget.Send("yeah");
             }
         }
     }

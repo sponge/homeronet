@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
+using System;
+using System.Collections.Generic;
 
 namespace Homero.Plugin.Goon
 {
@@ -24,7 +24,7 @@ namespace Homero.Plugin.Goon
 
         public List<string> RegisteredTextCommands
         {
-            get { return new List<string> {"drn"}; }
+            get { return new List<string> { "drn" }; }
         }
 
         public void Shutdown()
@@ -39,7 +39,7 @@ namespace Homero.Plugin.Goon
         {
             var client = sender as IClient;
             var drn = RollD6() + RollD6();
-            client.ReplyTo(e.Command, drn.ToString());
+            e.ReplyTarget.Send(drn.ToString());
         }
 
         private int RollD6()

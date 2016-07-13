@@ -1,6 +1,6 @@
-﻿using System;
+﻿using RestSharp.Extensions;
+using System;
 using System.IO;
-using RestSharp.Extensions;
 
 namespace Homero.Core.Messages.Attachments
 {
@@ -46,7 +46,6 @@ namespace Homero.Core.Messages.Attachments
             }
             set { _stream = value; }
         }
-
 
         public string Name { get; set; }
 

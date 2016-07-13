@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Messages;
 using Homero.Core.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Homero.Plugin.Circlejerk
 {
@@ -22,14 +22,12 @@ namespace Homero.Plugin.Circlejerk
         {
         }
 
-        public List<string> RegisteredTextCommands { get; } = new List<string> {"depths"};
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "depths" };
 
         private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            var client = sender as IClient;
-
             var str = string.Join(" ", e.Command.Arguments).Replace('o', 'ø');
-            client?.ReplyTo(e.Command, str);
+            e.ReplyTarget.Send(str);
         }
 
         public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message)

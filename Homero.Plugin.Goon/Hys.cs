@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using Homero.Core.Client;
-using Homero.Core.EventArgs;
+﻿using Homero.Core.EventArgs;
 using Homero.Core.Messages;
 using Homero.Core.Services;
 using Homero.Core.Utility;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using HysDB = System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>>;
 
 namespace Homero.Plugin.Goon
@@ -30,7 +29,7 @@ namespace Homero.Plugin.Goon
         {
         }
 
-        public List<string> RegisteredTextCommands { get; } = new List<string> {"hys"};
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "hys" };
 
         private string Choice(HysDB db, string key)
         {
@@ -45,12 +44,15 @@ namespace Homero.Plugin.Goon
             {
                 case 0:
                     return ",, ";
+
                 case 1:
                 case 2:
                     return ". ";
+
                 case 3:
                 case 4:
                     return ", ";
+
                 default:
                     return "... ";
             }
@@ -99,10 +101,8 @@ namespace Homero.Plugin.Goon
 
         private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            var client = sender as IClient;
-
             var outStr = CreateIdiot(string.Join(" ", e.Command.Arguments));
-            client?.ReplyTo(e.Command, outStr);
+            e.ReplyTarget.Send(outStr);
         }
 
         public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message)

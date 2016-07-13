@@ -7,6 +7,8 @@ namespace Homero.Plugin.Discord
         public override void Load()
         {
             Bind<IPlugin>().To<NowPlaying>().InSingletonScope();
+            Bind<IPlugin>().To<NowTyping>().InSingletonScope();
+            Bind<IPlugin>().To<NowFailing>().InSingletonScope();
         }
     }
 }

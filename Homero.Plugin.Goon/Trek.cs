@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using Homero.Core.Utility;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using TrekQuotes =
     System.Collections.Generic.Dictionary
         <string, System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>>>;
@@ -38,12 +38,10 @@ namespace Homero.Plugin.Goon
         {
         }
 
-        public List<string> RegisteredTextCommands { get; } = new List<string> {"trek", "sg"};
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "trek", "sg" };
 
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            var client = sender as IClient;
-
             TrekQuotes quotes = null;
             if (e.Command.Command == "trek")
             {
@@ -86,7 +84,7 @@ namespace Homero.Plugin.Goon
             var possibleQuotes = charQuotes[count];
             response = possibleQuotes[_random.Next(possibleQuotes.Count)];
 
-            client?.ReplyTo(e.Command, response);
+            e.ReplyTarget.Send(response);
         }
     }
 }

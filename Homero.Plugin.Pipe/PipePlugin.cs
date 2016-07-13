@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Messages;
 using Homero.Core.Services;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Homero.Plugin.Pipe
 {
@@ -25,10 +25,11 @@ namespace Homero.Plugin.Pipe
         {
         }
 
-        public List<string> RegisteredTextCommands { get; } = new List<string> {"pip", "pipe"};
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "pip", "pipe" };
 
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
+            /*
             var client = sender as IClient;
 
             var pipeClient = new PipeClient(client, _broker, e.Command);
@@ -47,6 +48,7 @@ namespace Homero.Plugin.Pipe
             commandChain.RemoveAt(0);
             pipeClient.CommandChain = commandChain;
             pipeClient.FireFirstMessage(firstCommand);
+            */
         }
     }
 }

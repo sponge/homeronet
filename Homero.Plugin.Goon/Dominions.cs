@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Homero.Core.EventArgs;
+using Homero.Core.Services;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Homero.Core.Client;
-using Homero.Core.EventArgs;
-using Homero.Core.Services;
 
 namespace Homero.Plugin.Goon
 {
@@ -32,7 +31,7 @@ namespace Homero.Plugin.Goon
 
         public List<string> RegisteredTextCommands
         {
-            get { return new List<string> {"dom4"}; }
+            get { return new List<string> { "dom4" }; }
         }
 
         public void Shutdown()
@@ -45,15 +44,13 @@ namespace Homero.Plugin.Goon
 
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            var client = sender as IClient;
             if (e.Command.Arguments?.Count >= 2)
             {
                 var thing = e.Command.Arguments.ElementAt(0);
                 var query = string.Join(" ", e.Command.Arguments.Skip(1));
                 if (_pageNameMappings.ContainsKey(thing))
                 {
-                    client.ReplyTo(e.Command,
-                        string.Format(BASE_URL, _pageNameMappings[thing], HttpUtility.UrlEncode(query)));
+                    e.ReplyTarget.Send(string.Format(BASE_URL, _pageNameMappings[thing], HttpUtility.UrlEncode(query)));
                 }
             }
         }

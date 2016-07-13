@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Homero.Core.EventArgs;
+using Homero.Core.Services;
+using Homero.Core.Utility;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Homero.Core.Client;
-using Homero.Core.EventArgs;
-using Homero.Core.Services;
-using Homero.Core.Utility;
 
 namespace Homero.Plugin.Goon
 {
@@ -41,7 +40,7 @@ namespace Homero.Plugin.Goon
                 RegisteredTextCommands.Add(fortuneFile.Command);
 
                 var stringList =
-                    text.Split(new[] {fortuneFile.IsMultiLine ? "\n%" : "\n"}, StringSplitOptions.RemoveEmptyEntries)
+                    text.Split(new[] { fortuneFile.IsMultiLine ? "\n%" : "\n" }, StringSplitOptions.RemoveEmptyEntries)
                         .Select(str => str.Trim());
 
                 if (fortuneFile.StripNewLines)
@@ -61,10 +60,9 @@ namespace Homero.Plugin.Goon
 
         public void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            var client = sender as IClient;
             if (_fortunes.ContainsKey(e.Command.Command))
             {
-                client?.ReplyTo(e.Command, _fortunes[e.Command.Command][_random.Next(_fortunes.Count)]);
+                e.ReplyTarget.Send(_fortunes[e.Command.Command][_random.Next(_fortunes.Count)]);
             }
         }
     }

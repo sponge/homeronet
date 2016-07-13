@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
+using Homero.Core.Messages.Attachments;
 using Homero.Core.Services;
 using Homero.Core.Utility;
 using HtmlAgilityPack;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Homero.Plugin.Goon
 {
@@ -34,12 +35,11 @@ namespace Homero.Plugin.Goon
         {
         }
 
-        public List<string> RegisteredTextCommands { get; } = new List<string> {"wip"};
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "wip" };
 
         private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
         {
             var client = sender as IClient;
-
             // do lazy initialization of images so we dont slowdown startup for a stupid plugin
             if (_images.Count == 0)
             {
@@ -54,13 +54,19 @@ namespace Homero.Plugin.Goon
             var imgName = _images[_random.Next(_images.Count)];
             var imgUrl = $"{baseUrl}{imgName}";
 
-            // TODO: fix me when pp fixes image attachments
-            //if (client?.InlineOrOembedSupported == true) {
-            //    var img = new ImageAttachment(imgName) { DataStream = _webClient.OpenRead(imgUrl) };
-            //    client?.ReplyTo(e.Command, img);
-            //} else {
-            client?.ReplyTo(e.Command, imgUrl);
-            //}
+            if (client?.InlineOrOembedSupported == true)
+            {
+                var img = new ImageAttachment()
+                {
+                    Name = "UNDERCONSTRUCTION.gif",
+                    DataStream = _webClient.OpenRead(imgUrl)
+                };
+                e.ReplyTarget.Send(String.Empty, img);
+            }
+            else
+            {
+                e.ReplyTarget.Send(imgUrl);
+            }
         }
     }
 }

@@ -1,12 +1,10 @@
-﻿using System;
+﻿using Discord;
+using Homero.Core.Interface;
+using Homero.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Discord;
-using Homero.Core.EventArgs;
-using Homero.Core.Messages;
-using Homero.Core.Messages.Attachments;
-using Homero.Core.Services;
 
 namespace Homero.Core.Client
 {
@@ -34,33 +32,41 @@ namespace Homero.Core.Client
             });
 
             RootClient.MessageReceived += DiscordClientOnMessageReceived;
+            RootClient.MessageSent += DiscordClientOnMessageSent;
+        }
+
+        private void DiscordClientOnMessageSent(object sender, Discord.MessageEventArgs e)
+        {
+            MessageSent?.Invoke(this, new EventArgs.MessageEventArgs(new DiscordMessage(e.Message), new DiscordServer(e.Server), new DiscordChannel(e.Channel), new DiscordUser(e.User)));
         }
 
         #endregion Constructors
 
         #region Methods
 
-        private void DiscordClientOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
+        private void DiscordClientOnMessageReceived(object sender, Discord.MessageEventArgs e)
         {
-            if (messageEventArgs.User.Id == RootClient.CurrentUser.Id)
+            if (e.User.Id == RootClient.CurrentUser.Id)
             {
                 return;
             }
-            var message = new DiscordMessage(this, messageEventArgs.Message);
-            MessageReceived?.Invoke(this, new MessageReceivedEventArgs(message));
+            MessageReceived?.Invoke(this, new EventArgs.MessageEventArgs(new DiscordMessage(e.Message), new DiscordServer(e.Server), new DiscordChannel(e.Channel), new DiscordUser(e.User)));
         }
 
         #endregion Methods
 
         #region Events
 
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
+        public event EventHandler<EventArgs.MessageEventArgs> MessageReceived;
 
-        public event EventHandler<MessageSentEventArgs> MessageSent;
+        public event EventHandler<EventArgs.MessageEventArgs> MessageSent;
 
         #endregion Events
 
-        #region Async Methods
+        public List<IServer> Servers
+        {
+            get { return RootClient.Servers.Select(x => new DiscordServer(x)).Cast<IServer>().ToList(); }
+        }
 
         public async Task<bool> Connect()
         {
@@ -68,127 +74,28 @@ namespace Homero.Core.Client
             return true; // uh why can't i get the connect result?
         }
 
-        public void ReplyTo(IStandardMessage originalMessage, string reply)
-        {
-            ReplyTo(originalMessage, originalMessage.CreateResponse(reply));
-            // TODO: Remove CreateResponse and remove from Interface.
-        }
-
-        public void ReplyTo(IStandardMessage originalMessage, string reply, IAttachment attachment)
-        {
-            var msg = originalMessage.CreateResponse(reply);
-            msg.Attachments.Add(attachment);
-            ReplyTo(originalMessage, msg);
-        }
-
-        public void ReplyTo(IStandardMessage originalMessage, IAttachment attachment)
-        {
-            ReplyTo(originalMessage, string.Empty, attachment);
-        }
-
-        public void ReplyTo(IStandardMessage originalMessage, string reply, List<IAttachment> attachments)
-        {
-            var msg = originalMessage.CreateResponse(reply);
-            msg.Attachments.AddRange(attachments);
-            ReplyTo(originalMessage, msg);
-        }
-
-        public void ReplyTo(IStandardMessage originalMessage, IStandardMessage reply)
-        {
-            DispatchMessage(reply);
-        }
-
-        public void ReplyTo(ITextCommand originalCommand, string reply)
-        {
-            ReplyTo(originalCommand, originalCommand.InnerMessage.CreateResponse(reply));
-        }
-
-        public void ReplyTo(ITextCommand originalCommand, IAttachment attachment)
-        {
-            ReplyTo(originalCommand, string.Empty, attachment);
-        }
-
-        public void ReplyTo(ITextCommand originalCommand, string reply, IAttachment attachment)
-        {
-            var msg = originalCommand.InnerMessage.CreateResponse(reply);
-            msg.Attachments.Add(attachment);
-            ReplyTo(originalCommand, msg);
-        }
-
-        public void ReplyTo(ITextCommand originalCommand, string reply, List<IAttachment> attachments)
-        {
-            var msg = originalCommand.InnerMessage.CreateResponse(reply);
-            msg.Attachments.AddRange(attachments);
-            ReplyTo(originalCommand, msg);
-        }
-
-        public void ReplyTo(ITextCommand originalCommand, IStandardMessage reply)
-        {
-            DispatchMessage(reply);
-        }
-
-        /// <summary>
-        /// Sends the message.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <returns>Task.</returns>
-        public async Task DispatchMessage(IStandardMessage message)
-        {
-            Channel targetChannel = null;
-
-            // Is it a PM or a public message?
-            if (message.IsPrivate)
-            {
-                targetChannel = RootClient.PrivateChannels.FirstOrDefault(x => x.Name == message.Channel);
-            }
-            else
-            {
-                targetChannel = (RootClient.Servers
-                    .FirstOrDefault(x => x.Name == message.Server)?.TextChannels)?.FirstOrDefault(
-                        x => x.Name == message.Channel);
-            }
-
-            var sentAttachment = false;
-
-            foreach (var attachment in message.Attachments)
-            {
-                await targetChannel?.SendFile(attachment.Name, attachment.DataStream);
-                sentAttachment = true;
-            }
-
-            if (string.IsNullOrEmpty(message.Message) && sentAttachment)
-            {
-                return;
-            }
-
-            var sendMessage = targetChannel?.SendMessage(message.Message);
-            if (sendMessage != null)
-            {
-                await sendMessage;
-                MessageSent?.Invoke(this, new MessageSentEventArgs(message));
-            }
-        }
-
-        #endregion Async Methods
-
         #region Properties
+
+        public bool AudioSupported => true;
+
+        public string Description => "Client that connects to Discord using the Discord.NET library.";
+
+        public bool InlineOrOembedSupported => true;
+
+        public bool IrcFormattingSupported => false;
 
         public bool IsConnected
         {
             get { return RootClient.State == ConnectionState.Connected; }
         }
 
+        public bool MarkdownSupported => true;
+
         public string Name => "Discord.NET Client";
 
-        public string Description => "Client that connects to Discord using the Discord.NET library.";
+        public Discord.DiscordClient RootClient { get; }
 
         public Version Version => new Version(0, 0, 1);
-        public bool MarkdownSupported => true;
-        public bool AudioSupported => true;
-        public bool IrcFormattingSupported => false;
-        public bool InlineOrOembedSupported => true;
-
-        public Discord.DiscordClient RootClient { get; }
 
         #endregion Properties
     }

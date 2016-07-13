@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Messages;
 using Homero.Core.Services;
 using Homero.Core.Utility;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Homero.Plugin.Circlejerk
 {
@@ -25,7 +25,7 @@ namespace Homero.Plugin.Circlejerk
         {
         }
 
-        public List<string> RegisteredTextCommands { get; } = new List<string> {"clump"};
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "clump" };
 
         private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
         {
@@ -33,7 +33,7 @@ namespace Homero.Plugin.Circlejerk
 
             var prefix = client?.IrcFormattingSupported == true ? "" + ControlCode.Color + ColorCode.Violet : "";
             var outStr = $"{prefix}{_clump}";
-            client?.ReplyTo(e.Command, outStr);
+            e.ReplyTarget.Send(outStr);
         }
 
         public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message)

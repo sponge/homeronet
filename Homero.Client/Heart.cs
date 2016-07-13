@@ -32,13 +32,17 @@ namespace Homero.Client
             Kernel.Bind<IConfiguration>()
                 .ToMethod(
                     context =>
-                        ConfigurationFactory.Instance.GetConfiguration(
+                        JsonConfigurationFactory.Instance.GetConfiguration(
                             context.Request?.Target?.Member?.DeclaringType?.Name));
 
             Logger.Debug("Configuring Message Broker");
             Kernel.Bind<IMessageBroker>().To<MessageBrokerService>().InSingletonScope();
 
+            Logger.Debug("Configuring Uploader Service.");
             Kernel.Bind<IUploader>().To<UploaderService>().InSingletonScope();
+
+            Logger.Debug("Configuring KV store");
+            Kernel.Bind<IStore>().ToMethod(context => KvStoreFactory.Instance.GetKvStore(context.Request?.Target?.Member?.DeclaringType?.Name));
 
             Logger.Info("Scanning and loading plugin directory.");
             Kernel.Load("Plugins\\Homero.Plugin.*.dll");

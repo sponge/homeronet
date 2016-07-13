@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Messages;
 using Homero.Core.Services;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Homero.Plugin.Media
 {
@@ -62,15 +62,13 @@ namespace Homero.Plugin.Media
 
         private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            var client = sender as IClient;
-
             var delay = 0;
 
             var minArgCount = e.Command.Command == "dub" ? 2 : 1;
 
             if (e.Command.Arguments.Count < minArgCount)
             {
-                client?.ReplyTo(e.Command, ".dub < vid > < audio > [audio start time]-- tubedubber");
+                e.ReplyTarget.Send(".dub < vid > < audio > [audio start time]-- tubedubber");
                 return;
             }
 
@@ -79,7 +77,7 @@ namespace Homero.Plugin.Media
                 var success = int.TryParse(e.Command.Arguments[minArgCount], out delay);
                 if (!success)
                 {
-                    client?.ReplyTo(e.Command, "that is not a time");
+                    e.ReplyTarget.Send("that is not a time");
                     return;
                 }
             }
@@ -103,12 +101,7 @@ namespace Homero.Plugin.Media
 
             var strOut = Dub(video, audio, delay);
 
-            client?.ReplyTo(e.Command, strOut);
-        }
-
-        public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message)
-        {
-            return null;
+            e.ReplyTarget.Send(strOut);
         }
     }
 }

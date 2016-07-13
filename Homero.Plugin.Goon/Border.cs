@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Homero.Plugin
 {
@@ -22,9 +22,8 @@ namespace Homero.Plugin
 
         public List<string> RegisteredTextCommands
         {
-            get { return new List<string> {"rip", "bread"}; }
+            get { return new List<string> { "rip", "bread" }; }
         }
-
 
         public void Shutdown()
         {
@@ -147,6 +146,10 @@ namespace Homero.Plugin
         public void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
             var client = sender as IClient;
+            if (e.Command.Arguments.Count == 0)
+            {
+                return;
+            }
             var message = string.Join(" ", e.Command.Arguments);
             var wrappedText = WrapText(message, BORDER_MAX_WIDTH);
             var outputLines = new List<string>();
@@ -163,7 +166,11 @@ namespace Homero.Plugin
             if (client?.MarkdownSupported == true)
             {
                 var combinedText = string.Format("```{0}```", string.Join("\n", outputLines));
-                client.ReplyTo(e.Command, combinedText);
+                e.ReplyTarget.Send(combinedText);
+            }
+            else
+            {
+                e.ReplyTarget.Send(string.Join("\n", outputLines));
             }
         }
 
@@ -172,7 +179,9 @@ namespace Homero.Plugin
         private class BorderedLine
         {
             public string Left { get; set; }
+
             public string Right { get; set; }
+
             public char Fill { get; set; }
 
             public string FillToWidth(int width)
@@ -190,7 +199,7 @@ namespace Homero.Plugin
             private string PadToWidth(string text, int width)
             {
                 var gapToFill = width - text.Length;
-                return text.PadLeft(gapToFill/2 + text.Length).PadRight(width);
+                return text.PadLeft(gapToFill / 2 + text.Length).PadRight(width);
             }
         }
 

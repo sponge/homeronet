@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Messages;
 using Homero.Core.Services;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Homero.Plugin.Media
 {
@@ -23,13 +23,11 @@ namespace Homero.Plugin.Media
         {
         }
 
-
-        public List<string> RegisteredTextCommands { get; } = new List<string> {"sbemail"};
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "sbemail" };
 
         private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            var client = sender as IClient;
-            client?.ReplyTo(e.Command, $"http://www.homestarrunner.com/sbemail{new Random().Next(206)}.html");
+            e.ReplyTarget.Send($"http://www.homestarrunner.com/sbemail{new Random().Next(206)}.html");
         }
 
         public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message)

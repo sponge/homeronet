@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using Homero.Core.Client;
+﻿using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Messages;
 using Homero.Core.Services;
 using Homero.Core.Utility;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Homero.Plugin.Circlejerk
 {
@@ -29,7 +29,7 @@ namespace Homero.Plugin.Circlejerk
         {
         }
 
-        public List<string> RegisteredTextCommands { get; } = new List<string> {"lilpp", "sponge"};
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "lilpp", "sponge" };
 
         private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
         {
@@ -41,12 +41,12 @@ namespace Homero.Plugin.Circlejerk
 
             if (e.Command.Command == "lilpp")
             {
-                client?.ReplyTo(e.Command, $"<LilPP> i hate {lines[i]}");
+                e.ReplyTarget.Send($"<LilPP> i hate {lines[i]}");
             }
             else if (e.Command.Command == "sponge")
             {
-                var verb = i%3 == 0 ? "love" : i%3 == 1 ? "am ambivalent towards" : "hate";
-                client?.ReplyTo(e.Command, $"<sponge> i {verb} {lines[i]}");
+                var verb = i % 3 == 0 ? "love" : i % 3 == 1 ? "am ambivalent towards" : "hate";
+                e.ReplyTarget.Send($"<sponge> i {verb} {lines[i]}");
             }
         }
 
