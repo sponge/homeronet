@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Homero.Core.Utility;
 
 namespace Homero.Core.Services
@@ -62,7 +64,8 @@ namespace Homero.Core.Services
             if (_backingObject.ContainsKey(key))
             {
                 var result = _backingObject[key];
-                if (result is T)
+
+                if (result.GetType() is T)
                 {
                     return (T) result;
                 }
@@ -73,6 +76,36 @@ namespace Homero.Core.Services
                 }
                 catch (InvalidCastException)
                 {
+                    // Is it an array of objects?
+                    if (result is object[])
+                    {
+                        if (typeof(IList).IsAssignableFrom(typeof(T)))
+                        {
+                            var listInstance = Activator.CreateInstance(typeof(T));
+                            Type listType = typeof(T).GenericTypeArguments[0];
+                            MethodInfo addMethod = listInstance.GetType().GetMethods().First(m => m.Name == "Add");
+
+                            // They want a list, great.
+                            foreach (object entry in (object[]) result)
+                            {
+                                if (entry is Dictionary<string, object>)
+                                {
+                                    addMethod.Invoke(listInstance,
+                                        new[] {((Dictionary<string, object>) entry).GetObject(listType)});
+                                }
+                                else
+                                {
+                                    addMethod.Invoke(listInstance, new[] {Convert.ChangeType(entry, listType)});
+                                }
+                            }
+                            return (T) listInstance;
+                        }
+                    }
+                    // Attempt to create an object.
+                    if (result is Dictionary<string, object>)
+                    {
+                        return ((Dictionary<string, object>) result).GetObject<T>();
+                    }
                 }
             }
 

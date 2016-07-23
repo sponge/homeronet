@@ -1,11 +1,11 @@
-﻿using Discord;
-using Homero.Core.Interface;
-using Homero.Core.Messages.Attachments;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Discord;
+using Homero.Core.Interface;
+using Homero.Core.Messages.Attachments;
 
-namespace Homero.Core.Client
+namespace Homero.Core.Client.Discord
 {
     public class DiscordChannel : IChannel
     {
@@ -45,6 +45,11 @@ namespace Homero.Core.Client
         public string Name
         {
             get { return _channel.Name; }
+        }
+
+        public string Topic
+        {
+            get { return _channel.Topic; }
         }
 
         public List<IUser> Users

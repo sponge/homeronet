@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Homero.Core.Interface;
 
 namespace Homero.Plugin.Converter
 {

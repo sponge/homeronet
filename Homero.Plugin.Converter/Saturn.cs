@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Homero.Core.Client;
 using Homero.Core.EventArgs;
+using Homero.Core.Interface;
 using Homero.Core.Services;
 
 namespace Homero.Plugin.Converter

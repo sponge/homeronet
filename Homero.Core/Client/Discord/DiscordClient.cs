@@ -1,12 +1,12 @@
-﻿using Discord;
-using Homero.Core.Interface;
-using Homero.Core.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Discord;
+using Homero.Core.Interface;
+using Homero.Core.Services;
 
-namespace Homero.Core.Client
+namespace Homero.Core.Client.Discord
 {
     public class DiscordClient : IClient
     {
@@ -24,7 +24,7 @@ namespace Homero.Core.Client
                 throw new Exception("No API key specified. Created a default file for editing.");
             }
 
-            RootClient = new Discord.DiscordClient(x =>
+            RootClient = new global::Discord.DiscordClient(x =>
             {
                 // Seriously, a configuration constructor in an action?
                 x.AppName = "Homero.NET";
@@ -35,7 +35,7 @@ namespace Homero.Core.Client
             RootClient.MessageSent += DiscordClientOnMessageSent;
         }
 
-        private void DiscordClientOnMessageSent(object sender, Discord.MessageEventArgs e)
+        private void DiscordClientOnMessageSent(object sender, global::Discord.MessageEventArgs e)
         {
             MessageSent?.Invoke(this, new EventArgs.MessageEventArgs(new DiscordMessage(e.Message), new DiscordServer(e.Server), new DiscordChannel(e.Channel), new DiscordUser(e.User)));
         }
@@ -44,7 +44,7 @@ namespace Homero.Core.Client
 
         #region Methods
 
-        private void DiscordClientOnMessageReceived(object sender, Discord.MessageEventArgs e)
+        private void DiscordClientOnMessageReceived(object sender, global::Discord.MessageEventArgs e)
         {
             if (e.User.Id == RootClient.CurrentUser.Id)
             {
@@ -93,7 +93,7 @@ namespace Homero.Core.Client
 
         public string Name => "Discord.NET Client";
 
-        public Discord.DiscordClient RootClient { get; }
+        public global::Discord.DiscordClient RootClient { get; }
 
         public Version Version => new Version(0, 0, 1);
 

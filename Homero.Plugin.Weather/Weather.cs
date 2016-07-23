@@ -12,6 +12,7 @@ using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Homero.Core.Interface;
 
 namespace Homero.Plugin.Weather
 {

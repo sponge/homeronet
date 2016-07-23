@@ -106,6 +106,10 @@
       <HintPath>..\packages\Finsa.CodeServices.Serialization.Json.4.1.5\lib\net45\Finsa.CodeServices.Serialization.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="IrcDotNet, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IrcDotNet.0.6.1\lib\net451\IrcDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
       <Private>True</Private>
@@ -218,13 +222,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client\DiscordChannel.cs" />
-    <Compile Include="Client\DiscordClient.cs" />
-    <Compile Include="Client\DiscordMessage.cs" />
-    <Compile Include="Client\DiscordServer.cs" />
-    <Compile Include="Client\DiscordUser.cs" />
-    <Compile Include="Client\IClient.cs" />
-    <Compile Include="Client\IrcClient.cs" />
+    <Compile Include="Client\Discord\DiscordChannel.cs" />
+    <Compile Include="Client\Discord\DiscordClient.cs" />
+    <Compile Include="Client\Discord\DiscordMessage.cs" />
+    <Compile Include="Client\Discord\DiscordServer.cs" />
+    <Compile Include="Client\Discord\DiscordUser.cs" />
+    <Compile Include="Client\IRC\IrcMessage.cs" />
+    <Compile Include="Client\IRC\IrcServer.cs" />
+    <Compile Include="Client\IRC\IrcServerConfiguration.cs" />
+    <Compile Include="Client\IRC\IrcUser.cs" />
+    <Compile Include="Interface\IClient.cs" />
+    <Compile Include="Client\IRC\IrcChannel.cs" />
+    <Compile Include="Client\IRC\IrcClient.cs" />
     <Compile Include="Client\SlackClient.cs" />
     <Compile Include="Client\TwitchClient.cs" />
     <Compile Include="Database\Configuration\SqliteConfiguration.cs" />
@@ -262,6 +271,8 @@
     <Compile Include="Services\ILogger.cs" />
     <Compile Include="Services\ILoggerFactory.cs" />
     <Compile Include="Services\IMessageBroker.cs" />
+    <Compile Include="Services\IUploader.cs" />
+    <Compile Include="Services\UploaderService.cs" />
     <Compile Include="Services\IStore.cs" />
     <Compile Include="Services\MessageBrokerService.cs" />
     <Compile Include="Services\NLogLogger.cs" />

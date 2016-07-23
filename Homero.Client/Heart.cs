@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Homero.Core.Client;
+using Homero.Core.Interface;
 using Homero.Core.Services;
 using Homero.Core.Utility;
 using Homero.Plugin;
@@ -37,6 +38,9 @@ namespace Homero.Client
 
             Logger.Debug("Configuring Message Broker");
             Kernel.Bind<IMessageBroker>().To<MessageBrokerService>().InSingletonScope();
+
+            Logger.Debug("Configuring Uploader Service.");
+            Kernel.Bind<IUploader>().To<UploaderService>().InSingletonScope();
 
             Logger.Debug("Configuring KV store");
             Kernel.Bind<IStore>().ToMethod(context => KvStoreFactory.Instance.GetKvStore(context.Request?.Target?.Member?.DeclaringType?.Name));

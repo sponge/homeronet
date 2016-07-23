@@ -5,6 +5,7 @@ using Homero.Core.Services;
 using Homero.Core.Utility;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Homero.Core.Interface;
 
 namespace Homero.Plugin.Circlejerk
 {

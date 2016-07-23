@@ -2,6 +2,7 @@
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using System.Collections.Generic;
+using Homero.Core.Client.Discord;
 
 namespace Homero.Plugin.Discord
 {

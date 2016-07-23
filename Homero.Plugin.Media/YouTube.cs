@@ -4,6 +4,7 @@ using Homero.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using Homero.Core.Interface;
 
 namespace Homero.Plugin.Media
 {
