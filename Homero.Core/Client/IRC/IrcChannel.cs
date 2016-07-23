@@ -36,16 +36,25 @@ namespace Homero.Core.Client.IRC
             messagesToSend.AddRange(Message.Split('\n'));
 
             // upload each attachment.
-            foreach (IAttachment attachment in Attachments)
+            if (Attachments != null)
             {
-                if (attachment is ImageAttachment)
+                foreach (IAttachment attachment in Attachments)
                 {
-                    string image = _uploader.Upload(attachment as ImageAttachment).Result;
-                    messagesToSend.Add(image);
+                    if (attachment is ImageAttachment)
+                    {
+                        string image = _uploader.Upload(attachment as ImageAttachment).Result;
+                        if (!string.IsNullOrEmpty(image))
+                        {
+                            messagesToSend.Add(image);
+                        }
+                    }
                 }
             }
 
-            _inner.Client.LocalUser.SendMessage(_inner, Message);
+            foreach (string message in messagesToSend)
+            {
+                _inner.Client.LocalUser.SendMessage(_inner, message);
+            }
         }
 
         public string Name

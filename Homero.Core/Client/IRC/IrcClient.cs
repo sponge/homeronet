@@ -11,7 +11,7 @@ namespace Homero.Core.Client.IRC
 {
     public class IrcClient : IClient
     {
-        private List<StandardIrcClient> _clients;
+        private Dictionary<StandardIrcClient, IrcServerConfiguration> _clients;
         private IConfiguration _config;
         private ILogger _logger;
         private IUploader _uploader;
@@ -20,7 +20,7 @@ namespace Homero.Core.Client.IRC
             _config = config;
             _logger = logger;
             _uploader = uploader;
-            _clients = new List<StandardIrcClient>();
+            _clients = new Dictionary<StandardIrcClient, IrcServerConfiguration>();
         }
 
         public event EventHandler<MessageEventArgs> MessageReceived;
@@ -48,7 +48,7 @@ namespace Homero.Core.Client.IRC
         {
             get
             {
-                return _clients.Select(x => new IrcServer(x, _uploader)).Cast<IServer>().ToList();
+                return _clients.Keys.Select(x => new IrcServer(x, _uploader)).Cast<IServer>().ToList();
             }
         }
 
@@ -59,19 +59,22 @@ namespace Homero.Core.Client.IRC
             foreach (IrcServerConfiguration serverConfig in _config.GetValue<List<IrcServerConfiguration>>("servers"))
             {
                 StandardIrcClient client = new StandardIrcClient();
+                _clients[client] = serverConfig;
                 client.Connected += ClientOnConnected;
                 client.ConnectFailed += ClientOnConnectFailed;
+                client.Registered += ClientOnRegistered;
+                
                 client.Connect(new Uri($"irc://{serverConfig.Host}"), new IrcUserRegistrationInfo()
                 {
                     NickName = serverConfig.Nickname,
                     UserName = serverConfig.Username,
-                    RealName = serverConfig.RealName
+                    RealName = serverConfig.RealName,
                 });
             }
             return new Task<bool>(() => true); // Future todo: actually return a real result, right now we don't care because we're jerks
         }
 
-        private void ClientOnConnected(object sender, System.EventArgs eventArgs)
+        private void ClientOnRegistered(object sender, System.EventArgs eventArgs)
         {
             StandardIrcClient client = sender as StandardIrcClient;
             if (client == null)
@@ -79,11 +82,8 @@ namespace Homero.Core.Client.IRC
                 return;
             }
 
-            _clients.Add(client);
             client.LocalUser.JoinedChannel += LocalUserOnJoinedChannel;
-
-            // This sucks but writing some object association stuff would suck, rather just sacrifice extra cycles on startup than hours of dev work.
-            IrcServerConfiguration serverConfiguration = _config.GetValue<List<IrcServerConfiguration>>("servers").FirstOrDefault(x => x.Host.Contains(client.ServerName));
+            IrcServerConfiguration serverConfiguration = _clients[client];
 
             if (serverConfiguration != null)
             {
@@ -97,31 +97,44 @@ namespace Homero.Core.Client.IRC
                     client.Channels.Join(channel);
                 }
             }
+
+        }
+
+        private void ClientOnConnected(object sender, System.EventArgs eventArgs)
+        {
+            StandardIrcClient client = sender as StandardIrcClient;
+            if (client == null)
+            {
+                return;
+            }
+
+            client.GetNetworkInfo();
+            client.GetServerLinks();
         }
 
         private void LocalUserOnJoinedChannel(object sender, IrcChannelEventArgs e)
         {
             e.Channel.MessageReceived += (s, args) =>
             {
-                ChannelOnMessageReceived(s, args, e.Channel);
+                ChannelOnMessageReceived(sender, args, e.Channel);
             };
         }
 
         private void ChannelOnMessageReceived(object sender, IrcMessageEventArgs e, IrcDotNet.IrcChannel channel)
         {
-            StandardIrcClient client = sender as StandardIrcClient;
+            IrcLocalUser localUser = sender as IrcLocalUser;
 
-            if (client == null)
+            if (localUser == null)
             {
                 return;
             }
 
-            MessageEventArgs args = new MessageEventArgs(new IrcMessage(e.Text), new IrcServer(client, _uploader), 
+            MessageEventArgs args = new MessageEventArgs(new IrcMessage(e.Text), new IrcServer(_clients.Keys.First(x => x.LocalUser.Equals(localUser)), _uploader), 
                 new IrcChannel(channel, _uploader),
                 new IrcUser(channel.Users.FirstOrDefault(x => x.User.NickName == e.Source.Name)?.User, _uploader));
 
             // Since we can't really listen to outgoing accurately, we can abuse this to get our message sent event. 
-            if (e.Source.Name == client.LocalUser.NickName)
+            if (e.Source.Name == localUser.NickName)
             {
                 MessageSent?.Invoke(this, args);
                 return;
