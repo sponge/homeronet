@@ -91,6 +91,7 @@ namespace Homero.Plugin.Weather
                         if (user != null)
                         {
                             location = new Tuple<float, float>(user.Latitude, user.Longitude);
+                            isMetric = user.IsMetric;
                         }
                     }
                     if (userAddress == null)

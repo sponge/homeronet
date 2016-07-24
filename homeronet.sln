@@ -20,6 +20,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Plugin.Pipe", "Homero.Plugin.Pipe\Homero.Plugin.Pipe.csproj", "{B9F15209-14FA-49C1-A5D9-1D15E676E8F3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Plugin.Examples", "Homero.Plugin.Examples\Homero.Plugin.Examples.csproj", "{B728F0AD-71F6-492B-A2CF-D90BACF08317}"
+	ProjectSection(ProjectDependencies) = postProject
+		{54A516D0-24E0-4957-88F2-364C70D34C7B} = {54A516D0-24E0-4957-88F2-364C70D34C7B}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Client", "Homero.Client\Homero.Client.csproj", "{82A3EE59-565D-464F-96C9-5111992C39F4}"
 	ProjectSection(ProjectDependencies) = postProject

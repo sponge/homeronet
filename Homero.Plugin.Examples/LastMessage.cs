@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Homero.Core.Client;
 using Homero.Core.EventArgs;
 using Homero.Core.Interface;
 using Homero.Core.Services;
