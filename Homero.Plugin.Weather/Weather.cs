@@ -146,8 +146,13 @@ namespace Homero.Plugin.Weather
                 var unit = isMetric ? Unit.si : Unit.us;
                 var weather = new ForecastIORequest(_forecastIoApiKey, location.Item1, location.Item2, unit).Get();
 
-                string summary = $"{userAddress} | {weather.currently.summary} | {weather.currently.temperature}{(unit == Unit.us ? "F" : "C")} | Humidity: {weather.currently.humidity*100}%"
-                                 + $"\n{weather.minutely.summary}";
+                string summary =
+                    $"{userAddress} | {weather.currently.summary} | {weather.currently.temperature}{(unit == Unit.us ? "F" : "C")} | Humidity: {weather.currently.humidity*100}%";
+
+                if (weather.minutely != null)
+                {
+                    summary += "\n" + weather.minutely;
+                }
 
                 var info = new WeatherRendererInfo();
                 info.Unit = unit;
