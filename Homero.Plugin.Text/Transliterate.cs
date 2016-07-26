@@ -37,7 +37,7 @@ namespace Homero.Plugin.Text
 
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            e.ReplyTarget.Send(ApplyMappings(_mappings[e.Command.Command], String.Join(" ", e.Command.Arguments)));
+            e.ReplyTarget.Send(ApplyMappings(_mappings[e.Command.Command], String.Join(" ", e.Command.Arguments).ToLower()));
         }
 
         public void Shutdown()
@@ -54,20 +54,43 @@ namespace Homero.Plugin.Text
         {
             // this is to make a regex like /abc[^\w]/ work on the last word in the input
             input += " ";
+            StringBuilder output = new StringBuilder();
 
-            foreach(List<string> mapping in mappings.Multi)
+            List<string> searches = mappings.Multi.Select(x => x.First()).ToList();
+
+            foreach(string word in input.Split(' '))
             {
-                input = Regex.Replace(input, mapping.First(), mapping.Last());
+                StringBuilder wordBuilder = new StringBuilder(word);
+                while (wordBuilder.Length > 0)
+                {
+                    string match = searches.Where(x => word.Contains(x)).FirstOrDefault();
+                    if (match != null)
+                    {
+                        wordBuilder.Remove(0, match.Length);
+                        output.Append(match);
+                    }
+                    else
+                    {
+                        output.Append(mappings.Single[wordBuilder[0].ToString()]);
+                        wordBuilder.Remove(0, 1);
+                    }
+                }
+                output.Append(' ');
             }
 
-            foreach (KeyValuePair<string, string> mapping in mappings.Single)
-            {
-                input = input.Replace(mapping.Key, mapping.Value);
-            }
+            //foreach(List<string> mapping in mappings.Multi)
+            //{
+            //    input = Regex.Replace(input, mapping.First(), mapping.Last());
+            //}
+
+            //foreach (KeyValuePair<string, string> mapping in mappings.Single)
+            //{
+            //    input = input.Replace(mapping.Key, mapping.Value);
+            //}
 
             // this doesn't a stringbuilder because i need to regex replace and i can't do that in place in a
             // stringbuilder. don't think the speed matters on this small a set of replacements.
-            return input;
+            return output.ToString();
         }
     }
 }
