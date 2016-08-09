@@ -12,6 +12,7 @@ namespace Homero.Plugin.Converter
             Bind<IPlugin>().To<Saturn>().InSingletonScope();
             Bind<IPlugin>().To<Jab>().InSingletonScope();
             Bind<IPlugin>().To<CodeEval>().InSingletonScope();
+            Bind<IPlugin>().To<Bitcoin>().InSingletonScope();
         }
     }
 }
