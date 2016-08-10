@@ -64,9 +64,11 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Beats.cs" />
+    <Compile Include="Bitcoin.cs" />
     <Compile Include="CodeEval.cs" />
     <Compile Include="ConverterModule.cs" />
     <Compile Include="Currency.cs" />
