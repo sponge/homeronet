@@ -9,14 +9,14 @@ namespace Homero.Plugin.Comic
 {
     public class CharacterMappings
     {
-        private Dictionary<string, string> _mappings;
+        public Dictionary<string, string> Mappings;
         private List<string> _characterFiles;
         private int index = 0;
         private Random _random;
 
         public CharacterMappings()
         {
-            _mappings = new Dictionary<string, string>();
+            Mappings = new Dictionary<string, string>();
             _random = new Random();
 
             _characterFiles = ComicImages.Charcters.ToList();
@@ -25,10 +25,10 @@ namespace Homero.Plugin.Comic
 
         public string Add(string user)
         {
-            if (!_mappings.ContainsKey(user))
+            if (!Mappings.ContainsKey(user))
             {
                 string file = GetCharacterFile();
-                _mappings.Add(user, file);
+                Mappings.Add(user, file);
             }
             return Get(user);
         }
@@ -36,7 +36,7 @@ namespace Homero.Plugin.Comic
         public string Get(string user)
         {
             string value;
-            _mappings.TryGetValue(user, out value);
+            Mappings.TryGetValue(user, out value);
             return value;
         }
 

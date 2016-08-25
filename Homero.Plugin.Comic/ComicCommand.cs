@@ -1,15 +1,14 @@
-﻿using Homero.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Homero.EventArgs;
-using Homero.Client;
 using System.IO;
-using System.Linq;
 using SkiaSharp;
-using Homero.Messages.Attachments;
+using Homero.Core.Services;
+using Homero.Core.EventArgs;
+using Homero.Core.Interface;
+using Homero.Core.Messages.Attachments;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace Homero.Plugin.Comic
 {
@@ -17,10 +16,11 @@ namespace Homero.Plugin.Comic
     {
         private const int QUEUE_LIMIT = 30;
         private Dictionary<string, MessageQueue<ComicMessage>> _queues;
+        private Comic _lastComic;
 
         public List<string> RegisteredTextCommands
         {
-            get { return new List<string> { "comic" }; }
+            get { return new List<string> { "comic", "lastcomic" }; }
         }
 
         public ComicCommand(IMessageBroker broker)
@@ -30,16 +30,16 @@ namespace Homero.Plugin.Comic
             broker.MessageReceived += BrokerOnMessageReceived;
         }
 
-        private void BrokerOnMessageReceived(object sender, MessageReceivedEventArgs e)
+        private void BrokerOnMessageReceived(object sender, MessageEventArgs e)
         {
-            if (!_queues.ContainsKey(e.Message.Channel))
+            if (!_queues.ContainsKey(e.Channel.Name))
             {
-                _queues.Add(e.Message.Channel, new MessageQueue<ComicMessage>(QUEUE_LIMIT));
+                _queues.Add(e.Channel.Name, new MessageQueue<ComicMessage>(QUEUE_LIMIT));
             }
-            _queues[e.Message.Channel].Add(new ComicMessage()
+            _queues[e.Channel.Name].Add(new ComicMessage()
             {
                 Message = e.Message.Message,
-                User = e.Message.Sender,
+                User = e.User.Name,
             });
         }
 
@@ -47,10 +47,95 @@ namespace Homero.Plugin.Comic
         {
             IClient client = sender as IClient;
 
-            Comic comic = new Comic(_queues[e.Command.InnerMessage.Channel].ToList());
-            Stream stream = CreateComic(comic);
+            if (e.Command.Command == "comic")
+            {
+               HandleComic(client, e);
+            }
+            else if (e.Command.Command == "lastcomic")
+            {
+                HandleLastComic(client, e);
+            }
+        }
 
-            client.ReplyTo(e.Command, new ImageAttachment() { DataStream = stream, Name = $"{e.Command.InnerMessage.Sender} Comic {DateTime.Now}.png" });
+        private void HandleLastComic(IClient client, CommandReceivedEventArgs e)
+        {
+            /*
+            .lastcomic [action] [1,2,3...]
+
+            actions:
+                none    repost last comic
+                retry   regen last comic with random bg/characters
+                export  export JSON repr of last comic
+            */
+            Regex test = new Regex(@"^(retry|export)?\s?((?:\d+)(?:,\s*\d+)*)?$");
+            Match match = test.Match(String.Join(" ", e.Command.Arguments));
+
+            if (_lastComic == null)
+            {
+                e.ReplyTarget.Send("no last comic");
+                return;
+            }
+
+            if (!match.Success)
+            {
+                e.ReplyTarget.Send("invalid arguments");
+                return;
+            }
+
+            string command = "";
+            int panelIndex = 1;
+            List<int> panels;
+            if (match.Groups.Count == 3)
+            {
+                command = match.Groups[1].Value;
+                panelIndex = 2;
+            }
+
+            if (!String.IsNullOrEmpty(match.Groups[panelIndex].Value))
+            {
+                panels = match.Groups[panelIndex].Value.Split(',').Select(Int32.Parse).ToList();
+                Stream stream = CreateSlicedComic(_lastComic, panels);
+                e.ReplyTarget.Send("comic", new ImageAttachment() { DataStream = stream, Name = $"{e.ReplyTarget.Name} Comic {DateTime.Now}.png" });
+            }
+
+            //Comic lastComic = _lastComic;
+
+            if (command == "retry")
+            {
+                _lastComic.Regenerate();
+            }
+            else if (command == "export")
+            {
+                e.ReplyTarget.Send(JsonConvert.SerializeObject(_lastComic));
+                return;
+            }
+
+            //Stream stream = CreateComic(lastComic);
+        }
+
+        private void HandleComic(IClient sender, CommandReceivedEventArgs e)
+        {
+            Comic comic;
+            if (e.Command.Arguments.Count == 0)
+            {
+                comic = new Comic(_queues[e.Channel.Name].ToList());
+            }
+            else
+            {
+                comic = new Comic(_queues[e.Channel.Name].ToList(), String.Join(" ", e.Command.Arguments.ToArray()));
+            }
+
+            Stream stream = CreateComic(comic);
+            _lastComic = comic;
+
+            e.ReplyTarget.Send("comic", new ImageAttachment() { DataStream = stream, Name = $"{e.ReplyTarget.Name} Comic {DateTime.Now}.png" });
+        }
+
+        private Stream CreateSlicedComic(Comic comic, List<int> panels)
+        {
+            Comic slicedComic = new Comic(comic);
+            slicedComic.Panels = panels.Select(i => slicedComic.Panels.Count > i-1 ? slicedComic.Panels[i-1] : null).ToList();
+            return CreateComic(slicedComic);
         }
 
         private Stream CreateComic(Comic comic)

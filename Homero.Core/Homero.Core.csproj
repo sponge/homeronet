@@ -203,6 +203,7 @@
     <Compile Include="Messages\Attachments\FileAttachment.cs" />
     <Compile Include="Messages\Attachments\IAttachment.cs" />
     <Compile Include="Messages\Attachments\ImageAttachment.cs" />
+    <Compile Include="Messages\Attachments\TextAttachment.cs" />
     <Compile Include="Messages\IStandardMessage.cs" />
     <Compile Include="Messages\ITextCommand.cs" />
     <Compile Include="Messages\IVoiceMessage.cs" />

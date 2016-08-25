@@ -9,6 +9,7 @@ namespace Homero.Core.Interface
 {
     public interface ISendable
     {
+        string Name { get; }
         void Send(string Message);
         void Send(string Message, params object[] Format);
         void Send(string Message, params IAttachment[] Attachments);

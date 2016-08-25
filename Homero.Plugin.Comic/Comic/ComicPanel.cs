@@ -9,6 +9,7 @@ namespace Homero.Plugin.Comic
     public class ComicPanel
     {
         public List<ComicMessage> Messages { get; set; }
+        public Boolean IsTitle { get; set; }
 
         public ComicPanel()
         {

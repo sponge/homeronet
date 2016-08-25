@@ -12,11 +12,19 @@ namespace Homero.Plugin.Comic
         public void DrawComic(Comic comic, SKCanvas canvas, int width, int height)
         {
             PanelRenderer pre = new PanelRenderer();
+
             foreach (var item in comic.Panels.Select((panel, index) => new { index, panel }))
             {
                 int startY = item.index * 300;
                 canvas.SetMatrix(SKMatrix.MakeTranslation(0, startY));
-                pre.Render(item.panel, comic, canvas, width, 300);
+                if (item.panel.IsTitle)
+                {
+                    pre.RenderTitle(item.panel.Messages.FirstOrDefault()?.Message, comic, canvas, width, 300);
+                }
+                else
+                {
+                    pre.RenderPanel(item.panel, comic, canvas, width, 300);
+                }
             }
         }
     }
@@ -32,15 +40,13 @@ namespace Homero.Plugin.Comic
         private SKColor _textFg = SKColors.White;
         private SKColor _textBg = SKColors.Black;
 
-        public void Render(ComicPanel panel, Comic comic, SKCanvas canvas, int width, int height)
+        public void RenderPanel(ComicPanel panel, Comic comic, SKCanvas canvas, int width, int height)
         {
+            RenderBackground(comic, canvas, width, height);
+
             ComicMessage leftMsg = panel.Messages.First();
             ComicMessage rightMsg = panel.Messages.Last();
-
-            // paint bg
-            SKBitmap background = SKBitmap.Decode(comic.Background);
-            canvas.DrawBitmap(background, new SKRect(0, 0, width, height));
-
+            
             // paint text
             using (SKPaint paint = new SKPaint())
             {
@@ -68,6 +74,25 @@ namespace Homero.Plugin.Comic
                 SKBitmap rightImg = SKBitmap.Decode(comic.Mappings.Get(rightMsg.User));
                 DrawUserBitmap(rightImg, width, height, ImagePosition.Right, canvas);
             }
+        }
+
+        public void RenderTitle(string title, Comic comic, SKCanvas canvas, int width, int height)
+        {
+            RenderBackground(comic, canvas, width, height);
+
+            using (SKPaint paint = new SKPaint())
+            {
+                paint.Typeface = _typeFace;
+                paint.TextSize = TEXT_SIZE;
+                DrawStrokedText(title, width/2, height/2, SKTextAlign.Center, canvas);
+            }
+        }
+
+        public void RenderBackground(Comic comic, SKCanvas canvas, int width, int height)
+        {
+            // paint bg
+            SKBitmap background = SKBitmap.Decode(comic.Background);
+            canvas.DrawBitmap(background, new SKRect(0, 0, width, height));
 
             // paint bottom bar
             using (SKPaint paint = new SKPaint())
