@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>$(SolutionDir)\Build\Plugins\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -26,14 +26,14 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>$(SolutionDir)\Build\Plugins\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Homero\bin\Debug\Plugins\</OutputPath>
+    <OutputPath>$(SolutionDir)\Build\Plugins\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -41,7 +41,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>..\Homero\bin\Release\Plugins\</OutputPath>
+    <OutputPath>$(SolutionDir)\Build\Plugins\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -50,16 +50,17 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <Reference Include="Forecast.io.45, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Forecast.io.1.0.9\lib\net45\Forecast.io.45.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="GeocodeSharp, Version=1.3.0.0, Culture=neutral, PublicKeyToken=1ae1b40d2ef46f2d, processorArchitecture=MSIL">
-      <HintPath>..\packages\GeocodeSharp.1.3.0.0\lib\net45\GeocodeSharp.dll</HintPath>
+    <Reference Include="Geocoding, Version=3.4.0.0, Culture=neutral, PublicKeyToken=7c714700b88674c7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Geocoding.net.3.4.0\lib\net40\Geocoding.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
@@ -71,6 +72,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -84,15 +86,17 @@
     <Compile Include="Renderer\WeatherRenderer.cs" />
     <Compile Include="Renderer\WeatherBitmapResource.cs" />
     <Compile Include="Renderer\WeatherTypeface.cs" />
+    <Compile Include="UserContext.cs" />
     <Compile Include="Weather.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer\WeatherRenderInfo.cs" />
     <Compile Include="WeatherModule.cs" />
+    <Compile Include="WeatherUser.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Homero\Homero.csproj">
+    <ProjectReference Include="..\Homero.Core\Homero.Core.csproj">
       <Project>{ff9f1cd6-7472-452c-aa36-a0ebf6014dd3}</Project>
-      <Name>Homero</Name>
+      <Name>Homero.Core</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

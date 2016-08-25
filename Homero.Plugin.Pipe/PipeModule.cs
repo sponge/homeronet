@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ninject.Modules;
+﻿using Ninject.Modules;
 
 namespace Homero.Plugin.Pipe
 {
@@ -11,7 +6,7 @@ namespace Homero.Plugin.Pipe
     {
         public override void Load()
         {
-            Bind<IPlugin>().To<PipePlugin>();
+            //            Bind<IPlugin>().To<PipePlugin>();
         }
     }
 }

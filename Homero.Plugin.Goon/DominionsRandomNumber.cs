@@ -1,11 +1,9 @@
-﻿using Homero.Services;
+﻿using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Homero.EventArgs;
-using Homero.Client;
+using Homero.Core.Interface;
 
 namespace Homero.Plugin.Goon
 {
@@ -19,35 +17,15 @@ namespace Homero.Plugin.Goon
         */
         private Random _random;
 
-        public List<string> RegisteredTextCommands
-        {
-            get { return new List<string> { "drn" }; }
-        }
-
         public DominionsRandomNumber(IMessageBroker broker)
         {
             _random = new Random();
             broker.CommandReceived += BrokerOnCommandReceived;
         }
 
-        private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
+        public List<string> RegisteredTextCommands
         {
-            IClient client = sender as IClient;
-            int drn = RollD6() + RollD6();
-            client.ReplyTo(e.Command, drn.ToString());
-        }
-
-        private int RollD6()
-        {
-            int roll = _random.Next(6) + 1;
-
-            if (roll == 6)
-            {
-                // explode!!
-                return 5 + RollD6();
-            }
-
-            return roll;
+            get { return new List<string> { "drn" }; }
         }
 
         public void Shutdown()
@@ -56,6 +34,26 @@ namespace Homero.Plugin.Goon
 
         public void Startup()
         {
+        }
+
+        private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
+        {
+            var client = sender as IClient;
+            var drn = RollD6() + RollD6();
+            e.ReplyTarget.Send(drn.ToString());
+        }
+
+        private int RollD6()
+        {
+            var roll = _random.Next(6) + 1;
+
+            if (roll == 6)
+            {
+                // explode!!
+                return 5 + RollD6();
+            }
+
+            return roll;
         }
     }
 }

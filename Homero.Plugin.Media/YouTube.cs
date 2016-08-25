@@ -1,27 +1,19 @@
-﻿using System;
+﻿using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
-using Homero.Client;
-using Homero.EventArgs;
-using Homero.Messages;
-using Homero.Services;
-using Homero.Utility;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Homero.Core.Interface;
 
-namespace Homero.Plugin.Media {
-
+namespace Homero.Plugin.Media
+{
     public class YouTube : IPlugin
     {
-        private WebClient _webClient;
         private Random _random = new Random();
 
-
-
-        private List<string> _registeredCommands = new List<string>() { "youtube", "yt", "kula", "sylauxe" };
-
-        private List<string> _sylauxeSearches = new List<string>() {
+        private List<string> _sylauxeSearches = new List<string>
+        {
             "diaper",
             "anime",
             "my little sister cant be this cute",
@@ -29,8 +21,11 @@ namespace Homero.Plugin.Media {
             "anime obama"
         };
 
-        private string _ytApiKey = String.Empty;
+        private WebClient _webClient;
+
+        private string _ytApiKey = string.Empty;
         private IConfiguration config;
+
         public YouTube(IMessageBroker broker, IConfiguration config)
         {
             this.config = config;
@@ -39,16 +34,31 @@ namespace Homero.Plugin.Media {
             broker.CommandReceived += BrokerOnCommandReceived;
         }
 
+        public void Startup()
+        {
+            if (string.IsNullOrEmpty(_ytApiKey))
+            {
+                config.SetValue("ApiKey", "SETANAPIKEYDINGUS");
+                throw new Exception("No API key provided!");
+            }
+        }
+
+        public void Shutdown()
+        {
+        }
+
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "youtube", "yt", "kula", "sylauxe" };
+
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            IClient client = sender as IClient;
+            var client = sender as IClient;
             YouTubeVideo video = null;
 
             if (e.Command.Command == "youtube" || e.Command.Command == "yt")
             {
                 if (e.Command.Arguments.Count == 0)
                 {
-                    client?.ReplyTo(e.Command, "youtube <query> -- returns the first YouTube search result for <query>");
+                    e.ReplyTarget.Send("youtube <query> -- returns the first YouTube search result for <query>");
                     return;
                 }
 
@@ -67,32 +77,13 @@ namespace Homero.Plugin.Media {
             {
                 if (client?.InlineOrOembedSupported == true)
                 {
-                    client.ReplyTo(e.Command, $"{video.Title} - {video.VideoUrl}");
+                    e.ReplyTarget.Send($"{video.Title} - {video.VideoUrl}");
                 }
                 else
                 {
-                    client?.ReplyTo(e.Command, $"{video.Title} - {video.VideoUrl} - 👍 {video.LikeCount} 	👎 {video.DislikeCount} - {video.ViewCount} views - {video.ChannelTitle} on {video.PublishedAt}");
+                    e.ReplyTarget.Send($"{video.Title} - {video.VideoUrl} - 👍 {video.LikeCount} 	👎 {video.DislikeCount} - {video.ViewCount} views - {video.ChannelTitle} on {video.PublishedAt}");
                 }
             }
         }
-
-        public void Startup()
-        {
-            if (String.IsNullOrEmpty(_ytApiKey))
-            {
-                config.SetValue("ApiKey", "SETANAPIKEYDINGUS");
-                throw new Exception("No API key provided!");
-            }
-        }
-
-        public void Shutdown()
-        {
-        }
-
-        public List<string> RegisteredTextCommands {
-            get { return _registeredCommands; }
-        }
-
     }
 }
- 

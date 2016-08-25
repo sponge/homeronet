@@ -1,40 +1,44 @@
-﻿using System;
+﻿using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Messages;
+using Homero.Core.Services;
+using Homero.Core.Utility;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Homero.Client;
-using Homero.Messages;
-using Homero.Services;
-using Homero.Utility;
+using Homero.Core.Interface;
 
-namespace Homero.Plugin.Circlejerk {
-    public class Clump : IPlugin {
-        private List<string> _registeredCommands = new List<string>() { "clump" };
-
+namespace Homero.Plugin.Circlejerk
+{
+    public class Clump : IPlugin
+    {
         private string _clump = "゜・。。・゜゜・。。・゜☆゜・。。・゜ im too bullshit feeligns  。・゜゜・。。・゜☆゜・。。・゜゜・。。・゜";
 
-        public Clump(IMessageBroker broker) {
+        public Clump(IMessageBroker broker)
+        {
             broker.CommandReceived += Broker_CommandReceived;
         }
 
-        public void Startup() {
+        public void Startup()
+        {
         }
 
-        public void Shutdown() {
+        public void Shutdown()
+        {
         }
 
-        private void Broker_CommandReceived(object sender, EventArgs.CommandReceivedEventArgs e) {
-            IClient client = sender as IClient;
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "clump" };
 
-            string prefix = client?.IrcFormattingSupported == true ? "" + ControlCode.Color + ColorCode.Violet : "";
+        private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
+        {
+            var client = sender as IClient;
+
+            var prefix = client?.IrcFormattingSupported == true ? "" + ControlCode.Color + ColorCode.Violet : "";
             var outStr = $"{prefix}{_clump}";
-            client?.ReplyTo(e.Command, outStr);
+            e.ReplyTarget.Send(outStr);
         }
 
-        public List<string> RegisteredTextCommands {
-            get { return _registeredCommands; }
-        }
-
-        public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message) {
+        public Task<IStandardMessage> ProcessTextMessage(IStandardMessage message)
+        {
             return null;
         }
     }

@@ -1,41 +1,54 @@
-﻿using Homero.Messages;
+﻿using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Services;
+using Homero.Core.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using Homero.Client;
-using Homero.EventArgs;
-using Homero.Services;
-using Homero.Utility;
-using Newtonsoft.Json;
-using TrekQuotes = System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>>>;
+using TrekQuotes =
+    System.Collections.Generic.Dictionary
+        <string, System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>>>;
 
 namespace Homero.Plugin.Goon
 {
     public class Trek : IPlugin
     {
-        private List<string> _registeredCommands = new List<string>() { "trek", "sg" };
-        private TrekQuotes _trekQuotes;
-        private TrekQuotes _sgQuotes;
         private Random _random = new Random();
+        private TrekQuotes _sgQuotes;
+        private TrekQuotes _trekQuotes;
 
         public Trek(IMessageBroker broker)
         {
-            _trekQuotes = JsonConvert.DeserializeObject<TrekQuotes>(File.ReadAllText(Path.Combine(Paths.ResourceDirectory,"trek.json")));
-            _sgQuotes = JsonConvert.DeserializeObject<TrekQuotes>(File.ReadAllText(Path.Combine(Paths.ResourceDirectory, "atlantis.json")));
+            _trekQuotes =
+                JsonConvert.DeserializeObject<TrekQuotes>(
+                    File.ReadAllText(Path.Combine(Paths.ResourceDirectory, "trek.json")));
+            _sgQuotes =
+                JsonConvert.DeserializeObject<TrekQuotes>(
+                    File.ReadAllText(Path.Combine(Paths.ResourceDirectory, "atlantis.json")));
             broker.CommandReceived += BrokerOnCommandReceived;
         }
 
+        public void Startup()
+        {
+        }
+
+        public void Shutdown()
+        {
+        }
+
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "trek", "sg" };
+
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            IClient client = sender as IClient;
-
             TrekQuotes quotes = null;
-            if (e.Command.Command == "trek") {
+            if (e.Command.Command == "trek")
+            {
                 quotes = _trekQuotes;
             }
-            else if (e.Command.Command == "sg") {
+            else if (e.Command.Command == "sg")
+            {
                 quotes = _sgQuotes;
             }
 
@@ -71,21 +84,7 @@ namespace Homero.Plugin.Goon
             var possibleQuotes = charQuotes[count];
             response = possibleQuotes[_random.Next(possibleQuotes.Count)];
 
-            client?.ReplyTo(e.Command, response);
+            e.ReplyTarget.Send(response);
         }
-
-        public void Startup()
-        {
-        }
-
-        public void Shutdown()
-        {
-        }
-
-        public List<string> RegisteredTextCommands
-        {
-            get { return _registeredCommands; }
-        }
-
     }
 }

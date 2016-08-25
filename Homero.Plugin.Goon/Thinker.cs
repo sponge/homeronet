@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Homero.Core.Client;
+using Homero.Core.EventArgs;
+using Homero.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Homero.Client;
-using Homero.EventArgs;
-using Homero.Services;
+using Homero.Core.Interface;
 
 namespace Homero.Plugin.Goon
 {
     public class Thinker : IPlugin
     {
-        private List<string> _registeredTextCommands = new List<string>() { "think" };
         private const string ThinkerTemplate = "( .   __ . ) . o O ( {0} )\n";
         private const string ThinkerEmptyLnTemplate = "                     {0}\n";
         private ILogger _logger;
@@ -30,13 +30,15 @@ namespace Homero.Plugin.Goon
             _logger.Debug("( .__. ).o O( thinkin real hard about going away now... )");
         }
 
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "think" };
+
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            IClient client = sender as IClient;
-            string[] thought = string.Join(" ", e.Command.Arguments).Split('\n');
-            int thinkerLine = (int) Math.Ceiling(thought.Length / 2.0f);
+            var client = sender as IClient;
+            var thought = string.Join(" ", e.Command.Arguments).Split('\n');
+            var thinkerLine = (int)Math.Ceiling(thought.Length / 2.0f);
 
-            StringBuilder response = new StringBuilder();
+            var response = new StringBuilder();
 
             if (client?.MarkdownSupported == true)
             {
@@ -45,7 +47,7 @@ namespace Homero.Plugin.Goon
 
             for (var i = 0; i < thought.Length; i++)
             {
-                string lnUsed = i + 1 == thinkerLine ? ThinkerTemplate : ThinkerEmptyLnTemplate;
+                var lnUsed = i + 1 == thinkerLine ? ThinkerTemplate : ThinkerEmptyLnTemplate;
                 response.AppendFormat(lnUsed, thought[i]);
             }
 
@@ -54,14 +56,7 @@ namespace Homero.Plugin.Goon
                 response.Append("```");
             }
 
-
-            client?.ReplyTo(e.Command, response.ToString());
-        }
-
-
-        public List<string> RegisteredTextCommands
-        {
-            get { return _registeredTextCommands; }
+            e.ReplyTarget.Send(response.ToString());
         }
     }
 }
