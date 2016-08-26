@@ -20,7 +20,7 @@ namespace Homero.Plugin.Comic
 
         public List<string> RegisteredTextCommands
         {
-            get { return new List<string> { "comic", "lastcomic" }; }
+            get { return new List<string> { "comic", "lastcomic", "importcomic" }; }
         }
 
         public ComicCommand(IMessageBroker broker)
@@ -49,11 +49,15 @@ namespace Homero.Plugin.Comic
 
             if (e.Command.Command == "comic")
             {
-               HandleComic(client, e);
+                HandleComic(client, e);
             }
             else if (e.Command.Command == "lastcomic")
             {
                 HandleLastComic(client, e);
+            }
+            else if (e.Command.Command == "importcomic")
+            {
+                //HandleImportComic(client, e);
             }
         }
 
@@ -98,19 +102,18 @@ namespace Homero.Plugin.Comic
                 e.ReplyTarget.Send("comic", new ImageAttachment() { DataStream = stream, Name = $"{e.ReplyTarget.Name} Comic {DateTime.Now}.png" });
             }
 
-            //Comic lastComic = _lastComic;
-
             if (command == "retry")
             {
                 _lastComic.Regenerate();
+                Stream stream = CreateComic(_lastComic);
+                e.ReplyTarget.Send("comic", new ImageAttachment() { DataStream = stream, Name = $"{e.ReplyTarget.Name} Comic {DateTime.Now}.png" });
             }
             else if (command == "export")
             {
-                e.ReplyTarget.Send(JsonConvert.SerializeObject(_lastComic));
+                string serialized = JsonConvert.SerializeObject(_lastComic);
+                e.ReplyTarget.Send("```" + serialized+ "```");
                 return;
             }
-
-            //Stream stream = CreateComic(lastComic);
         }
 
         private void HandleComic(IClient sender, CommandReceivedEventArgs e)
@@ -128,6 +131,14 @@ namespace Homero.Plugin.Comic
             Stream stream = CreateComic(comic);
             _lastComic = comic;
 
+            e.ReplyTarget.Send("comic", new ImageAttachment() { DataStream = stream, Name = $"{e.ReplyTarget.Name} Comic {DateTime.Now}.png" });
+        }
+
+        private void HandleImportComic(IClient client, CommandReceivedEventArgs e)
+        {
+            string raw = String.Join(" ", e.Command.Arguments.ToArray());
+            Comic imported = JsonConvert.DeserializeObject<Comic>(raw);
+            Stream stream = CreateComic(imported);
             e.ReplyTarget.Send("comic", new ImageAttachment() { DataStream = stream, Name = $"{e.ReplyTarget.Name} Comic {DateTime.Now}.png" });
         }
 

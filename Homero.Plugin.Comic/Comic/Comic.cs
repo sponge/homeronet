@@ -15,15 +15,13 @@ namespace Homero.Plugin.Comic
         public string Background { get; set; }
         public List<ComicPanel> Panels { get; set; }
 
+        public Comic()
+        {
+        }
+
         public Comic(List<ComicMessage> messages)
         {
-            Random random = new Random();
-
             _messages = messages;
-            Mappings = new CharacterMappings();
-            Panels = new List<ComicPanel>();
-            Background = ComicImages.Backgrounds[random.Next(ComicImages.Backgrounds.Count)];
-
             Regenerate();
         }
 
@@ -50,6 +48,13 @@ namespace Homero.Plugin.Comic
 
         public void Regenerate()
         {
+            Random random = new Random();
+
+            Mappings = new CharacterMappings();
+            Panels = new List<ComicPanel>();
+            Background = ComicImages.Backgrounds[random.Next(ComicImages.Backgrounds.Count)];
+            Panels = new List<ComicPanel>();
+
             ComicPanel currentPanel = new ComicPanel();
 
             foreach (ComicMessage message in _messages)
