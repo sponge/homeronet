@@ -241,6 +241,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Utility\WeakEvent.cs" />
+    <Compile Include="Utility\Web.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

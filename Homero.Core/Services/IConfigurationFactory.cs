@@ -46,6 +46,7 @@ namespace Homero.Core.Services
             }
             else
             {
+                Directory.CreateDirectory(Path.GetDirectoryName(CONFIG_FILE));
                 File.Create(CONFIG_FILE);
                 _rootConfig = new Dictionary<string, object>();
             }
