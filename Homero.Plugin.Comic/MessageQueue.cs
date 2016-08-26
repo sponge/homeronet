@@ -28,6 +28,11 @@ namespace Homero.Plugin.Comic
             _items.Add(item);
         }
 
+        public void Clear()
+        {
+            _items.Clear();
+        }
+
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return _items.GetEnumerator();

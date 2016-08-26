@@ -130,6 +130,7 @@ namespace Homero.Plugin.Comic
 
             Stream stream = CreateComic(comic);
             _lastComic = comic;
+            _queues[e.Channel.Name].Clear();
 
             e.ReplyTarget.Send("comic", new ImageAttachment() { DataStream = stream, Name = $"{e.ReplyTarget.Name} Comic {DateTime.Now}.png" });
         }

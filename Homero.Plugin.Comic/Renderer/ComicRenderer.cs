@@ -1,6 +1,8 @@
-﻿using SkiaSharp;
+﻿using Homero.Core.Utility;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,7 +38,7 @@ namespace Homero.Plugin.Comic
 
         private enum ImagePosition { Right, Left };
 
-        private SKTypeface _typeFace = SKTypeface.FromFamilyName("Comic Sans MS");
+        private SKTypeface _typeFace = SKTypeface.FromFile(Path.Combine(Paths.ResourceDirectory, "Comic", "COMICBD.TTF"));
         private SKColor _textFg = SKColors.White;
         private SKColor _textBg = SKColors.Black;
 
