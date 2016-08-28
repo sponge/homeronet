@@ -10,7 +10,7 @@ namespace Homero.Plugin.Comic
 {
     public static class ComicImages
     {
-        public static List<string> Charcters = Directory.GetFiles(Path.Combine(Paths.ResourceDirectory, "Comic/Characters")).ToList();
+        public static List<string> Characters = Directory.GetFiles(Path.Combine(Paths.ResourceDirectory, "Comic/Characters")).ToList();
         public static List<string> Backgrounds = Directory.GetFiles(Path.Combine(Paths.ResourceDirectory, "Comic/Backgrounds")).ToList();
     }
 }

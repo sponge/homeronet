@@ -19,7 +19,7 @@ namespace Homero.Plugin.Comic
             Mappings = new Dictionary<string, string>();
             _random = new Random();
 
-            _characterFiles = ComicImages.Charcters.ToList();
+            _characterFiles = ComicImages.Characters.ToList();
             _characterFiles.Sort((a, b) => _random.NextDouble() > 0.5f ? -1 : 1);
         }
 
