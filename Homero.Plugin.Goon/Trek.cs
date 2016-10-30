@@ -1,5 +1,4 @@
-﻿using Homero.Core.Client;
-using Homero.Core.EventArgs;
+﻿using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using Homero.Core.Utility;
 using Newtonsoft.Json;

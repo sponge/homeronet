@@ -70,7 +70,6 @@
     <Compile Include="Beats.cs" />
     <Compile Include="Bitcoin.cs" />
     <Compile Include="CodeEval.cs" />
-    <Compile Include="ConverterModule.cs" />
     <Compile Include="Currency.cs" />
     <Compile Include="Jab.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

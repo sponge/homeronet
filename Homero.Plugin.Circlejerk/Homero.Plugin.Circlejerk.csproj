@@ -66,7 +66,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CirclejerkModule.cs" />
     <Compile Include="Clump.cs" />
     <Compile Include="Depths.cs" />
     <Compile Include="Hate.cs" />

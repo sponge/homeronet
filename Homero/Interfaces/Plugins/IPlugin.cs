@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Homero.Core.Interface
+namespace Homero
 {
-    public interface IUser : ISendable
+    public interface IPlugin : IDisposable
     {
-        string Name { get; }
-
-        string Mention { get; }
     }
 }

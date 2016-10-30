@@ -1,10 +1,9 @@
-﻿using Homero.Core.Client;
+﻿using Homero.Core;
+using Homero.Core.Client.IRC;
 using Homero.Core.EventArgs;
-using Homero.Core.Interface;
 using Homero.Core.Services;
 using System.Collections.Generic;
 using System.Linq;
-using Homero.Core.Client.IRC;
 
 namespace Homero.Plugin.Goon
 {

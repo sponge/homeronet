@@ -1,10 +1,9 @@
-﻿using Homero.Core.Client;
+﻿using Homero.Core;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Homero.Core.Interface;
 
 namespace Homero.Plugin.Goon
 {
@@ -40,7 +39,7 @@ namespace Homero.Plugin.Goon
 
             var response = new StringBuilder();
 
-            if (client?.MarkdownSupported == true)
+            if (client?.Features.HasFlag(ClientFeature.Markdown) == true)
             {
                 response.Append("```");
             }
@@ -51,7 +50,7 @@ namespace Homero.Plugin.Goon
                 response.AppendFormat(lnUsed, thought[i]);
             }
 
-            if (client?.MarkdownSupported == true)
+            if (client?.Features.HasFlag(ClientFeature.Markdown) == true)
             {
                 response.Append("```");
             }

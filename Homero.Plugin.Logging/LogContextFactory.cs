@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Homero.Core.Client;
-using Homero.Core.Interface;
+﻿using Homero.Core;
 using Homero.Plugin.Logging.Context;
+using System;
 
 namespace Homero.Plugin.Logging
 {
     public static class LogContextFactory
     {
-
         public static LogContext Get(IClient client, IServer server)
         {
-            
             try
             {
                 LogContext context = new LogContext($"{client.Name}.{server.Name}");

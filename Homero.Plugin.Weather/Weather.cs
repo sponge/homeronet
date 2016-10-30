@@ -1,6 +1,6 @@
 using ForecastIO;
 using Geocoding.Google;
-using Homero.Core.Client;
+using Homero.Core;
 using Homero.Core.EventArgs;
 using Homero.Core.Messages.Attachments;
 using Homero.Core.Services;
@@ -12,7 +12,6 @@ using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Homero.Core.Interface;
 
 namespace Homero.Plugin.Weather
 {
@@ -84,7 +83,7 @@ namespace Homero.Plugin.Weather
                         // TODO: Don't break in PMs on discord
                         WeatherUser user =
                             ctx.Users.FirstOrDefault(
-                                x => x.Server == e.Server.Name && x.Client == ((IClient) sender).Name &&
+                                x => x.Server == e.Server.Name && x.Client == ((IClient)sender).Name &&
                                      x.Username == e.User.Name);
 
                         userAddress = user?.Address;
@@ -112,8 +111,8 @@ namespace Homero.Plugin.Weather
                         if (userAddress != null)
                         {
                             isMetric = address[GoogleAddressType.Country].ShortName != "US";
-                            location = new Tuple<float, float>((float) address.Coordinates.Latitude,
-                                (float) address.Coordinates.Longitude);
+                            location = new Tuple<float, float>((float)address.Coordinates.Latitude,
+                                (float)address.Coordinates.Longitude);
                             if (!noSave)
                             {
                                 using (var ctx = new UserContext("weather"))
@@ -121,10 +120,10 @@ namespace Homero.Plugin.Weather
                                     WeatherUser user =
                                         ctx.Users.FirstOrDefault(
                                             x =>
-                                                x.Server == e.Server.Name && x.Client == ((IClient) sender).Name &&
+                                                x.Server == e.Server.Name && x.Client == ((IClient)sender).Name &&
                                                 x.Username == e.User.Name) ?? new WeatherUser();
                                     user.Server = e.Server.Name;
-                                    user.Client = ((IClient) sender).Name;
+                                    user.Client = ((IClient)sender).Name;
                                     user.Username = e.User.Name;
                                     user.Address = userAddress;
                                     user.Latitude = location.Item1;
@@ -147,7 +146,7 @@ namespace Homero.Plugin.Weather
                 var weather = new ForecastIORequest(_forecastIoApiKey, location.Item1, location.Item2, unit).Get();
 
                 string summary =
-                    $"{userAddress} | {weather.currently.summary} | {weather.currently.temperature}{(unit == Unit.us ? "F" : "C")} | Humidity: {weather.currently.humidity*100}%";
+                    $"{userAddress} | {weather.currently.summary} | {weather.currently.temperature}{(unit == Unit.us ? "F" : "C")} | Humidity: {weather.currently.humidity * 100}%";
 
                 if (weather.minutely != null)
                 {
@@ -165,7 +164,6 @@ namespace Homero.Plugin.Weather
                         DataStream = stream,
                         Name = $"{e.User.Name} Weather {DateTime.Now}.png"
                     });
-
             });
 
             try
@@ -176,7 +174,6 @@ namespace Homero.Plugin.Weather
             {
                 throw ex.InnerExceptions.Last();
             }
-
         }
 
         private Stream CreateWeatherImage(WeatherRendererInfo info)

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Discord;
-using Homero.Core.Interface;
+﻿using Discord;
 using Homero.Core.Messages.Attachments;
+using System;
+using System.Threading.Tasks;
 
 namespace Homero.Core.Client.Discord
 {

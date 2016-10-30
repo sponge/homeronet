@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Homero.Core.Client;
+﻿using Homero.Core;
 using Homero.Core.Client.Discord;
 using Homero.Core.EventArgs;
 using Homero.Core.Messages.Attachments;
 using Homero.Core.Services;
 using Homero.Core.Utility;
 using Ninject;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Homero.Plugin.Discord
 {
@@ -18,6 +15,7 @@ namespace Homero.Plugin.Discord
     {
         public List<string> RegisteredTextCommands => null;
         private DiscordClient _client;
+
         public NowFailing(IMessageBroker broker, IKernel kernel)
         {
             _client = kernel.Get<DiscordClient>();
@@ -38,11 +36,10 @@ namespace Homero.Plugin.Discord
                 args.ReplyTarget.Send(message, new ImageAttachment()
                 {
                     Name = "good job dipshit.png",
-                    DataStream = File.OpenRead(Path.Combine(Paths.ResourceDirectory,"broke_bot.png"))
+                    DataStream = File.OpenRead(Path.Combine(Paths.ResourceDirectory, "broke_bot.png"))
                 });
-            } 
+            }
         }
-
 
         public void Startup()
         {

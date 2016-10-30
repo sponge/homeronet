@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Homero.Core;
 using Homero.Core.EventArgs;
-using Homero.Core.Interface;
 using Homero.Core.Services;
 using Homero.Plugin.Logging;
 using Homero.Plugin.Logging.Entity;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Homero.Plugin.Examples
 {
@@ -21,11 +20,11 @@ namespace Homero.Plugin.Examples
 
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            using (var ctx = LogContextFactory.Get((IClient) sender, e.Server))
+            using (var ctx = LogContextFactory.Get((IClient)sender, e.Server))
             {
                 if (ctx != null)
                 {
-                    Message message = ctx.Messages.OrderByDescending(x=> x.Timestamp).First(x => x.Channel.Equals(e.Channel.Name));
+                    Message message = ctx.Messages.OrderByDescending(x => x.Timestamp).First(x => x.Channel.Equals(e.Channel.Name));
                     if (message != null)
                     {
                         e.ReplyTarget.Send($"{message.User} said: {message.Content}");
@@ -40,7 +39,6 @@ namespace Homero.Plugin.Examples
                     e.ReplyTarget.Send("I don't log here, sorry.");
                 }
             }
-
         }
 
         public void Startup()

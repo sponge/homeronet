@@ -90,7 +90,6 @@
     <Compile Include="Weather.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer\WeatherRenderInfo.cs" />
-    <Compile Include="WeatherModule.cs" />
     <Compile Include="WeatherUser.cs" />
   </ItemGroup>
   <ItemGroup>

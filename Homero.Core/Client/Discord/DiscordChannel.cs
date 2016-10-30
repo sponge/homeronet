@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Discord;
+using Homero.Core.Messages.Attachments;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Discord;
-using Homero.Core.Interface;
-using Homero.Core.Messages.Attachments;
 
 namespace Homero.Core.Client.Discord
 {
@@ -64,6 +63,5 @@ namespace Homero.Core.Client.Discord
         {
             _channel?.SendIsTyping();
         }
-
     }
 }

@@ -1,10 +1,7 @@
-﻿using Homero.Core.Client;
-using Homero.Core.EventArgs;
-using Homero.Core.Messages;
+﻿using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Homero.Plugin.Media
 {

@@ -1,13 +1,9 @@
-﻿using Homero.Core.Services;
+﻿using Homero.Core;
+using Homero.Core.Services;
 using Homero.Plugin.Logging.Context;
 using Homero.Plugin.Logging.Entity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Homero.Core.Client;
-using Homero.Core.Interface;
 
 namespace Homero.Plugin.Logging
 {
@@ -46,7 +42,6 @@ namespace Homero.Plugin.Logging
                 }
                 context = _contextStorage[contextName];
             }
-
 
             Message message = new Message
             {

@@ -1,10 +1,7 @@
-﻿using Homero.Core.Client;
-using Homero.Core.EventArgs;
-using Homero.Core.Messages;
+﻿using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Homero.Plugin.Circlejerk
 {

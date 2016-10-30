@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Homero.Core.EventArgs;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Homero.Core.EventArgs;
 
-namespace Homero.Core.Interface
+namespace Homero.Core
 {
     public interface IClient
     {
@@ -13,13 +13,7 @@ namespace Homero.Core.Interface
 
         Version Version { get; }
 
-        bool MarkdownSupported { get; }
-
-        bool AudioSupported { get; }
-
-        bool IrcFormattingSupported { get; }
-
-        bool InlineOrOembedSupported { get; }
+        ClientFeature Features { get; }
 
         bool IsConnected { get; }
 

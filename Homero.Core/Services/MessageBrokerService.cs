@@ -1,15 +1,11 @@
-﻿using Homero.Core.Client;
-using Homero.Core.EventArgs;
+﻿using Homero.Core.EventArgs;
 using Homero.Core.Messages;
 using Homero.Core.Properties;
 using Homero.Core.Utility;
-using Homero.Plugin;
 using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Homero.Core.Interface;
-using Speedy.Linq;
 
 namespace Homero.Core.Services
 {
@@ -29,14 +25,15 @@ namespace Homero.Core.Services
 
         private readonly WeakEventSource<CommandReceivedEventArgs> _commandDispatchingEventSource =
             new WeakEventSource<CommandReceivedEventArgs>();
+
         private readonly WeakEventSource<CommandReceivedEventArgs> _commandDispatchedEventSource =
             new WeakEventSource<CommandReceivedEventArgs>();
+
         private readonly WeakEventSource<EventFailedEventArgs> _commandFailedEventSource =
                     new WeakEventSource<EventFailedEventArgs>();
 
-
-
         private IKernel _kernel;
+
         public MessageBrokerService(IKernel kernel)
         {
             _kernel = kernel;
@@ -92,6 +89,7 @@ namespace Homero.Core.Services
                 _commandDispatchingEventSource.Unsubscribe(value);
             }
         }
+
         public event EventHandler<EventFailedEventArgs> CommandFailed
         {
             add

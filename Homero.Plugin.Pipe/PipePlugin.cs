@@ -1,9 +1,6 @@
-﻿using Homero.Core.Client;
-using Homero.Core.EventArgs;
-using Homero.Core.Messages;
+﻿using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Homero.Plugin.Pipe
 {

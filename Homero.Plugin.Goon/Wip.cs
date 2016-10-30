@@ -1,4 +1,4 @@
-﻿using Homero.Core.Client;
+﻿using Homero.Core;
 using Homero.Core.EventArgs;
 using Homero.Core.Messages.Attachments;
 using Homero.Core.Services;
@@ -7,7 +7,6 @@ using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Homero.Core.Interface;
 
 namespace Homero.Plugin.Goon
 {
@@ -55,7 +54,7 @@ namespace Homero.Plugin.Goon
             var imgName = _images[_random.Next(_images.Count)];
             var imgUrl = $"{baseUrl}{imgName}";
 
-            if (client?.InlineOrOembedSupported == true)
+            if (client?.Features.HasFlag(ClientFeature.MediaAttachments) == true)
             {
                 var img = new ImageAttachment()
                 {

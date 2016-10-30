@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Homero.Core;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using HtmlAgilityPack;

@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Homero.Core.Interface
+namespace Homero
 {
-    public interface IServer
+    public interface IUser : ISendable
     {
-        string Name { get; }
-        List<IChannel> Channels { get; }
     }
 }

@@ -1,9 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Homero.Core.Utility
@@ -51,7 +47,7 @@ namespace Homero.Core.Utility
             Task<JObject> jsonTask = Task.Run(async () =>
             {
                 string result = await GetStringAsync(url);
-                if(string.IsNullOrEmpty(result))
+                if (string.IsNullOrEmpty(result))
                 {
                     throw new Exception("empty json lol");
                 }

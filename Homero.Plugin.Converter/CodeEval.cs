@@ -1,4 +1,4 @@
-﻿using Homero.Core.Client;
+﻿using Homero.Core;
 using Homero.Core.EventArgs;
 using Homero.Core.Messages;
 using Homero.Core.Services;
@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Homero.Core.Interface;
 
 namespace Homero.Plugin.Converter
 {

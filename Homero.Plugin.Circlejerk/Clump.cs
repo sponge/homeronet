@@ -1,11 +1,10 @@
-﻿using Homero.Core.Client;
+﻿using Homero.Core;
 using Homero.Core.EventArgs;
 using Homero.Core.Messages;
 using Homero.Core.Services;
 using Homero.Core.Utility;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Homero.Core.Interface;
 
 namespace Homero.Plugin.Circlejerk
 {
@@ -32,7 +31,7 @@ namespace Homero.Plugin.Circlejerk
         {
             var client = sender as IClient;
 
-            var prefix = client?.IrcFormattingSupported == true ? "" + ControlCode.Color + ColorCode.Violet : "";
+            var prefix = client?.Features.HasFlag(ClientFeature.ColorControlCodes) == true ? "" + ControlCode.Color + ColorCode.Violet : "";
             var outStr = $"{prefix}{_clump}";
             e.ReplyTarget.Send(outStr);
         }

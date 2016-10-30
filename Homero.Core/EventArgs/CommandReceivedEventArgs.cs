@@ -1,5 +1,4 @@
-﻿using Homero.Core.Interface;
-using Homero.Core.Messages;
+﻿using Homero.Core.Messages;
 
 namespace Homero.Core.EventArgs
 {

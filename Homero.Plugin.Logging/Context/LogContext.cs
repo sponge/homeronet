@@ -1,11 +1,6 @@
-﻿using Homero.Plugin.Logging.Entity;
-using System;
-using System.Collections.Generic;
+﻿using Homero.Core.Database.Context;
+using Homero.Plugin.Logging.Entity;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Homero.Core.Database.Context;
 
 namespace Homero.Plugin.Logging.Context
 {

@@ -1,10 +1,9 @@
-﻿using Homero.Core.Client;
+﻿using Homero.Core;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Homero.Core.Interface;
 
 namespace Homero.Plugin
 {
@@ -164,7 +163,7 @@ namespace Homero.Plugin
                 outputLines = FormatTextToBread(wrappedText);
             }
 
-            if (client?.MarkdownSupported == true)
+            if (client?.Features.HasFlag(ClientFeature.Markdown) == true)
             {
                 var combinedText = string.Format("```{0}```", string.Join("\n", outputLines));
                 e.ReplyTarget.Send(combinedText);

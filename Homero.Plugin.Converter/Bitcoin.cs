@@ -5,8 +5,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 
 namespace Homero.Plugin.Converter
@@ -17,12 +15,14 @@ namespace Homero.Plugin.Converter
         public float Average { get; set; }
         public float High { get; set; }
     }
+
     public class Bitcoin : IPlugin
     {
         private List<BitcoinPricePoint> _btcHistory = new List<BitcoinPricePoint>();
         private static float CICIS_CHEESE_PIZZA_COST = 6.99f;
 
         private List<string> _registeredCommands = new List<string>() { "bitcoin" };
+
         public Bitcoin(IMessageBroker broker)
         {
             broker.CommandReceived += Broker_CommandReceived;
@@ -35,19 +35,19 @@ namespace Homero.Plugin.Converter
 
         private async void BtcUpdater_Tick(object sender, EventArgs e)
         {
-            if(_btcHistory.Count >= 10)
+            if (_btcHistory.Count >= 10)
             {
                 _btcHistory.RemoveAt(0);
             }
 
             JObject currentPrice = await Web.GetJsonAsync("https://www.bitstamp.net/api/ticker/");
-            if(currentPrice != null)
+            if (currentPrice != null)
             {
                 BitcoinPricePoint btcPoint = new BitcoinPricePoint()
                 {
-                    Low = (float) currentPrice["low"],
-                    Average = (float) currentPrice["last"],
-                    High = (float) currentPrice["high"]
+                    Low = (float)currentPrice["low"],
+                    Average = (float)currentPrice["last"],
+                    High = (float)currentPrice["high"]
                 };
 
                 _btcHistory.Add(btcPoint);
@@ -72,7 +72,7 @@ namespace Homero.Plugin.Converter
 
         private void Broker_CommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            if(_btcHistory.Count == 0)
+            if (_btcHistory.Count == 0)
             {
                 e.ReplyTarget.Send("i have no bitcoin data because it's bad");
                 return;
@@ -89,11 +89,11 @@ namespace Homero.Plugin.Converter
             double rn = max - min;
             List<char> characterBuffer = new List<char>();
 
-            foreach(double value in values)
+            foreach (double value in values)
             {
                 int sparkValue = 0;
 
-                if(value - min != 0 && rn != 0)
+                if (value - min != 0 && rn != 0)
                 {
                     sparkValue = Convert.ToInt32(Math.Floor(Math.Min(6, ((value - min) / rn) * 7)));
                 }

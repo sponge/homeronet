@@ -60,7 +60,6 @@
     <Compile Include="Context\LogContext.cs" />
     <Compile Include="Entity\Message.cs" />
     <Compile Include="Log.cs" />
-    <Compile Include="LoggingModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

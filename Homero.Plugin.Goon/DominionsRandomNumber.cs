@@ -1,9 +1,8 @@
-﻿using Homero.Core.Client;
+﻿using Homero.Core;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using System;
 using System.Collections.Generic;
-using Homero.Core.Interface;
 
 namespace Homero.Plugin.Goon
 {

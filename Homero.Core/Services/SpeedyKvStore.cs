@@ -1,17 +1,15 @@
-﻿using System;
+﻿using Homero.Core.Utility;
+using Speedy;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Homero.Core.Utility;
-using Speedy;
 
 namespace Homero.Core.Services
 {
     public class SpeedyKvStore : IStore
     {
         private KeyValueRepository<object> _coreRepository;
+
         public SpeedyKvStore(string StoreName)
         {
             if (!Directory.Exists(Paths.DataDirectory))
@@ -29,7 +27,6 @@ namespace Homero.Core.Services
             }
         }
 
-
         public void Remove(string key)
         {
             _coreRepository.Remove(key);
@@ -42,7 +39,7 @@ namespace Homero.Core.Services
             {
                 return default(T);
             }
-            return (T) result;
+            return (T)result;
         }
 
         public void Set<T>(string key, T value)

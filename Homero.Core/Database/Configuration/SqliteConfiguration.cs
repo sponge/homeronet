@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Homero.Core.Database.Provider;
 using System.Data.Entity;
 using System.Data.Entity.Core.Common;
 using System.Data.SQLite;
 using System.Data.SQLite.EF6;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Homero.Core.Database.Provider;
 
 namespace Homero.Core.Database.Configuration
 {

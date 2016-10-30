@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Homero.Core.Messages;
+﻿using Homero.Core.Messages;
 using Homero.Core.Messages.Attachments;
+using System.Collections.Generic;
 
 namespace Homero.Core.Client.IRC
 {

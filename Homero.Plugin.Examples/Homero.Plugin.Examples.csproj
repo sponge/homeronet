@@ -58,7 +58,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExampleModule.cs" />
     <Compile Include="LastMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StoreTest.cs" />

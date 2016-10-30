@@ -90,7 +90,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DiscordModule.cs" />
     <Compile Include="NowFailing.cs" />
     <Compile Include="NowPlaying.cs" />
     <Compile Include="NowTyping.cs" />

@@ -1,9 +1,8 @@
-﻿using Homero.Core.Client;
+﻿using Homero.Core;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using System.Collections.Generic;
 using System.Text;
-using Homero.Core.Interface;
 
 namespace Homero.Plugin.Converter
 {
@@ -131,7 +130,7 @@ namespace Homero.Plugin.Converter
 
                     outStr = $"{fancy}\n{outStr}\n{fancy}";
 
-                    if (client?.MarkdownSupported == true)
+                    if (client?.Features.HasFlag(ClientFeature.Markdown) == true)
                     {
                         outStr = $"```{outStr}```";
                     }

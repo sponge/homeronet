@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Homero.Core.Client;
-using Homero.Core.Interface;
+﻿using Homero.Core;
 using Homero.Core.Services;
-using Homero.Core.Utility;
-using Homero.Plugin;
 using Ninject;
 using Ninject.Extensions.Conventions;
+using System;
 using Topshelf;
 
 namespace Homero.Client
@@ -60,6 +53,12 @@ namespace Homero.Client
                         .Configure(b => b.InSingletonScope()));
 
             Logger.Info("Loading all plugins.");
+            Kernel.Bind(x => x.FromAssembliesMatching("Homero.Plugin.*")
+            .SelectAllClasses()
+            .InheritedFrom<IPlugin>()
+            .BindAllInterfaces()
+            .Configure(b => b.InSingletonScope()));
+
             foreach (var plugin in Kernel.GetAll<IPlugin>())
             {
                 try

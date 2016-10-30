@@ -1,5 +1,4 @@
 ﻿using Homero.Core.EventArgs;
-using Homero.Core.Interface;
 using Homero.Core.Services;
 using IrcDotNet;
 using System;
@@ -15,6 +14,7 @@ namespace Homero.Core.Client.IRC
         private IConfiguration _config;
         private ILogger _logger;
         private IUploader _uploader;
+
         public IrcClient(IConfiguration config, ILogger logger, IUploader uploader)
         {
             _config = config;
@@ -27,20 +27,14 @@ namespace Homero.Core.Client.IRC
 
         public event EventHandler<MessageEventArgs> MessageSent;
 
-        public bool AudioSupported => false;
-
         public string Description => "IRC Client using IrcDotNet";
 
-        public bool InlineOrOembedSupported => false;
-
-        public bool IrcFormattingSupported => true;
+        public ClientFeature Features => ClientFeature.Text | ClientFeature.ColorControlCodes;
 
         public bool IsConnected
         {
             get { return _clients.Count > 0; }
         }
-
-        public bool MarkdownSupported => false;
 
         public string Name => "IRC Client";
 
@@ -63,7 +57,7 @@ namespace Homero.Core.Client.IRC
                 client.Connected += ClientOnConnected;
                 client.ConnectFailed += ClientOnConnectFailed;
                 client.Registered += ClientOnRegistered;
-                
+
                 client.Connect(new Uri($"irc://{serverConfig.Host}"), new IrcUserRegistrationInfo()
                 {
                     NickName = serverConfig.Nickname,
@@ -97,7 +91,6 @@ namespace Homero.Core.Client.IRC
                     client.Channels.Join(channel);
                 }
             }
-
         }
 
         private void ClientOnConnected(object sender, System.EventArgs eventArgs)
@@ -129,11 +122,11 @@ namespace Homero.Core.Client.IRC
                 return;
             }
 
-            MessageEventArgs args = new MessageEventArgs(new IrcMessage(e.Text), new IrcServer(_clients.Keys.First(x => x.LocalUser.Equals(localUser)), _uploader), 
+            MessageEventArgs args = new MessageEventArgs(new IrcMessage(e.Text), new IrcServer(_clients.Keys.First(x => x.LocalUser.Equals(localUser)), _uploader),
                 new IrcChannel(channel, _uploader),
                 new IrcUser(channel.Users.FirstOrDefault(x => x.User.NickName == e.Source.Name)?.User, _uploader));
 
-            // Since we can't really listen to outgoing accurately, we can abuse this to get our message sent event. 
+            // Since we can't really listen to outgoing accurately, we can abuse this to get our message sent event.
             if (e.Source.Name == localUser.NickName)
             {
                 MessageSent?.Invoke(this, args);

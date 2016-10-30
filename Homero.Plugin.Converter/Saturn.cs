@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using Homero.Core.Client;
+﻿using Homero.Core;
 using Homero.Core.EventArgs;
-using Homero.Core.Interface;
 using Homero.Core.Services;
+using System.Collections.Generic;
 
 namespace Homero.Plugin.Converter
 {
@@ -52,7 +51,7 @@ namespace Homero.Plugin.Converter
         {
         }
 
-        public List<string> RegisteredTextCommands { get; } = new List<string> {"saturn"};
+        public List<string> RegisteredTextCommands { get; } = new List<string> { "saturn" };
 
         private void BrokerOnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
@@ -70,7 +69,7 @@ namespace Homero.Plugin.Converter
                 str = str.Replace(entry.Key, entry.Value);
             }
 
-            e.ReplyTarget.Send( str);
+            e.ReplyTarget.Send(str);
         }
     }
 }

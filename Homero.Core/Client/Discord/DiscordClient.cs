@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Discord;
+using Homero.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Discord;
-using Homero.Core.Interface;
-using Homero.Core.Services;
 
 namespace Homero.Core.Client.Discord
 {
@@ -70,31 +69,24 @@ namespace Homero.Core.Client.Discord
 
         public async Task<bool> Connect()
         {
-            await RootClient.Connect(_config.GetValue<string>("key"));
-            return true; // uh why can't i get the connect result?
+            await RootClient.Connect(_config.GetValue<string>("key"), TokenType.Bot);
+            return RootClient.State == ConnectionState.Connected;
         }
 
         #region Properties
 
-        public bool AudioSupported => true;
-
         public string Description => "Client that connects to Discord using the Discord.NET library.";
 
-        public bool InlineOrOembedSupported => true;
-
-        public bool IrcFormattingSupported => false;
+        public ClientFeature Features => ClientFeature.AudioChat | ClientFeature.Markdown | ClientFeature.Text |
+                                         ClientFeature.MediaAttachments | ClientFeature.UrlInlining;
 
         public bool IsConnected
         {
             get { return RootClient.State == ConnectionState.Connected; }
         }
 
-        public bool MarkdownSupported => true;
-
         public string Name => "Discord.NET Client";
-
         public global::Discord.DiscordClient RootClient { get; }
-
         public Version Version => new Version(0, 0, 1);
 
         #endregion Properties

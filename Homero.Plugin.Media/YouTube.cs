@@ -1,10 +1,9 @@
-﻿using Homero.Core.Client;
+﻿using Homero.Core;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using Homero.Core.Interface;
 
 namespace Homero.Plugin.Media
 {
@@ -75,7 +74,7 @@ namespace Homero.Plugin.Media
 
             if (video != null)
             {
-                if (client?.InlineOrOembedSupported == true)
+                if (client?.Features.HasFlag(ClientFeature.UrlInlining) == true)
                 {
                     e.ReplyTarget.Send($"{video.Title} - {video.VideoUrl}");
                 }

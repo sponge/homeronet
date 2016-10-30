@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Client", "Homero.Cli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero.Plugin.Logging", "Homero.Plugin.Logging\Homero.Plugin.Logging.csproj", "{54A516D0-24E0-4957-88F2-364C70D34C7B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homero", "Homero\Homero.csproj", "{CACF31E7-168E-457A-B7AE-0608EE80F7EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -135,6 +137,14 @@ Global
 		{54A516D0-24E0-4957-88F2-364C70D34C7B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{54A516D0-24E0-4957-88F2-364C70D34C7B}.Release|x64.ActiveCfg = Release|Any CPU
 		{54A516D0-24E0-4957-88F2-364C70D34C7B}.Release|x64.Build.0 = Release|Any CPU
+		{CACF31E7-168E-457A-B7AE-0608EE80F7EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CACF31E7-168E-457A-B7AE-0608EE80F7EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CACF31E7-168E-457A-B7AE-0608EE80F7EC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CACF31E7-168E-457A-B7AE-0608EE80F7EC}.Debug|x64.Build.0 = Debug|Any CPU
+		{CACF31E7-168E-457A-B7AE-0608EE80F7EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CACF31E7-168E-457A-B7AE-0608EE80F7EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CACF31E7-168E-457A-B7AE-0608EE80F7EC}.Release|x64.ActiveCfg = Release|Any CPU
+		{CACF31E7-168E-457A-B7AE-0608EE80F7EC}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

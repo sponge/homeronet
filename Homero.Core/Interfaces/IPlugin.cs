@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Homero.Plugin
+namespace Homero.Core
 {
     public interface IPlugin
     {

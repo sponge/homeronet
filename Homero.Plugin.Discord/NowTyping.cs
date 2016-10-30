@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Homero.Core.Client;
+﻿using Homero.Core;
 using Homero.Core.Client.Discord;
 using Homero.Core.EventArgs;
 using Homero.Core.Services;
 using Ninject;
+using System.Collections.Generic;
 
 namespace Homero.Plugin.Discord
 {
@@ -15,6 +11,7 @@ namespace Homero.Plugin.Discord
     {
         public List<string> RegisteredTextCommands => null;
         private DiscordClient _client;
+
         public NowTyping(IMessageBroker broker, IKernel kernel)
         {
             _client = kernel.Get<DiscordClient>();

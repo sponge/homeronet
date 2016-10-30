@@ -1,10 +1,9 @@
-﻿using Homero.Core.Client;
+﻿using Homero.Core;
 using Homero.Core.EventArgs;
 using Homero.Core.Messages;
 using Homero.Core.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Homero.Core.Interface;
 
 namespace Homero.Plugin.Goon
 {
@@ -37,7 +36,7 @@ namespace Homero.Plugin.Goon
  \   \
   `~~~'";
 
-            if (client?.MarkdownSupported == true)
+            if (client?.Features.HasFlag(ClientFeature.Markdown) == true)
             {
                 boo = $"```{boo}```";
             }

@@ -78,7 +78,6 @@
     <Compile Include="DominionsRandomNumber.cs" />
     <Compile Include="Fortune.cs" />
     <Compile Include="FortuneFile.cs" />
-    <Compile Include="GoonModule.cs" />
     <Compile Include="Hys.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spook.cs" />

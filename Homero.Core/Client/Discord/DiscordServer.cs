@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using Discord;
+using System.Collections.Generic;
 using System.Linq;
-using Discord;
-using Homero.Core.Interface;
 
 namespace Homero.Core.Client.Discord
 {
     public class DiscordServer : IServer
     {
         private Server _server;
+
         public DiscordServer(Server server)
         {
             _server = server;

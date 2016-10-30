@@ -1,5 +1,4 @@
-﻿using Homero.Core.Client;
-using Homero.Core.EventArgs;
+﻿using Homero.Core.EventArgs;
 using Homero.Core.Messages;
 using Homero.Core.Services;
 using System;

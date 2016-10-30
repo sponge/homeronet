@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Homero.Core.Messages.Attachments;
+using Homero.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Homero.Core.Interface;
-using Homero.Core.Messages.Attachments;
-using Homero.Core.Services;
 
 namespace Homero.Core.Client.IRC
 {
@@ -11,6 +10,7 @@ namespace Homero.Core.Client.IRC
     {
         private IrcDotNet.IrcChannel _inner;
         private IUploader _uploader;
+
         public IrcChannel(IrcDotNet.IrcChannel inner, IUploader uploader)
         {
             _inner = inner;
@@ -29,7 +29,6 @@ namespace Homero.Core.Client.IRC
 
         public void Send(string Message, params IAttachment[] Attachments)
         {
-
             List<string> messagesToSend = new List<string>();
 
             // split up multi-line messages

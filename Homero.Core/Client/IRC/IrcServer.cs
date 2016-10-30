@@ -1,11 +1,7 @@
-﻿using System;
+﻿using Homero.Core.Services;
+using IrcDotNet;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Homero.Core.Interface;
-using Homero.Core.Services;
-using IrcDotNet;
 
 namespace Homero.Core.Client.IRC
 {
@@ -13,6 +9,7 @@ namespace Homero.Core.Client.IRC
     {
         private StandardIrcClient _inner;
         private IUploader _uploader;
+
         public IrcServer(StandardIrcClient inner, IUploader uploader)
         {
             _inner = inner;
