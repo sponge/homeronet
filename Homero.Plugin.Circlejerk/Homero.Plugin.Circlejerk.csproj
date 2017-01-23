@@ -70,6 +70,7 @@
     <Compile Include="Clump.cs" />
     <Compile Include="Depths.cs" />
     <Compile Include="Hate.cs" />
+    <Compile Include="HowItsMade.cs" />
     <Compile Include="Pepito.cs" />
     <Compile Include="Reddit.cs" />
     <Compile Include="Tone.cs" />

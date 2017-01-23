@@ -70,7 +70,7 @@ namespace Homero.Core.Client.Discord
 
         public async Task<bool> Connect()
         {
-            await RootClient.Connect(_config.GetValue<string>("key"));
+            await RootClient.Connect((_config.GetValue<string>("key")), TokenType.Bot);
             return true; // uh why can't i get the connect result?
         }
 

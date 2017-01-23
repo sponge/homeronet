@@ -13,6 +13,7 @@ namespace Homero.Plugin.Circlejerk
             Bind<IPlugin>().To<Depths>().InSingletonScope();
             Bind<IPlugin>().To<Clump>().InSingletonScope();
             Bind<IPlugin>().To<Hate>().InSingletonScope();
+            Bind<IPlugin>().To<HowItsMade>().InSingletonScope();
         }
     }
 }
